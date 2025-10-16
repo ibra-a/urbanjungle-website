@@ -30,3 +30,8 @@ dist-ssr
 
 # Vercel
 .vercel
+
+# Large video files (host externally)
+*.mp4
+*.mov
+*.avi
