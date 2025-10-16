@@ -1,0 +1,30 @@
+{
+  "name": "@gabfashion/ecommerce-backend-proxy",
+  "version": "1.0.0",
+  "description": "CAC Bank proxy server for ecommerce backend package",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "pm2": "pm2 start ecosystem.config.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "express-rate-limit": "^7.1.5",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "keywords": [
+    "proxy",
+    "cac-bank",
+    "payment",
+    "ecommerce"
+  ],
+  "author": "GAB Fashion House",
+  "license": "MIT"
+}
+

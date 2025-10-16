@@ -1,0 +1,1182 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Palanquin:wght@100;200;300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Nike Color Palette - Custom Properties */
+  :root {
+    --nike-black: #000000;
+    --nike-white: #FFFFFF;
+    --nike-coral: #FF6B35;
+    --nike-amber: #FFB627;
+    --nike-light-gray: #F5F5F5;
+  }
+
+  /* Page background - using @layer base to override Tailwind */
+  html, body {
+    background-color: var(--nike-black) !important;
+    color: var(--nike-white);
+    overflow-x: hidden !important;
+    width: 100%;
+  }
+  
+  #root {
+    background-color: var(--nike-black) !important;
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+  }
+
+  /* Dark theme scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #1a1a1a;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(45deg, var(--nike-coral), var(--nike-amber));
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, var(--nike-amber), var(--nike-coral));
+  }
+}
+
+@layer components {
+  .max-container {
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .input {
+    @apply sm:flex-1 max-sm:w-full text-base leading-normal text-white bg-black/50 border border-white/20 pl-5 max-sm:p-5 outline-none sm:border-white/20 max-sm:border-white/20 max-sm:rounded-full focus:border-white/40;
+  }
+
+  /* Nike-style glassmorphism card */
+  .glass-card {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  /* Nike-style buttons */
+  .nike-button-primary {
+    background: var(--nike-white);
+    color: var(--nike-black);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    border: 2px solid var(--nike-white);
+  }
+
+  .nike-button-primary:hover {
+    background: var(--nike-amber);
+    color: var(--nike-black);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 182, 39, 0.3);
+    border-color: var(--nike-amber);
+  }
+
+  .nike-button-secondary {
+    background: var(--nike-coral);
+    color: var(--nike-white);
+    transition: all 0.3s ease;
+    transform: translateY(0);
+    border: 2px solid var(--nike-coral);
+  }
+
+  .nike-button-secondary:hover {
+    background: var(--nike-amber);
+    color: var(--nike-black);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(255, 182, 39, 0.3);
+    border-color: var(--nike-amber);
+  }
+
+  /* Floating animation */
+  .floating {
+    animation: floating 3s ease-in-out infinite;
+  }
+
+  @keyframes floating {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Nike glow effect for accent text */
+  .nike-glow {
+    color: var(--nike-amber);
+    text-shadow: 0 0 20px rgba(255, 182, 39, 0.5);
+    animation: pulse-glow 2s infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      text-shadow: 0 0 20px rgba(255, 182, 39, 0.5);
+    }
+    50% { 
+      text-shadow: 0 0 30px rgba(255, 182, 39, 0.8), 0 0 40px rgba(255, 182, 39, 0.3);
+    }
+  }
+
+  /* Modern card hover effect with Nike colors */
+  .nike-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateY(0);
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .nike-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--nike-coral);
+  }
+
+  /* Shimmer animation for loading skeletons */
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+}
+
+@layer utilities {
+  .padding {
+    @apply sm:px-16 px-8 sm:py-24 py-12;
+  }
+
+  .padding-x {
+    @apply sm:px-16 px-8;
+  }
+
+  .padding-y {
+    @apply sm:py-24 py-12;
+  }
+
+  .padding-l {
+    @apply sm:pl-16 pl-8;
+  }
+
+  .padding-r {
+    @apply sm:pr-16 pr-8;
+  }
+
+  .padding-t {
+    @apply sm:pt-24 pt-12;
+  }
+
+  .padding-b {
+    @apply sm:pb-24 pb-12;
+  }
+
+  .info-text {
+    @apply font-montserrat text-white/70 text-lg leading-7 font-light;
+  }
+
+  /* Modern responsive text sizes */
+  .hero-text {
+    font-size: 72px;
+    line-height: 80px;
+  }
+
+  @media (min-width: 640px) {
+    .hero-text {
+      font-size: 84px;
+      line-height: 92px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .hero-text {
+      font-size: 96px;
+      line-height: 106px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .hero-text {
+      font-size: 128px;
+      line-height: 140px;
+    }
+  }
+
+  .section-title {
+    font-size: 28px;
+    line-height: 50px;
+    color: var(--nike-white);
+  }
+
+  @media (min-width: 640px) {
+    .section-title {
+      font-size: 48px;
+      line-height: 58px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-title {
+      font-size: 60px;
+      line-height: 72px;
+    }
+  }
+
+  /* Nike color utilities */
+  .text-nike-coral {
+    color: var(--nike-coral);
+  }
+
+  .text-nike-amber {
+    color: var(--nike-amber);
+  }
+
+  .bg-nike-coral {
+    background-color: var(--nike-coral);
+  }
+
+  .bg-nike-amber {
+    background-color: var(--nike-amber);
+  }
+
+  .border-nike-coral {
+    border-color: var(--nike-coral);
+  }
+
+  .border-nike-amber {
+    border-color: var(--nike-amber);
+  }
+
+  /* Enhanced gradients for Nike theme */
+  .gradient-text {
+    background: linear-gradient(135deg, var(--nike-white) 0%, var(--nike-light-gray) 50%, var(--nike-amber) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Chrome red gradient for premium text effects */
+  .chrome-red-gradient {
+    background: linear-gradient(to right, #7f1d1d, #dc2626, #fca5a5, #dc2626, #7f1d1d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: brightness(110%) contrast(125%);
+    text-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  }
+
+  /* Font family organization - Prevent conflicts */
+  .font-primary {
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .font-secondary {
+    font-family: 'Palanquin', sans-serif;
+  }
+
+  /* Font weight utilities for consistency */
+  .font-primary-light {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 300;
+  }
+
+  .font-primary-regular {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+  }
+
+  .font-primary-medium {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+  }
+
+  .font-primary-semibold {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+  }
+
+  .font-primary-bold {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+  }
+
+  .font-secondary-semibold {
+    font-family: 'Palanquin', sans-serif;
+    font-weight: 600;
+  }
+
+  .font-secondary-bold {
+    font-family: 'Palanquin', sans-serif;
+    font-weight: 700;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, var(--nike-black) 0%, #1a1a1a 100%);
+  }
+
+  /* Nike theme specific utilities */
+  .dark-surface {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .dark-surface-hover {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--nike-coral);
+  }
+
+  /* Logo Marquee Animation */
+  @keyframes logoScroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-33.333%);
+    }
+  }
+
+  /* Reduced motion support for logo marquee */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-marquee-content {
+      animation: none !important;
+    }
+  }
+
+  /* Service Cards with Animated Glow Border Effects */
+  .service-card-container {
+    flex: 1;
+    min-width: 300px;
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    padding: 2px;
+    margin: 8px;
+  }
+
+  .service-card-glow-border {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(45deg, 
+      transparent,
+      rgba(139, 92, 246, 0.3),
+      rgba(59, 130, 246, 0.3),
+      rgba(236, 72, 153, 0.3),
+      transparent
+    );
+    background-size: 400% 400%;
+    padding: 2px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: glowBorderFlow 8s ease-in-out infinite;
+  }
+
+  .service-card-glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, 
+      rgba(139, 92, 246, 0.4),
+      rgba(59, 130, 246, 0.4),
+      rgba(236, 72, 153, 0.4),
+      rgba(139, 92, 246, 0.4)
+    );
+    background-size: 400% 400%;
+    border-radius: 22px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    animation: glowBorderFlow 8s ease-in-out infinite reverse;
+    filter: blur(6px);
+  }
+
+  .service-card-container:hover .service-card-glow-border {
+    transform: translateY(-8px) scale(1.02);
+    background: linear-gradient(45deg, 
+      rgba(139, 92, 246, 0.6),
+      rgba(59, 130, 246, 0.6),
+      rgba(236, 72, 153, 0.6),
+      rgba(139, 92, 246, 0.6)
+    );
+    background-size: 400% 400%;
+    box-shadow: 
+      0 25px 50px -12px rgba(139, 92, 246, 0.25),
+      0 0 60px rgba(59, 130, 246, 0.2);
+  }
+
+  .service-card-container:hover .service-card-glow-border::before {
+    opacity: 1;
+  }
+
+  .service-card-content {
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    padding: 2.5rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+  }
+
+  .service-card-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.05), 
+      transparent
+    );
+    transition: left 0.6s ease;
+  }
+
+  .service-card-container:hover .service-card-content::before {
+    left: 100%;
+  }
+
+  .service-card-container:hover .service-card-content {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .service-icon-container {
+    width: 56px;
+    height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, 
+      rgba(139, 92, 246, 0.8), 
+      rgba(59, 130, 246, 0.8)
+    );
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    position: relative;
+    transition: all 0.4s ease;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3);
+  }
+
+  .service-icon-container::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(135deg, 
+      rgba(139, 92, 246, 0.6), 
+      rgba(59, 130, 246, 0.6),
+      rgba(236, 72, 153, 0.6)
+    );
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .service-card-container:hover .service-icon-container {
+    transform: scale(1.1);
+    box-shadow: 
+      0 12px 40px rgba(139, 92, 246, 0.4),
+      0 0 30px rgba(59, 130, 246, 0.3);
+  }
+
+  .service-card-container:hover .service-icon-container::before {
+    opacity: 1;
+  }
+
+  .service-title {
+    font-family: 'Palanquin', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+  }
+
+  .service-card-container:hover .service-title {
+    background: linear-gradient(135deg, 
+      #ffffff, 
+      rgba(139, 92, 246, 0.9),
+      rgba(59, 130, 246, 0.9)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .service-description {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    transition: color 0.3s ease;
+  }
+
+  .service-card-container:hover .service-description {
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  /* Keyframe animations */
+  @keyframes glowBorderFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 100% 50%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
+    }
+  }
+
+  /* Responsive design for service cards */
+  @media (max-width: 1024px) {
+    .service-card-container {
+      min-width: 280px;
+      margin: 6px;
+    }
+    
+    .service-card-content {
+      padding: 2rem;
+    }
+    
+    .service-title {
+      font-size: 1.5rem;
+    }
+    
+    .service-description {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .service-card-container {
+      min-width: 100%;
+      max-width: 100%;
+      margin: 4px 0;
+    }
+    
+    .service-card-content {
+      padding: 1.8rem;
+    }
+    
+    .service-icon-container {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1.2rem;
+    }
+    
+    .service-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    .service-description {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .service-card-glow-border,
+    .service-card-glow-border::before,
+    .service-card-content,
+    .service-card-content::before,
+    .service-icon-container,
+    .service-icon-container::before,
+    .service-title,
+    .service-description {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* Clean Services Grid - No Background Box */
+  .services-grid-only {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2rem;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* Responsive design for clean services grid */
+  @media (max-width: 1024px) {
+    .services-grid-only {
+      gap: 1.5rem;
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .services-grid-only {
+      flex-direction: column;
+      gap: 1rem;
+      padding: 0 1rem;
+    }
+  }
+
+  /* Premium Mbappe Visual Effects */
+  .mbappe-bg-gradient {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at center, 
+      rgba(255, 107, 53, 0.1) 0%, 
+      rgba(139, 92, 246, 0.05) 30%,
+      rgba(59, 130, 246, 0.03) 60%,
+      transparent 80%
+    );
+    animation: gradientPulse 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .mbappe-container {
+    position: relative;
+    z-index: 1;
+    animation: floatingMbappe 4s ease-in-out infinite;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .mbappe-container:hover {
+    transform: scale(1.05) translateY(-5px);
+  }
+
+  .mbappe-glow-border {
+    position: relative;
+    border-radius: 30px;
+    padding: 3px;
+    background: linear-gradient(45deg, 
+      rgba(255, 107, 53, 0.6),
+      rgba(139, 92, 246, 0.6),
+      rgba(59, 130, 246, 0.6),
+      rgba(236, 72, 153, 0.6),
+      rgba(255, 107, 53, 0.6)
+    );
+    background-size: 400% 400%;
+    animation: mbappeGlowFlow 8s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.3));
+  }
+
+  .mbappe-glow-border::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(45deg, 
+      rgba(255, 107, 53, 0.8),
+      rgba(139, 92, 246, 0.8),
+      rgba(59, 130, 246, 0.8),
+      rgba(236, 72, 153, 0.8)
+    );
+    background-size: 400% 400%;
+    border-radius: 35px;
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 0.4s ease;
+    animation: mbappeGlowFlow 8s ease-in-out infinite reverse;
+    filter: blur(15px);
+  }
+
+  .mbappe-container:hover .mbappe-glow-border::before {
+    opacity: 1;
+  }
+
+  .mbappe-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    border-radius: 27px;
+    transition: all 0.4s ease;
+    background: rgba(0, 0, 0, 0.02);
+  }
+
+  .mbappe-container:hover .mbappe-image {
+    filter: brightness(1.1) contrast(1.05);
+  }
+
+  /* Floating Promotional Badges */
+  .mbappe-badge {
+    position: absolute;
+    background: linear-gradient(135deg, 
+      rgba(255, 107, 53, 0.95), 
+      rgba(255, 182, 39, 0.95)
+    );
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    box-shadow: 
+      0 8px 25px rgba(255, 107, 53, 0.4),
+      0 0 20px rgba(255, 182, 39, 0.3);
+    animation: badgeFloat 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .mbappe-badge-1 {
+    top: 10%;
+    right: 15%;
+    animation-delay: 0s;
+  }
+
+  .mbappe-badge-2 {
+    top: 60%;
+    left: 5%;
+    animation-delay: -1s;
+    background: linear-gradient(135deg, 
+      rgba(139, 92, 246, 0.95), 
+      rgba(59, 130, 246, 0.95)
+    );
+  }
+
+  .mbappe-badge-3 {
+    bottom: 15%;
+    right: 10%;
+    animation-delay: -2s;
+    background: linear-gradient(135deg, 
+      rgba(236, 72, 153, 0.95), 
+      rgba(219, 39, 119, 0.95)
+    );
+    font-size: 0.8rem;
+    padding: 10px 18px;
+  }
+
+  .mbappe-container:hover .mbappe-badge {
+    transform: scale(1.1);
+    box-shadow: 
+      0 12px 35px rgba(255, 107, 53, 0.6),
+      0 0 30px rgba(255, 182, 39, 0.5);
+  }
+
+  /* Keyframe Animations */
+  @keyframes floatingMbappe {
+    0%, 100% {
+      transform: translateY(0px) rotate(0deg);
+    }
+    33% {
+      transform: translateY(-8px) rotate(0.5deg);
+    }
+    66% {
+      transform: translateY(4px) rotate(-0.5deg);
+    }
+  }
+
+  @keyframes mbappeGlowFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    25% {
+      background-position: 100% 50%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    75% {
+      background-position: 0% 100%;
+    }
+  }
+
+  @keyframes gradientPulse {
+    0%, 100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 0.3;
+    }
+    50% {
+      transform: scale(1.1) rotate(180deg);
+      opacity: 0.6;
+    }
+  }
+
+  @keyframes badgeFloat {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-6px) scale(1.02);
+    }
+  }
+
+  /* Responsive Design for Mbappe Effects */
+  @media (max-width: 1024px) {
+    .mbappe-badge {
+      font-size: 0.7rem;
+      padding: 6px 12px;
+    }
+    
+    .mbappe-badge-3 {
+      font-size: 0.75rem;
+      padding: 8px 14px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mbappe-bg-gradient {
+      top: -30%;
+      left: -30%;
+      width: 160%;
+      height: 160%;
+    }
+    
+    .mbappe-container {
+      animation: none; /* Reduce animations on mobile for performance */
+    }
+    
+    .mbappe-badge {
+      font-size: 0.65rem;
+      padding: 5px 10px;
+    }
+    
+    .mbappe-badge-3 {
+      font-size: 0.7rem;
+      padding: 6px 12px;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .mbappe-container,
+    .mbappe-glow-border,
+    .mbappe-glow-border::before,
+    .mbappe-bg-gradient,
+    .mbappe-badge {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  /* Floating Chat Button - Nike Theme */
+  .floating-chat-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .floating-chat-button {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+      rgba(255, 107, 53, 1) 0%, 
+      rgba(255, 182, 39, 1) 100%
+    );
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 8px 32px rgba(255, 107, 53, 0.4),
+      0 0 20px rgba(255, 182, 39, 0.3);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: chatFloat 3s ease-in-out infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+  }
+
+  .floating-chat-button:hover {
+    transform: scale(1.1) translateY(-2px);
+    background: linear-gradient(135deg, 
+      rgba(255, 107, 53, 1) 0%, 
+      rgba(255, 182, 39, 1) 50%,
+      rgba(139, 92, 246, 0.8) 100%
+    );
+    box-shadow: 
+      0 12px 40px rgba(255, 107, 53, 0.6),
+      0 0 30px rgba(255, 182, 39, 0.5),
+      0 0 60px rgba(139, 92, 246, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .floating-chat-button.hovered .chat-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-100%) translateY(-50%) scale(1);
+  }
+
+  .chat-icon {
+    color: white;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+  }
+
+  .floating-chat-button:hover .chat-icon {
+    transform: scale(1.1);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  .chat-tooltip {
+    position: absolute;
+    right: calc(100% + 16px);
+    top: 50%;
+    transform: translateX(-100%) translateY(-50%) scale(0.8);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 107, 53, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .chat-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-left-color: rgba(0, 0, 0, 0.9);
+  }
+
+  .chat-notification-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, 
+      rgba(236, 72, 153, 1), 
+      rgba(219, 39, 119, 1)
+    );
+    border: 2px solid white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: badgePulse 2s ease-in-out infinite;
+    box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+  }
+
+  .chat-notification-badge span {
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+  }
+
+  .chat-pulse-bg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, 
+      rgba(255, 107, 53, 0.3), 
+      rgba(255, 182, 39, 0.3)
+    );
+    animation: chatPulse 3s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  /* Keyframe Animations */
+  @keyframes chatFloat {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-6px);
+    }
+  }
+
+  @keyframes chatPulse {
+    0%, 100% {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translate(-50%, -50%) scale(1.4);
+      opacity: 0.2;
+    }
+  }
+
+  @keyframes badgePulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  /* Responsive Design for Chat */
+  @media (max-width: 768px) {
+    .floating-chat-container {
+      bottom: 20px;
+      right: 20px;
+    }
+    
+    .floating-chat-button {
+      width: 56px;
+      height: 56px;
+    }
+    
+    .chat-tooltip {
+      display: none; /* Hide tooltip on mobile */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .floating-chat-container {
+      bottom: 16px;
+      right: 16px;
+    }
+    
+    .floating-chat-button {
+      width: 52px;
+      height: 52px;
+    }
+  }
+
+  /* Reduced motion support for chat */
+  @media (prefers-reduced-motion: reduce) {
+    .floating-chat-button,
+    .chat-pulse-bg,
+    .chat-notification-badge {
+      animation: none !important;
+    }
+  }
+
+  /* Promotional Sections Styling */
+  .promo-section-bg {
+    position: relative;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .promo-section-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.7) 0%,
+      rgba(0, 0, 0, 0.4) 50%,
+      rgba(0, 0, 0, 0.2) 100%
+    );
+    z-index: 1;
+  }
+
+  .promo-content {
+    position: relative;
+    z-index: 2;
+  }
+
+  @media (max-width: 768px) {
+    .promo-section-bg {
+      background-attachment: scroll;
+    }
+  }
+
+  /* Nike themed gradient borders */
+  .nike-gradient-border {
+    background: linear-gradient(45deg, var(--nike-coral), var(--nike-amber));
+    padding: 2px;
+    border-radius: 50px;
+  }
+
+  .nike-gradient-border-inner {
+    background: black;
+    border-radius: 48px;
+    padding: 12px 24px;
+  }
+
+  /* Electric promo text animation */
+  .electric-promo-text {
+    background: linear-gradient(
+      90deg,
+      var(--nike-coral) 0%,
+      #00D4FF 25%,
+      #8B5CF6 50%,
+      var(--nike-amber) 75%,
+      var(--nike-coral) 100%
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: electricFlow 4s ease-in-out infinite;
+  }
+
+  @keyframes electricFlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Scale container overflow fix */
+  .scale-container {
+    overflow: hidden;
+  }
+
+  /* Section-level overflow control for animations */
+  .section-container {
+    overflow-x: hidden;
+    width: 100%;
+  }
+}
