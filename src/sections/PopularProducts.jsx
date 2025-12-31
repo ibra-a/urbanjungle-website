@@ -14,19 +14,19 @@ const PopularProducts = () => {
   const items = [
     {
       type: "video",
-      src: "/src/assets/videos/Epic Adidas shoe commercial concept _ product video B-ROLL.mp4",
+      src: "/videos/Epic Adidas shoe commercial concept _ product video B-ROLL.mp4",
       alt: "Epic Adidas Shoe",
       title: "Adidas"
     },
     {
       type: "video",
-      src: "/src/assets/videos/3dairforcebuttonshow.mp4",
+      src: "/videos/3dairforcebuttonshow.mp4",
       alt: "3D Air Force Show",
       title: "Nike"
     },
     {
       type: "video",
-      src: "/src/assets/videos/Converse Weapon l Create History Not Hype.mp4",
+      src: "/videos/Converse Weapon l Create History Not Hype.mp4",
       alt: "Converse Weapon",
       title: "Converse"
     }

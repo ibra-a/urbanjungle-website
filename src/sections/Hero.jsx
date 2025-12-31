@@ -65,7 +65,7 @@ const Hero = () => {
           loop
           playsInline
         >
-          <source src="/src/assets/videos/Airmax.mp4" type="video/mp4" />
+          <source src="/videos/Airmax.mp4" type="video/mp4" />
         </video>
         
         {/* Dark overlay for better text readability */}
