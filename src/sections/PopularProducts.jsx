@@ -223,7 +223,7 @@ const PopularProducts = () => {
             loop
             playsInline
           >
-            <source src="/src/assets/videos/jordan.mp4" type="video/mp4" />
+            <source src="/videos/jordan.mp4" type="video/mp4" />
           </video>
           
           {/* Gradient Overlay */}
