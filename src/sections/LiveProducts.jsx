@@ -25,8 +25,8 @@ const LiveProducts = () => {
     price: 85.99,
     stock_qty: 15,
     image: "/files/719833610637.jpg",
-    description: "Nike Training Top - Black, 2XL",
-    item_group: "Apparel T-Shirt - Nike"
+    description: "Training Top - Black, 2XL",
+    item_group: "Apparel T-Shirt"
   };
 
   const fetchProducts = async () => {
@@ -130,7 +130,7 @@ const LiveProducts = () => {
               Live <span className='gradient-text'>ERPNext</span> Inventory
             </h2>
             <p className='lg:max-w-lg mt-2 font-montserrat text-slate-gray leading-relaxed'>
-              Real-time Nike inventory from our ERPNext system. Fresh data every 5 minutes.
+              Real-time Urban Jungle inventory from our ERPNext system. Fresh data every 5 minutes.
             </p>
           </motion.div>
           
@@ -169,7 +169,7 @@ const LiveProducts = () => {
           {loading && (
             <div className="flex items-center justify-center py-12">
               <div className="flex items-center gap-3">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-500"></div>
                 <span className="text-gray-600">Fetching live inventory...</span>
               </div>
             </div>
@@ -219,7 +219,7 @@ const LiveProducts = () => {
             >
               <Link to="/shop">
                 <motion.button
-                  className="bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors font-medium"
+                  className="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition-colors font-medium"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >

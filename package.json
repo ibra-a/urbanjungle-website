@@ -7,10 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "backend": "cd backend && python app.py",
-    "start:backend": "cd backend && python app.py",
-    "start:frontend": "npm run dev"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.7.0",
@@ -20,6 +17,7 @@
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-tailwindcss": "^3.13.0",
     "framer-motion": "^12.15.0",
+    "json-bigint": "^1.0.0",
     "lucide-react": "^0.511.0",
     "package": "^1.0.1",
     "prettier": "^3.0.1",

@@ -312,89 +312,89 @@ const CheckoutWithCAC = () => {
                 <form onSubmit={handleShippingSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">First Name *</label>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">First Name *</label>
                       <input
                         type="text"
                         value={shippingData.firstName}
                         onChange={(e) => setShippingData({ ...shippingData, firstName: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Last Name *</label>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">Last Name *</label>
                       <input
                         type="text"
                         value={shippingData.lastName}
                         onChange={(e) => setShippingData({ ...shippingData, lastName: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                         required
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email *</label>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Email *</label>
                     <input
                       type="email"
                       value={shippingData.email}
                       onChange={(e) => setShippingData({ ...shippingData, email: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Phone Number *</label>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Phone Number *</label>
                     <input
                       type="tel"
                       value={shippingData.phone}
                       onChange={(e) => setShippingData({ ...shippingData, phone: e.target.value })}
                       placeholder="77XXXXXX or 78XXXXXX"
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Address *</label>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Address *</label>
                     <input
                       type="text"
                       value={shippingData.address}
                       onChange={(e) => setShippingData({ ...shippingData, address: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                       required
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Apartment, suite, etc.</label>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Apartment, suite, etc.</label>
                     <input
                       type="text"
                       value={shippingData.apartment}
                       onChange={(e) => setShippingData({ ...shippingData, apartment: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">City *</label>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">City *</label>
                       <input
                         type="text"
                         value={shippingData.city}
                         onChange={(e) => setShippingData({ ...shippingData, city: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">Region</label>
+                      <label className="block text-sm font-medium text-gray-900 mb-2">Region</label>
                       <input
                         type="text"
                         value={shippingData.region}
                         onChange={(e) => setShippingData({ ...shippingData, region: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                       />
                     </div>
                   </div>
@@ -446,7 +446,7 @@ const CheckoutWithCAC = () => {
                         value={paymentData.phoneNumber}
                         onChange={(e) => setPaymentData({ ...paymentData, phoneNumber: e.target.value })}
                         placeholder="77XXXXXX or 78XXXXXX"
-                        className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                         required
                       />
                     </div>
@@ -507,13 +507,13 @@ const CheckoutWithCAC = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-2">Enter OTP Code *</label>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Enter OTP Code *</label>
                     <input
                       type="text"
                       value={paymentData.otp}
                       onChange={(e) => setPaymentData({ ...paymentData, otp: e.target.value })}
                       placeholder="Enter 4-6 digit code"
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-center text-2xl font-mono tracking-widest"
+                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-center text-2xl font-mono tracking-widest text-gray-900"
                       maxLength={6}
                       required
                     />
@@ -562,7 +562,7 @@ const CheckoutWithCAC = () => {
             className="lg:sticky lg:top-32 h-fit"
           >
             <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h3 className="text-xl font-bold mb-6">Order Summary</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
               
               {/* Cart Items */}
               <div className="space-y-4 mb-6 max-h-96 overflow-y-auto">
@@ -576,16 +576,16 @@ const CheckoutWithCAC = () => {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-sm truncate">{item.name}</h4>
+                      <h4 className="font-medium text-sm text-gray-900 truncate">{item.name}</h4>
                       <p className="text-xs text-gray-500">
                         Size: {item.size} {item.color && `• ${item.color}`}
                       </p>
-                      <p className="text-sm font-medium mt-1">
+                      <p className="text-sm font-medium text-gray-900 mt-1">
                         {formatPrice(item.price)} × {item.quantity}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">{formatPrice(item.price * item.quantity)}</p>
+                      <p className="font-bold text-gray-900">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   </div>
                 ))}
@@ -594,18 +594,18 @@ const CheckoutWithCAC = () => {
               {/* Totals */}
               <div className="border-t pt-4 space-y-3">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal</span>
-                  <span className="font-medium">{formatPrice(subtotal)}</span>
+                  <span className="text-gray-900">Subtotal</span>
+                  <span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Shipping</span>
-                  <span className="font-medium">
+                  <span className="text-gray-900">Shipping</span>
+                  <span className="font-medium text-gray-900">
                     {shipping === 0 ? 'FREE' : formatPrice(shipping)}
                   </span>
                 </div>
                 <div className="border-t pt-3 flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span>{formatPrice(total)}</span>
+                  <span className="text-gray-900">Total</span>
+                  <span className="text-gray-900">{formatPrice(total)}</span>
                 </div>
               </div>
 

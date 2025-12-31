@@ -61,12 +61,13 @@ const backend = {
   payment: {
     currency: 'DJF',
     testMode: import.meta.env.VITE_PAYMENT_TEST_MODE === 'true',
-    cacProxyUrl: import.meta.env.VITE_CAC_PROXY_URL || 'http://157.230.110.104/api/cacint',
+    cacApiUrl: import.meta.env.VITE_CAC_API_URL || 'https://services.cacintbank.com:8749/pay/v1',
+    cacProxyUrl: import.meta.env.VITE_CAC_PROXY_URL,
     credentials: {
       username: import.meta.env.VITE_CAC_USERNAME,
       password: import.meta.env.VITE_CAC_PASSWORD,
+      appKey: import.meta.env.VITE_CAC_APP_KEY,
       apiKey: import.meta.env.VITE_CAC_API_KEY,
-      secretKey: import.meta.env.VITE_CAC_SECRET_KEY,
       companyServicesId: import.meta.env.VITE_CAC_COMPANY_SERVICES_ID
     }
   }

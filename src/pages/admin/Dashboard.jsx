@@ -23,26 +23,26 @@ const Dashboard = () => {
       
       // Today's orders
       const { data: todayOrders } = await supabase
-        .from('orders')
+        .from('urban_orders')
         .select('*')
         .gte('created_at', today);
       
       // Pending orders
       const { data: pending } = await supabase
-        .from('orders')
+        .from('urban_orders')
         .select('*')
         .eq('status', 'pending');
       
       // Low stock products
       const { data: lowStock } = await supabase
-        .from('tommy_products')
+        .from('urban_products')
         .select('*')
         .lt('stock_quantity', 10)
         .gt('stock_quantity', 0);
       
       // Recent orders
       const { data: recent } = await supabase
-        .from('orders')
+        .from('urban_orders')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(10);

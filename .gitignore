@@ -35,3 +35,35 @@ dist-ssr
 *.mp4
 *.mov
 *.avi
+
+# Documentation files (not needed for deployment)
+*.md
+*.txt
+SETUP_SUMMARY.txt
+
+# Development/Testing files
+test-*.js
+*.test.js
+*.spec.js
+
+# Backup files
+*.backup
+*.bak
+*_backup
+backend info../
+ecommerce-backend updated/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Deployment scripts (keep only essential ones)
+# update_env_production.sh - keep if needed

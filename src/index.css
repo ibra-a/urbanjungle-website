@@ -6,13 +6,22 @@
 @tailwind utilities;
 
 @layer base {
-  /* Nike Color Palette - Custom Properties */
+  /* Urban Jungle Color Palette - Custom Properties */
   :root {
-    --nike-black: #000000;
-    --nike-white: #FFFFFF;
-    --nike-coral: #FF6B35;
-    --nike-amber: #FFB627;
-    --nike-light-gray: #F5F5F5;
+    --uj-black: #000000;
+    --uj-white: #FFFFFF;
+    --uj-yellow: #FCD34D;
+    --uj-yellow-dark: #FBBF24;
+    --uj-yellow-light: #FDE68A;
+    --uj-light-gray: #F5F5F5;
+    /* Legacy support - map old names to new */
+    --nike-black: var(--uj-black);
+    --nike-white: var(--uj-white);
+    --nike-coral: var(--uj-yellow);
+    --nike-amber: var(--uj-yellow-dark);
+    --uj-coral: var(--uj-yellow);
+    --uj-amber: var(--uj-yellow-dark);
+    --nike-light-gray: var(--uj-light-gray);
   }
 
   /* Page background - using @layer base to override Tailwind */
@@ -46,12 +55,12 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, var(--nike-coral), var(--nike-amber));
+    background: linear-gradient(45deg, var(--uj-yellow), var(--uj-yellow-dark));
     border-radius: 10px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(45deg, var(--nike-amber), var(--nike-coral));
+    background: linear-gradient(45deg, var(--uj-yellow-dark), var(--uj-yellow));
   }
 }
 
@@ -65,7 +74,7 @@
     @apply sm:flex-1 max-sm:w-full text-base leading-normal text-white bg-black/50 border border-white/20 pl-5 max-sm:p-5 outline-none sm:border-white/20 max-sm:border-white/20 max-sm:rounded-full focus:border-white/40;
   }
 
-  /* Nike-style glassmorphism card */
+  /* Urban Jungle-style glassmorphism card */
   .glass-card {
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
@@ -74,7 +83,8 @@
     box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
   }
 
-  /* Nike-style buttons */
+  /* Urban Jungle-style buttons */
+  .uj-button-primary,
   .nike-button-primary {
     background: var(--nike-white);
     color: var(--nike-black);
@@ -84,27 +94,28 @@
   }
 
   .nike-button-primary:hover {
-    background: var(--nike-amber);
+    background: var(--uj-yellow);
     color: var(--nike-black);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 182, 39, 0.3);
-    border-color: var(--nike-amber);
+    box-shadow: 0 10px 25px rgba(252, 211, 77, 0.3);
+    border-color: var(--uj-yellow);
   }
 
+  .uj-button-secondary,
   .nike-button-secondary {
-    background: var(--nike-coral);
-    color: var(--nike-white);
+    background: var(--uj-yellow);
+    color: var(--nike-black);
     transition: all 0.3s ease;
     transform: translateY(0);
-    border: 2px solid var(--nike-coral);
+    border: 2px solid var(--uj-yellow);
   }
 
   .nike-button-secondary:hover {
-    background: var(--nike-amber);
+    background: var(--uj-yellow-dark);
     color: var(--nike-black);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(255, 182, 39, 0.3);
-    border-color: var(--nike-amber);
+    box-shadow: 0 10px 25px rgba(252, 211, 77, 0.3);
+    border-color: var(--uj-yellow-dark);
   }
 
   /* Floating animation */
@@ -117,19 +128,20 @@
     50% { transform: translateY(-10px); }
   }
 
-  /* Nike glow effect for accent text */
+  /* Urban Jungle glow effect for accent text */
+  .uj-glow,
   .nike-glow {
-    color: var(--nike-amber);
-    text-shadow: 0 0 20px rgba(255, 182, 39, 0.5);
+    color: var(--uj-yellow);
+    text-shadow: 0 0 20px rgba(252, 211, 77, 0.5);
     animation: pulse-glow 2s infinite;
   }
 
   @keyframes pulse-glow {
     0%, 100% { 
-      text-shadow: 0 0 20px rgba(255, 182, 39, 0.5);
+      text-shadow: 0 0 20px rgba(252, 211, 77, 0.5);
     }
     50% { 
-      text-shadow: 0 0 30px rgba(255, 182, 39, 0.8), 0 0 40px rgba(255, 182, 39, 0.3);
+      text-shadow: 0 0 30px rgba(252, 211, 77, 0.8), 0 0 40px rgba(252, 211, 77, 0.3);
     }
   }
 
@@ -143,9 +155,9 @@
 
   .nike-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+    box-shadow: 0 20px 40px rgba(252, 211, 77, 0.2);
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--nike-coral);
+    border: 1px solid var(--uj-yellow);
   }
 
   /* Shimmer animation for loading skeletons */
@@ -249,28 +261,28 @@
   }
 
   .text-nike-amber {
-    color: var(--nike-amber);
+    color: var(--uj-yellow);
   }
 
   .bg-nike-coral {
-    background-color: var(--nike-coral);
+    background-color: var(--uj-yellow);
   }
 
   .bg-nike-amber {
-    background-color: var(--nike-amber);
+    background-color: var(--uj-yellow-dark);
   }
 
   .border-nike-coral {
-    border-color: var(--nike-coral);
+    border-color: var(--uj-yellow);
   }
 
   .border-nike-amber {
-    border-color: var(--nike-amber);
+    border-color: var(--uj-yellow-dark);
   }
 
-  /* Enhanced gradients for Nike theme */
+  /* Enhanced gradients for Urban Jungle theme */
   .gradient-text {
-    background: linear-gradient(135deg, var(--nike-white) 0%, var(--nike-light-gray) 50%, var(--nike-amber) 100%);
+    background: linear-gradient(135deg, var(--nike-white) 0%, var(--nike-light-gray) 50%, var(--uj-yellow) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -343,7 +355,7 @@
 
   .dark-surface-hover {
     background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--nike-coral);
+    border: 1px solid var(--uj-yellow);
   }
 
   /* Logo Marquee Animation */
@@ -1130,9 +1142,9 @@
     }
   }
 
-  /* Nike themed gradient borders */
+  /* Urban Jungle themed gradient borders */
   .nike-gradient-border {
-    background: linear-gradient(45deg, var(--nike-coral), var(--nike-amber));
+    background: linear-gradient(45deg, var(--uj-yellow), var(--uj-yellow-dark));
     padding: 2px;
     border-radius: 50px;
   }
@@ -1147,11 +1159,11 @@
   .electric-promo-text {
     background: linear-gradient(
       90deg,
-      var(--nike-coral) 0%,
-      #00D4FF 25%,
-      #8B5CF6 50%,
-      var(--nike-amber) 75%,
-      var(--nike-coral) 100%
+      var(--uj-yellow) 0%,
+      var(--uj-yellow-light) 25%,
+      var(--uj-yellow-dark) 50%,
+      var(--uj-yellow) 75%,
+      var(--uj-yellow-dark) 100%
     );
     background-size: 300% 100%;
     -webkit-background-clip: text;

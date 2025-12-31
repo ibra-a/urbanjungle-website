@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { headerLogo } from '../assets/images';
 
-const NikeLoadingScreen = ({ onLoadingComplete }) => {
+const UJLoadingScreen = ({ onLoadingComplete }) => {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
@@ -36,7 +36,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
           {/* Background Patterns with Nike Colors */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <motion.div
-              className="absolute top-1/4 left-1/4 w-32 h-32 bg-nike-coral/20 rounded-full blur-xl"
+              className="absolute top-1/4 left-1/4 w-32 h-32 bg-yellow-500/20 rounded-full blur-xl"
               animate={{
                 scale: [1, 1.2, 1],
                 opacity: [0.2, 0.4, 0.2]
@@ -48,7 +48,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
               }}
             />
             <motion.div
-              className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-nike-amber/20 rounded-full blur-xl"
+              className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-yellow-400/20 rounded-full blur-xl"
               animate={{
                 scale: [1.2, 1, 1.2],
                 opacity: [0.1, 0.3, 0.1]
@@ -61,7 +61,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
               }}
             />
             <motion.div
-              className="absolute top-1/2 left-1/6 w-24 h-24 bg-nike-coral/15 rounded-full blur-lg"
+              className="absolute top-1/2 left-1/6 w-24 h-24 bg-yellow-500/15 rounded-full blur-lg"
               animate={{
                 y: [0, -20, 0],
                 opacity: [0.1, 0.2, 0.1]
@@ -85,8 +85,8 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
             >
               <img 
                 src={headerLogo}
-                alt="Nike"
-                className="h-16 w-auto mx-auto filter brightness-0 invert"
+                alt="Urban Jungle"
+                className="h-16 w-auto mx-auto"
               />
             </motion.div>
 
@@ -103,7 +103,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
               >
-                NIKE
+                URBAN JUNGLE
               </motion.h2>
               <motion.p 
                 className="text-white/70 text-sm font-montserrat tracking-widest"
@@ -111,7 +111,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.7 }}
               >
-                JUST DO IT
+                EXPLORE YOUR STYLE
               </motion.p>
             </motion.div>
 
@@ -124,7 +124,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
             >
               <div className="relative h-1 bg-white/20 rounded-full overflow-hidden">
                 <motion.div
-                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-nike-coral to-nike-amber rounded-full"
+                  className="absolute top-0 left-0 h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full"
                   style={{ width: `${progress}%` }}
                   initial={{ width: '0%' }}
                   animate={{ width: `${progress}%` }}
@@ -133,7 +133,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
                 
                 {/* Glowing effect on progress bar */}
                 <motion.div
-                  className="absolute top-0 left-0 h-full bg-nike-amber opacity-50 rounded-full blur-sm"
+                  className="absolute top-0 left-0 h-full bg-yellow-400 opacity-50 rounded-full blur-sm"
                   style={{ width: `${progress}%` }}
                   animate={{ 
                     opacity: [0.3, 0.7, 0.3],
@@ -169,7 +169,7 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
               {[0, 1, 2].map((index) => (
                 <motion.div
                   key={index}
-                  className="w-2 h-2 bg-nike-coral rounded-full"
+                  className="w-2 h-2 bg-yellow-500 rounded-full"
                   animate={{
                     y: [0, -10, 0],
                     opacity: [0.5, 1, 0.5]
@@ -190,4 +190,4 @@ const NikeLoadingScreen = ({ onLoadingComplete }) => {
   );
 };
 
-export default NikeLoadingScreen;
+export default UJLoadingScreen;

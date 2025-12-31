@@ -871,7 +871,8 @@ const Products = () => {
                 const getBrandColor = (brandName) => {
                   if (brandName === 'TOMMY HILFIGER') return 'bg-red-600';
                   if (brandName === 'CALVIN KLEIN') return 'bg-gray-900 border border-white';
-                  if (brandName === 'NIKE') return 'bg-orange-600';
+                  if (brandName === 'NIKE') return 'bg-yellow-600';
+                  if (brandName === 'URBAN JUNGLE' || brandName === 'URBAN') return 'bg-green-600';
                   if (brandName === 'ADIDAS') return 'bg-blue-600';
                   if (brandName === 'JORDAN') return 'bg-red-700';
                   if (brandName === 'CONVERSE') return 'bg-purple-600';

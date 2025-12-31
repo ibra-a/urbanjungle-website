@@ -1,49 +1,64 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { Search, Filter, Grid, List, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { apiService } from '../services/api';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Filter } from 'lucide-react';
+import { products as productsApi } from '../services/supabase';
 import LiveProductCard from '../components/LiveProductCard';
 import LoadingSkeleton from '../components/LoadingSkeleton';
+import ShopSidebar from '../components/ShopSidebar';
+import ShopHeader from '../components/ShopHeader';
+import Pagination from '../components/Pagination';
+import { groupProductsByName } from '../utils/productGrouping';
+
+// Subcategories removed - filtering now done via sidebar (Category and Brand)
+
+const ITEMS_PER_PAGE = 24;
 
 const Shop = () => {
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [viewMode, setViewMode] = useState('grid');
-  const [sortBy, setSortBy] = useState('name');
-  const [backendStatus, setBackendStatus] = useState('checking');
+  const fetchingRef = useRef(false); // Prevent duplicate calls (React.StrictMode)
+  
+  // Get search query from URL
+  const searchQuery = searchParams.get('search') || '';
+  
+  // Filter states
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [sortBy, setSortBy] = useState('position');
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  
+  // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(24);
-
-  const [ref, inView] = useInView({
-    threshold: 0.1,
-    triggerOnce: true
-  });
 
   const fetchProducts = async () => {
+    // Prevent duplicate calls (React.StrictMode double-invokes in dev)
+    if (fetchingRef.current) {
+      return;
+    }
+    
+    fetchingRef.current = true;
+    
     try {
       setLoading(true);
       setError(null);
-      setBackendStatus('connected');
       
-      // Fetch products directly (no health check needed - wastes time)
-      const response = await apiService.getProducts();
-      const fetchedProducts = response.products || [];
+      const { data, error: dbError } = await productsApi.getAll();
       
-      setProducts(fetchedProducts);
-      setFilteredProducts(fetchedProducts);
+      if (dbError) {
+        throw new Error(dbError.message || 'Failed to load products');
+      }
+      
+      const fetched = Array.isArray(data) ? data : [];
+      setProducts(fetched);
       
     } catch (err) {
-      console.error('Error fetching products:', err);
       setError(err.message);
-      setBackendStatus('error');
     } finally {
       setLoading(false);
+      fetchingRef.current = false;
     }
   };
 
@@ -51,326 +66,291 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
-  // Filter and search logic
+  // Reset to page 1 when filters change
   useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, selectedBrand, selectedColors, sortBy, searchQuery]);
+
+  // Generate brand-category combinations from products (moved before getFilteredProducts)
+  const brandCategoryMap = new Map();
+  
+  products.forEach(product => {
+    if (product.brand && product.item_group) {
+      // Extract category from item_group (e.g., "Footwear - Urban Jungle" -> "Footwear")
+      const category = product.item_group
+        .replace(' - Urban Jungle', '')
+        .replace('Urban Jungle', '')
+        .trim();
+      
+      if (category) {
+        const key = `${product.brand} - ${category}`;
+        if (!brandCategoryMap.has(key)) {
+          brandCategoryMap.set(key, {
+            brand: product.brand,
+            category: category,
+            count: 0
+          });
+        }
+        brandCategoryMap.get(key).count++;
+      }
+    }
+  });
+
+  // Convert to array and sort
+  const brands = [
+    { value: null, label: 'All Brands', count: products.length, brand: null, category: null },
+    ...Array.from(brandCategoryMap.values())
+      .sort((a, b) => {
+        // Sort by brand first, then category
+        if (a.brand !== b.brand) {
+          return a.brand.localeCompare(b.brand);
+        }
+        return a.category.localeCompare(b.category);
+      })
+      .map(item => ({
+        value: `${item.brand} - ${item.category}`,
+        label: `${item.brand} - ${item.category}`,
+        count: item.count,
+        brand: item.brand,
+        category: item.category
+      }))
+  ];
+
+  // Filter and sort products
+  const getFilteredProducts = () => {
     let filtered = [...products];
 
-    // Apply search filter
-    if (searchTerm) {
+    // Filter by category
+    if (selectedCategory) {
       filtered = filtered.filter(product =>
-        product.item_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.item_code?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.item_group?.toLowerCase().includes(searchTerm.toLowerCase())
+        product.item_group?.toLowerCase().includes(selectedCategory.toLowerCase()) ||
+        product.category?.toLowerCase().includes(selectedCategory.toLowerCase())
       );
     }
 
-    // Apply category filter
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(product =>
-        product.item_group?.toLowerCase().includes(selectedCategory.toLowerCase())
-      );
+    // Filter by brand-category combination
+    if (selectedBrand) {
+      // Find the brand-category combination
+      const brandCategory = brands.find(b => b.value === selectedBrand);
+      if (brandCategory) {
+        // If "All Brands" is selected (value is null), don't filter
+        if (brandCategory.value === null) {
+          // Don't filter - show all brands
+        } else if (brandCategory.brand && brandCategory.category) {
+          // Filter by specific brand-category combination
+          filtered = filtered.filter(product => {
+            const productBrand = product.brand?.toUpperCase();
+            const productCategory = product.item_group
+              ?.replace(' - Urban Jungle', '')
+              .replace('Urban Jungle', '')
+              .trim();
+            
+            return productBrand === brandCategory.brand.toUpperCase() &&
+                   productCategory === brandCategory.category;
+          });
+        }
+      }
     }
 
-    // Apply sorting
+    // Subcategory filtering removed - now handled by Category and Brand filters in sidebar
+
+    // Filter by colors
+    if (selectedColors.length > 0) {
+      filtered = filtered.filter(product => {
+        if (!product.colors || !Array.isArray(product.colors)) return false;
+        
+        return selectedColors.some(selectedColor => {
+          return product.colors.some(colorObj => {
+            const colorName = colorObj.color?.toLowerCase() || '';
+            return colorName.includes(selectedColor.toLowerCase()) ||
+                   selectedColor.toLowerCase() === 'navy' && colorName.includes('navy') ||
+                   selectedColor.toLowerCase() === 'grey' && colorName.includes('grey') ||
+                   selectedColor.toLowerCase() === 'grey' && colorName.includes('gray');
+          });
+        });
+      });
+    }
+
+    // Filter by search query (from URL)
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(product => {
+        const searchableText = [
+          product.product_name || product.item_name, // Support both field names
+          product.item_code,
+          product.brand,
+          product.category || product.item_group, // Support both field names
+          product.description
+        ].filter(Boolean).join(' ').toLowerCase();
+        
+        return searchableText.includes(query);
+      });
+    }
+
+    // GROUP products by base name to merge color variants (like Tommy CK)
+    filtered = groupProductsByName(filtered);
+
+    // Sort products
     filtered.sort((a, b) => {
       switch (sortBy) {
+        case 'price-asc':
+          return (a.price || 0) - (b.price || 0);
+        case 'price-desc':
+          return (b.price || 0) - (a.price || 0);
         case 'name':
-          return (a.item_name || '').localeCompare(b.item_name || '');
-        case 'price-low':
-          return (parseFloat(a.price) || 0) - (parseFloat(b.price) || 0);
-        case 'price-high':
-          return (parseFloat(b.price) || 0) - (parseFloat(a.price) || 0);
-        case 'stock':
-          return (b.stock_quantity || 0) - (a.stock_quantity || 0);
+          return ((a.product_name || a.item_name) || '').localeCompare((b.product_name || b.item_name) || '');
         default:
           return 0;
       }
     });
 
-    setFilteredProducts(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [products, searchTerm, selectedCategory, sortBy]);
-
-  // Extract unique categories from item_group
-  const categories = ['all', ...new Set(products.map(p => {
-    const group = p.item_group || '';
-    // Extract category part (e.g., "Footwear" from "Footwear - Urban Jungle")
-    return group.split(' - ')[0]?.toLowerCase();
-  }).filter(Boolean))];
-
-  const getStatusColor = () => {
-    switch (backendStatus) {
-      case 'connected': return 'bg-green-500';
-      case 'offline': return 'bg-red-500';
-      case 'error': return 'bg-red-500';
-      case 'checking': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
-    }
+    return filtered;
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+  const filteredProducts = getFilteredProducts();
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
+  
+  // Handle page change
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: "easeOut"
-      }
-    }
-  };
+  // Generate categories from products
+  const categories = [
+    { value: null, label: 'All', count: products.length },
+    ...Array.from(
+      new Set(
+        products
+          .map(p => p.item_group || p.category)
+          .filter(Boolean)
+      )
+    ).map(cat => ({
+      value: cat,
+      label: cat,
+      count: products.filter(p => 
+        p.item_group === cat || p.category === cat
+      ).length
+    }))
+  ];
+
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white" ref={ref}>
-      {/* Header */}
-      <motion.div 
-        className="bg-white shadow-sm border-b sticky top-0 z-10"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <div className="max-container py-6">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <Link 
-                to="/"
-                className="flex items-center gap-2 text-slate-gray hover:text-coral-red transition-colors"
-              >
-                <ArrowLeft size={20} />
-                <span className="font-montserrat">Back to Home</span>
-              </Link>
-              <div className="h-6 w-px bg-gray-300" />
-              <div className="flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
-                <span className="text-sm font-montserrat text-slate-gray">
-                  {backendStatus === 'connected' ? 'Connected to Supabase' : 'Connection Status'}
-                </span>
-              </div>
-            </div>
+    <div className="min-h-screen bg-white">
+      <main className="container mx-auto px-4 pt-8 pb-8">
+        {/* Search Results Banner */}
+        {searchQuery && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <p className="text-sm">
+              Showing results for <span className="font-bold">"{searchQuery}"</span> 
+              <span className="text-gray-600 ml-2">({filteredProducts.length} products found)</span>
+            </p>
           </div>
+        )}
 
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            <div>
-              <h1 className="text-4xl font-bold font-palanquin text-black mb-2">
-                Urban Jungle <span className="text-black">Collection</span>
-              </h1>
-              <p className="text-lg text-slate-600 font-montserrat font-medium">
-                {filteredProducts.length} products available
-              </p>
-            </div>
+        <ShopHeader
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
 
-            {/* Search and Filters */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-                <input
-                  type="text"
-                  placeholder="Search products..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-11 pr-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none font-montserrat text-black font-medium placeholder-gray-400 bg-white w-full sm:w-64"
-                />
-              </div>
-
-              {/* Category Filter */}
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none font-montserrat bg-white text-black font-medium"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
-                  </option>
-                ))}
-              </select>
-
-              {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-coral-red focus:border-transparent outline-none font-montserrat bg-white"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="stock">Stock Level</option>
-              </select>
-
-              {/* View Mode */}
-              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+        {/* Mobile Filter Button */}
                 <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 ${viewMode === 'grid' ? 'bg-coral-red text-white' : 'bg-white text-slate-gray'} transition-colors`}
+          onClick={() => setIsMobileFilterOpen(true)}
+          className="lg:hidden fixed bottom-6 right-6 z-40 bg-black text-white p-4 rounded-full shadow-lg flex items-center gap-2"
                 >
-                  <Grid size={18} />
+          <Filter className="h-5 w-5" />
+          <span className="font-medium">Filter</span>
                 </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 ${viewMode === 'list' ? 'bg-coral-red text-white' : 'bg-white text-slate-gray'} transition-colors`}
-                >
-                  <List size={18} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
-      {/* Content */}
-      <div className="max-container py-8">
+        <div className="flex gap-8">
+          <ShopSidebar
+            categories={categories}
+            brands={brands}
+            selectedCategory={selectedCategory}
+            selectedBrand={selectedBrand}
+            selectedColors={selectedColors}
+            onCategoryChange={setSelectedCategory}
+            onBrandChange={setSelectedBrand}
+            onColorChange={setSelectedColors}
+            isMobileOpen={isMobileFilterOpen}
+            onMobileClose={() => setIsMobileFilterOpen(false)}
+          />
+
+          <div className="flex-1">
         {loading && (
-          <motion.div 
-            className={`grid ${viewMode === 'grid' ? 'lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2' : 'grid-cols-1'} gap-6`}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-          >
-            {[...Array(8)].map((_, i) => (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {[...Array(9)].map((_, i) => (
               <div key={i}>
-                <LoadingSkeleton variant="card" className="h-80" />
+                    <LoadingSkeleton variant="card" className="h-96" />
                 <div className="mt-4 space-y-2">
                   <LoadingSkeleton variant="text" />
                   <LoadingSkeleton variant="title" />
                 </div>
               </div>
             ))}
-          </motion.div>
+              </div>
         )}
 
         {error && (
-          <motion.div 
-            className="bg-red-50 border border-red-200 rounded-lg p-8 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="text-red-600 font-semibold mb-2 text-lg">Connection Error</div>
+              <div className="bg-red-50 border border-red-200 rounded-lg p-8 text-center">
+                <div className="text-red-600 font-semibold mb-2">Error Loading Products</div>
             <div className="text-red-500 mb-4">{error}</div>
-            <motion.button
-              className="bg-red-500 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors font-montserrat"
+                <button
+                  className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition-colors"
               onClick={fetchProducts}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
             >
               Try Again
-            </motion.button>
-            <div className="text-xs text-gray-500 mt-4">
-              Make sure your Supabase configuration is correct in the .env file
+                </button>
             </div>
-          </motion.div>
         )}
 
         {!loading && !error && filteredProducts.length === 0 && (
-          <motion.div 
-            className="text-center py-16"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className="text-6xl mb-4">🔍</div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-2 font-palanquin">No products found</h3>
-            <p className="text-slate-gray font-montserrat">Try adjusting your search or filter criteria</p>
-          </motion.div>
+              <div className="text-center py-16">
+            <div className="text-6xl mb-4">📦</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">No products found</h3>
+                {products.length === 0 ? (
+                  <>
+                    <p className="text-gray-600 mb-4">No products in database yet.</p>
+                    <p className="text-sm text-gray-500 mb-6">
+                      Run the sync script to load products from ERPNext:
+                    </p>
+                    <code className="block bg-gray-100 p-3 rounded text-sm font-mono mb-4">
+                      node sync-urban-jungle-to-supabase.js
+                    </code>
+                  </>
+                ) : (
+                  <p className="text-gray-600">Try adjusting your filters</p>
+                )}
+              </div>
         )}
 
         {!loading && !error && filteredProducts.length > 0 && (
           <>
-            <motion.div 
-              className={`grid gap-6 ${
-                viewMode === 'grid' 
-                  ? 'lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1'
-                  : 'grid-cols-1 max-w-4xl mx-auto'
-              }`}
-              variants={containerVariants}
-              initial="hidden"
-              animate={inView ? "visible" : "hidden"}
-            >
-              {filteredProducts
-                .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                .map((product, index) => (
-                  <motion.div
-                    key={product.item_code}
-                    variants={itemVariants}
-                    custom={index}
-                    className={viewMode === 'list' ? 'w-full' : ''}
-                  >
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-3 sm:gap-6">
+                  {paginatedProducts.map((product) => (
                     <LiveProductCard 
+                      key={product.item_code || product.product_name || product.item_name}
                       product={product} 
-                      className={viewMode === 'list' ? 'flex-row items-center gap-6' : ''}
                     />
-                  </motion.div>
-                ))}
-            </motion.div>
-
-            {/* Pagination */}
-            {filteredProducts.length > itemsPerPage && (
-              <motion.div 
-                className="flex justify-center items-center gap-4 mt-12"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-              >
-                <button
-                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                  className="px-6 py-2.5 rounded-xl border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat font-medium transition-all duration-300 disabled:hover:bg-transparent disabled:hover:border-gray-200"
-                >
-                  Previous
-                </button>
-                
-                <div className="flex gap-2">
-                  {Array.from({ length: Math.ceil(filteredProducts.length / itemsPerPage) }, (_, i) => i + 1)
-                    .filter(page => {
-                      // Show first page, last page, current page, and pages around current
-                      const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-                      return page === 1 || page === totalPages || Math.abs(page - currentPage) <= 1;
-                    })
-                    .map((page, index, array) => {
-                      // Add ellipsis if there's a gap
-                      const prevPage = array[index - 1];
-                      const showEllipsis = prevPage && page - prevPage > 1;
-                      
-                      return (
-                        <React.Fragment key={page}>
-                          {showEllipsis && <span className="px-2 text-gray-400">...</span>}
-                          <button
-                            onClick={() => setCurrentPage(page)}
-                            className={`min-w-[44px] px-4 py-2.5 rounded-xl font-montserrat font-medium transition-all duration-300 ${
-                              currentPage === page
-                                ? 'bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-white shadow-lg shadow-orange-500/30'
-                                : 'border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-50'
-                            }`}
-                          >
-                            {page}
-                          </button>
-                        </React.Fragment>
-                      );
-                    })}
+                  ))}
                 </div>
 
-                <button
-                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredProducts.length / itemsPerPage)))}
-                  disabled={currentPage === Math.ceil(filteredProducts.length / itemsPerPage)}
-                  className="px-6 py-2.5 rounded-xl border-2 border-gray-200 hover:border-orange-400 hover:bg-orange-50 disabled:opacity-50 disabled:cursor-not-allowed font-montserrat font-medium transition-all duration-300 disabled:hover:bg-transparent disabled:hover:border-gray-200"
-                >
-                  Next
-                </button>
-              </motion.div>
+                {/* Pagination */}
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </>
             )}
-          </>
-        )}
+          </div>
       </div>
+      </main>
     </div>
   );
 };

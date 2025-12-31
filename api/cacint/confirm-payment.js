@@ -94,9 +94,18 @@ export default async function handler(req, res) {
       if (data.description && data.description.toLowerCase().includes('otp')) {
         errorMessage = 'Invalid or expired OTP';
       }
+
+      const errorCode = data?.details?.errorCode || data?.errorCode;
+      if (errorCode === 180) {
+        errorMessage = 'Insufficient funds in CAC Wallet. Please top up your wallet or use a different phone number.';
+        console.warn('⚠️ CAC Wallet balance insufficient (error 180)');
+      } else if (errorCode === 155) {
+        errorMessage = 'This phone number does not have an active CAC Wallet. Please call 6363 to activate CAC Wallet or use another number.';
+      }
       
       return res.status(response.status).json({ 
         error: errorMessage,
+        errorCode,
         details: data 
       });
     }

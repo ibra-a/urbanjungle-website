@@ -243,10 +243,10 @@ const Favorites = () => {
                   <div className={`absolute inset-0 rounded-full ${
                     !selectedSize || isAddingToBag
                       ? 'bg-gray-300'
-                      : 'bg-gradient-to-r from-orange-500 via-red-500 to-pink-500'
+                      : 'bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500'
                   }`}></div>
                   <div className={`absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300 ${
-                    selectedSize && !isAddingToBag ? 'bg-gradient-to-r from-orange-500 via-red-500 to-pink-500' : ''
+                    selectedSize && !isAddingToBag ? 'bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500' : ''
                   }`}></div>
                   <span className={`relative flex items-center justify-center gap-2 py-4 font-semibold text-lg tracking-wide ${
                     !selectedSize || isAddingToBag ? 'text-gray-500' : 'text-white'
@@ -356,7 +356,7 @@ const Favorites = () => {
           </h3>
           
           {favorite.price && (
-            <p className="text-base font-medium mb-4 bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent">
+            <p className="text-base font-medium mb-4 bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent">
               {parseFloat(favorite.price).toLocaleString('fr-DJ')} DJF
             </p>
           )}
@@ -372,8 +372,8 @@ const Favorites = () => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full"></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-full"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
               <span className="relative block py-3 text-white font-semibold text-sm tracking-wide">
                 Select Size
               </span>

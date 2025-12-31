@@ -248,7 +248,7 @@ const PopularProducts = () => {
               </p>
               <Link to="/men">
                 <motion.button
-                  className="bg-gradient-to-r from-nike-coral to-nike-amber text-white px-8 py-4 rounded-full font-montserrat font-bold text-lg hover:from-nike-amber hover:to-nike-coral transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-white px-8 py-4 rounded-full font-montserrat font-bold text-lg hover:from-yellow-400 hover:to-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -260,7 +260,7 @@ const PopularProducts = () => {
           
           {/* Floating "23" Badge */}
           <motion.div
-            className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-nike-coral/90 to-nike-amber/90 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg"
+            className="absolute top-8 right-8 w-16 h-16 bg-gradient-to-br from-yellow-500/90 to-yellow-400/90 backdrop-blur-sm rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg"
             animate={{ 
               y: [0, -10, 0],
               rotate: [0, 5, -5, 0]

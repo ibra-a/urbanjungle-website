@@ -13,9 +13,9 @@ const Button = ({
 }) => {
   const getButtonClasses = () => {
     if (variant === "secondary") {
-      return "nike-button-secondary";
+      return "uj-button-secondary";
     }
-    return "nike-button-primary";
+    return "uj-button-primary";
   };
 
   return (

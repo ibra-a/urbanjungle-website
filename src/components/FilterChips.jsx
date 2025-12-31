@@ -114,7 +114,7 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-nike-coral to-nike-amber text-white text-sm font-semibold rounded-full group"
+              className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-yellow-500 to-yellow-400 text-white text-sm font-semibold rounded-full group"
             >
               <span>{filter.display}</span>
               <button
@@ -135,7 +135,7 @@ const FilterChips = ({ filters, onRemoveFilter, onClearAll }) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClearAll}
-          className="text-sm font-semibold text-white/70 hover:text-nike-coral transition-colors underline decoration-dotted underline-offset-2"
+          className="text-sm font-semibold text-white/70 hover:text-yellow-500 transition-colors underline decoration-dotted underline-offset-2"
         >
           Clear All
         </motion.button>

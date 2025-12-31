@@ -66,8 +66,8 @@ const MegaMenu = () => {
             onMouseLeave={handleMouseLeave}
           >
             <div
-              className={`text-white hover:text-nike-coral transition-all duration-300 font-semibold text-sm py-4 uppercase tracking-wide relative group hover-underline-animation cursor-pointer ${
-                activeMenu === item.key ? 'text-nike-coral' : ''
+              className={`text-white hover:text-yellow-500 transition-all duration-300 font-semibold text-sm py-4 uppercase tracking-wide relative group hover-underline-animation cursor-pointer ${
+                activeMenu === item.key ? 'text-yellow-500' : ''
               }`}
             >
               {item.label}
@@ -93,17 +93,17 @@ const MegaMenu = () => {
             onMouseLeave={handleMouseLeave}
           >
             {/* Header accent */}
-            <div className="h-1 bg-gradient-to-r from-nike-coral to-orange-400"></div>
+            <div className="h-1 bg-gradient-to-r from-yellow-500 to-yellow-400"></div>
             
             <div className="py-3">
               {menuConfigs[activeMenu]?.map((item, index) => (
                 <Link
                   key={index}
                   to={item.href}
-                  className="group flex items-center px-6 py-3 text-gray-800 hover:bg-gradient-to-r hover:from-gray-50 hover:to-orange-50 hover:text-nike-coral transition-all duration-300 font-medium text-sm relative overflow-hidden"
+                  className="group flex items-center px-6 py-3 text-gray-800 hover:bg-gradient-to-r hover:from-gray-50 hover:to-yellow-50 hover:text-yellow-500 transition-all duration-300 font-medium text-sm relative overflow-hidden"
                 >
                   {/* Hover accent line */}
-                  <span className="absolute left-0 top-0 h-full w-1 bg-nike-coral transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></span>
+                  <span className="absolute left-0 top-0 h-full w-1 bg-yellow-500 transform scale-y-0 group-hover:scale-y-100 transition-transform duration-300 origin-top"></span>
                   
                   {/* Text with subtle animation */}
                   <span className="relative z-10 group-hover:translate-x-2 transition-transform duration-300 font-semibold uppercase tracking-wide">
@@ -112,7 +112,7 @@ const MegaMenu = () => {
                   
                   {/* Arrow indicator */}
                   <svg 
-                    className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300 text-nike-coral" 
+                    className="w-4 h-4 ml-auto opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300 text-yellow-500" 
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -124,13 +124,13 @@ const MegaMenu = () => {
             </div>
             
             {/* Bottom accent */}
-            <div className="h-0.5 bg-gradient-to-r from-transparent via-nike-coral to-transparent opacity-30"></div>
+            <div className="h-0.5 bg-gradient-to-r from-transparent via-yellow-500 to-transparent opacity-30"></div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Custom CSS for animated underline */}
-      <style jsx>{`
+      <style>{`
         .hover-underline-animation {
           position: relative;
           display: inline-block;
@@ -144,7 +144,7 @@ const MegaMenu = () => {
           height: 3px;
           bottom: 10px;
           left: 0;
-          background: linear-gradient(90deg, #FF6B35, #FF8C42);
+          background: linear-gradient(90deg, #FCD34D, #FBBF24);
           border-radius: 2px;
           transform-origin: bottom left;
           transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);

@@ -86,7 +86,7 @@ const FavoriteButton = ({
         window.dispatchEvent(new CustomEvent('favoritesUpdated'));
         
         if (!isFavorite) {
-          // Show Nike-style notification
+          // Show Urban Jungle-style notification
           const productName = product.item_name || 'Product';
           actions.showFavoriteNotification(`The product has been added to Favorites`, 'added');
           
@@ -146,8 +146,8 @@ const FavoriteButton = ({
         transition-all duration-300 ease-out
         ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}
         ${isFavorite 
-          ? 'bg-nike-coral text-white shadow-lg shadow-nike-coral/30 border-2 border-nike-coral' 
-          : 'bg-black/80 text-white border-2 border-black/80 hover:bg-nike-coral hover:border-nike-coral hover:shadow-lg hover:shadow-nike-coral/30'
+          ? 'bg-yellow-500 text-white shadow-lg shadow-nike-coral/30 border-2 border-yellow-500' 
+          : 'bg-black/80 text-white border-2 border-black/80 hover:bg-yellow-500 hover:border-yellow-500 hover:shadow-lg hover:shadow-nike-coral/30'
         }
         backdrop-blur-sm
         ${config.shadow}
@@ -183,7 +183,7 @@ const FavoriteButton = ({
       {/* Premium background glow effect */}
       {isFavorite && (
         <motion.div
-          className="absolute inset-0 bg-nike-coral rounded-full opacity-50 blur-md"
+          className="absolute inset-0 bg-yellow-500 rounded-full opacity-50 blur-md"
           initial={{ scale: 0 }}
           animate={{ scale: 1.3 }}
           transition={{ duration: 0.3 }}

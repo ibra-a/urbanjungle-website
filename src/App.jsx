@@ -1,29 +1,38 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { EcommerceNav } from "./components";
-import NikeLoadingScreen from './components/NikeLoadingScreen';
+import UJLoadingScreen from './components/NikeLoadingScreen';
 import FavoriteNotification from './components/FavoriteNotification';
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import Men from './pages/Men';
-import Women from './pages/Women';
-import Kids from './pages/Kids';
-import Brands from './pages/Brands';
-import ProductDetail from './pages/ProductDetail';
-import Checkout from './pages/Checkout';
-import CheckoutSuccess from './pages/CheckoutSuccess';
-import Favorites from './pages/Favorites';
-import Cart from './pages/Cart';
-import TestPage from './pages/TestPage';
+import ScrollToTop from './components/ScrollToTop';
 
-// Admin Pages
-import AdminRoute from './components/AdminRoute';
-import AdminLayout from './pages/admin/Layout';
-import AdminDashboard from './pages/admin/Dashboard';
-import AdminOrders from './pages/admin/Orders';
-import AdminProducts from './pages/admin/Products';
+// OPTIMIZATION: Lazy load pages for code splitting (like Tommy CK)
+const Home = lazy(() => import('./pages/Home'));
+const Shop = lazy(() => import('./pages/Shop'));
+const Men = lazy(() => import('./pages/Men'));
+const Women = lazy(() => import('./pages/Women'));
+const Kids = lazy(() => import('./pages/Kids'));
+const Brands = lazy(() => import('./pages/Brands'));
+const ProductDetail = lazy(() => import('./pages/ProductDetail'));
+const PaymentMethodSelection = lazy(() => import('./pages/PaymentMethodSelection'));
+const CheckoutWithCAC = lazy(() => import('./pages/CheckoutWithCAC'));
+const CheckoutCOD = lazy(() => import('./pages/CheckoutCOD'));
+const CheckoutSuccess = lazy(() => import('./pages/CheckoutSuccess'));
+const PaymentSuccess = lazy(() => import('./pages/PaymentSuccess'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
+const Favorites = lazy(() => import('./pages/Favorites'));
+const Cart = lazy(() => import('./pages/Cart'));
+const TestPage = lazy(() => import('./pages/TestPage'));
+const AuthCallback = lazy(() => import('./pages/AuthCallback'));
+
+// Admin Pages - Lazy loaded (admin routes are less frequently accessed)
+const AdminRoute = lazy(() => import('./components/AdminRoute'));
+const AdminLayout = lazy(() => import('./pages/admin/Layout'));
+const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
+const AdminOrders = lazy(() => import('./pages/admin/Orders'));
+const AdminProducts = lazy(() => import('./pages/admin/Products'));
 
 const AppContent = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
@@ -35,46 +44,55 @@ const AppContent = () => {
 
   // Only show loading on initial load AND when authLoading is true for login/register (not logout)
   if (isInitialLoading || (state.authLoading && !state.user)) {
-    return <NikeLoadingScreen onLoadingComplete={handleLoadingComplete} />;
+    return <UJLoadingScreen onLoadingComplete={handleLoadingComplete} />;
   }
 
   return (
     <main className='relative min-h-screen'>
-      <Routes>
-        {/* Admin Routes - No shop navbar */}
-        <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="products" element={<AdminProducts />} />
-        </Route>
-        
-        {/* Public routes - With shop navbar */}
-        <Route path="*" element={
-          <>
-            <FavoriteNotification 
-              isVisible={state.favoriteNotification.isVisible}
-              message={state.favoriteNotification.message}
-              type={state.favoriteNotification.type}
-              onClose={actions.hideFavoriteNotification}
-            />
-            <EcommerceNav />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/shop" element={<Shop />} />
-              <Route path="/men" element={<Men />} />
-              <Route path="/women" element={<Women />} />
-              <Route path="/kids" element={<Kids />} />
-              <Route path="/brands" element={<Brands />} />
-              <Route path="/product/:itemCode" element={<ProductDetail />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/checkout" element={<Checkout />} />
-              <Route path="/checkout/success" element={<CheckoutSuccess />} />
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/test" element={<TestPage />} />
-            </Routes>
-          </>
-        } />
-      </Routes>
+      <ScrollToTop />
+      <Suspense fallback={<UJLoadingScreen />}>
+        <Routes>
+          {/* Admin Routes - No shop navbar */}
+          <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
+            <Route index element={<AdminDashboard />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="products" element={<AdminProducts />} />
+          </Route>
+          
+          {/* Public routes - With shop navbar */}
+          <Route path="*" element={
+            <>
+              <FavoriteNotification 
+                isVisible={state.favoriteNotification.isVisible}
+                message={state.favoriteNotification.message}
+                type={state.favoriteNotification.type}
+                onClose={actions.hideFavoriteNotification}
+              />
+              <EcommerceNav />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/shop" element={<Shop />} />
+                <Route path="/men" element={<Men />} />
+                <Route path="/women" element={<Women />} />
+                <Route path="/kids" element={<Kids />} />
+                <Route path="/brands" element={<Brands />} />
+                <Route path="/product/:itemCode" element={<ProductDetail />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<PaymentMethodSelection />} />
+                <Route path="/checkout/cacpay" element={<CheckoutWithCAC />} />
+                <Route path="/checkout/cash-on-delivery" element={<CheckoutCOD />} />
+                <Route path="/checkout/success" element={<CheckoutSuccess />} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/test" element={<TestPage />} />
+              </Routes>
+            </>
+          } />
+        </Routes>
+      </Suspense>
       
       {/* Toast notifications */}
       <Toaster

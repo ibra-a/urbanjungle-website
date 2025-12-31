@@ -60,6 +60,11 @@ const CartDropdown = ({ isOpen, onClose }) => {
     navigate('/cart'); // Navigate to full cart page
   };
 
+  // Calculate cart total
+  const cartTotal = cart.items.reduce((sum, item) => {
+    return sum + (item.price * item.quantity);
+  }, 0);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -159,6 +164,14 @@ const CartDropdown = ({ isOpen, onClose }) => {
             {/* Footer with Actions */}
             {cart.items.length > 0 && (
               <div className="p-4 border-t border-gray-100 space-y-3">
+                {/* Subtotal Display */}
+                <div className="flex items-center justify-between py-2 mb-2">
+                  <span className="text-sm font-medium text-gray-700">Subtotal</span>
+                  <span className="text-sm font-semibold text-gray-900">
+                    {cartTotal.toLocaleString('fr-DJ')} DJF
+                  </span>
+                </div>
+                
                 <div className="grid grid-cols-2 gap-3">
                   <button
                     onClick={handleViewBag}

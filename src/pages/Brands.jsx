@@ -39,7 +39,7 @@ const Brands = () => {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-4">
-              Our <span className="text-nike-coral">Brands</span>
+              Our <span className="text-yellow-500">Brands</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Discover the world's most iconic brands, from athletic powerhouses to luxury lifestyle labels.
@@ -72,7 +72,7 @@ const Brands = () => {
                   whileHover={{ y: -5 }}
                 >
                   <div className="aspect-video bg-gray-200 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-br from-nike-coral/20 to-black/40 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/20 to-black/40 flex items-center justify-center">
                       <h3 className="text-3xl font-bold text-white">{brand.name}</h3>
                     </div>
                   </div>
@@ -80,7 +80,7 @@ const Brands = () => {
                     <p className="text-gray-600 mb-4">{brand.description}</p>
                     <Link
                       to={brand.href}
-                      className="inline-flex items-center gap-2 text-nike-coral font-semibold hover:gap-3 transition-all group"
+                      className="inline-flex items-center gap-2 text-yellow-500 font-semibold hover:gap-3 transition-all group"
                     >
                       Shop {brand.name}
                       <ArrowRight className="w-4 h-4" />
@@ -125,14 +125,14 @@ const Brands = () => {
                         to={item.href}
                         className="flex items-center justify-between group py-2 hover:bg-gray-50 rounded-lg px-3 -mx-3 transition-colors"
                       >
-                        <span className="font-medium text-gray-700 group-hover:text-nike-coral transition-colors">
+                        <span className="font-medium text-gray-700 group-hover:text-yellow-500 transition-colors">
                           {item.name}
                         </span>
                         <div className="flex items-center gap-2">
                           {item.featured && (
                             <Star className="w-4 h-4 text-yellow-500 fill-current" />
                           )}
-                          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-nike-coral transition-colors opacity-0 group-hover:opacity-100" />
+                          <ArrowRight className="w-4 h-4 text-gray-400 group-hover:text-yellow-500 transition-colors opacity-0 group-hover:opacity-100" />
                         </div>
                       </Link>
                     ))}
@@ -160,7 +160,7 @@ const Brands = () => {
             </p>
             <Link
               to="/contact"
-              className="inline-flex items-center gap-2 bg-nike-coral text-white px-8 py-4 rounded-lg font-semibold hover:bg-nike-coral/90 transition-colors"
+              className="inline-flex items-center gap-2 bg-yellow-500 text-white px-8 py-4 rounded-lg font-semibold hover:bg-yellow-500/90 transition-colors"
             >
               Contact Us
               <ArrowRight className="w-5 h-5" />

@@ -40,13 +40,13 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
                 </p>
               )}
               <p className="text-sm font-semibold text-slate-900">
-                ${item.standard_rate} × {item.quantity}
+                {item.standard_rate.toLocaleString('fr-DJ')} DJF × {item.quantity}
               </p>
             </div>
             
             <div className="text-right">
               <p className="font-semibold text-slate-900">
-                ${(item.standard_rate * item.quantity).toFixed(2)}
+                {(item.standard_rate * item.quantity).toLocaleString('fr-DJ')} DJF
               </p>
             </div>
           </motion.div>
@@ -57,25 +57,25 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
       <div className="border-t pt-4 space-y-3">
         <div className="flex justify-between text-sm">
           <span className="text-slate-gray">Subtotal</span>
-          <span className="font-semibold">${subtotal.toFixed(2)}</span>
+          <span className="font-semibold">{subtotal.toLocaleString('fr-DJ')} DJF</span>
         </div>
         
         <div className="flex justify-between text-sm">
           <span className="text-slate-gray">Shipping</span>
           <span className={`font-semibold ${shipping === 0 ? 'text-green-600' : ''}`}>
-            {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+            {shipping === 0 ? 'FREE' : `${shipping.toLocaleString('fr-DJ')} DJF`}
           </span>
         </div>
         
         <div className="flex justify-between text-sm">
           <span className="text-slate-gray">Tax</span>
-          <span className="font-semibold">${tax.toFixed(2)}</span>
+          <span className="font-semibold">{tax.toLocaleString('fr-DJ')} DJF</span>
         </div>
         
         <div className="border-t pt-3">
           <div className="flex justify-between">
             <span className="text-lg font-semibold text-slate-900">Total</span>
-            <span className="text-lg font-bold text-slate-900">${total.toFixed(2)}</span>
+            <span className="text-lg font-bold text-slate-900">{total.toLocaleString('fr-DJ')} DJF</span>
           </div>
         </div>
       </div>
@@ -90,7 +90,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
         >
           <p className="text-sm text-slate-gray text-center">
             Add <span className="font-semibold text-coral-red">
-              ${(200 - subtotal).toFixed(2)}
+              {(200 - subtotal).toLocaleString('fr-DJ')} DJF
             </span> more for free shipping
           </p>
         </motion.div>
@@ -100,7 +100,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
       <div className="mt-6 space-y-3">
         <div className="flex items-center gap-3 text-sm text-slate-gray">
           <Truck size={16} className="text-coral-red flex-shrink-0" />
-          <span>Free shipping on orders over $200</span>
+          <span>Free shipping on orders over 200,000 DJF</span>
         </div>
         
         <div className="flex items-center gap-3 text-sm text-slate-gray">
@@ -117,7 +117,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
       {/* Member Benefits */}
       <div className="mt-6 p-4 bg-gradient-to-r from-coral-red/10 to-amber/10 rounded-lg border border-coral-red/20">
         <div className="text-center">
-          <h3 className="font-semibold text-slate-900 mb-1">Nike Member Benefits</h3>
+          <h3 className="font-semibold text-slate-900 mb-1">Urban Jungle Member Benefits</h3>
           <p className="text-sm text-slate-gray">
             Free shipping, exclusive access & more
           </p>

@@ -78,7 +78,7 @@ const EnhancedFavoriteButton = ({ product, className = '' }) => {
         window.dispatchEvent(new CustomEvent('favoritesUpdated'));
         
         if (!isFavorite) {
-          // Show Nike-style notification
+          // Show Urban Jungle-style notification
           actions.showFavoriteNotification(`The product has been added to Favorites`, 'added');
           
           // Auto-hide notification after 5 seconds

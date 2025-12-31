@@ -21,8 +21,8 @@ const Orders = () => {
     try {
       setLoading(true);
       let query = supabase
-        .from('orders')
-        .select('*, order_items(*)')
+        .from('urban_orders')
+        .select('*')
         .order('created_at', { ascending: false });
       
       if (filter !== 'all') {
@@ -43,7 +43,7 @@ const Orders = () => {
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
       const { error } = await supabase
-        .from('orders')
+        .from('urban_orders')
         .update({ status: newStatus })
         .eq('id', orderId);
       

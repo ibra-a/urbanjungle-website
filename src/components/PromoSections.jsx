@@ -54,7 +54,7 @@ const PromoSections = () => {
           
           {/* Floating Badge */}
           <motion.div
-            className="absolute top-8 right-8 bg-gradient-to-r from-nike-coral to-nike-amber px-4 py-2 rounded-full text-white font-bold text-sm shadow-lg"
+            className="absolute top-8 right-8 bg-gradient-to-r from-yellow-500 to-yellow-400 px-4 py-2 rounded-full text-white font-bold text-sm shadow-lg"
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
           >

@@ -51,8 +51,8 @@ const Footer = () => {
             />
           </a>
           <p className='mt-6 text-base leading-7 font-montserrat text-white/70 sm:max-w-sm font-light'>
-            Get shoes ready for the new term at your nearest Nike store. Find
-            Your perfect Size In Store. Get Rewards
+            Discover the latest fashion trends at Urban Jungle. Find
+            Your perfect style. Get Rewards
           </p>
           
           {/* Updated Social Media Buttons - Chatbot Style */}

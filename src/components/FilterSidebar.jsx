@@ -63,13 +63,13 @@ const FilterSidebar = ({
         onClick={() => toggleSection(section)}
         className="flex items-center justify-between w-full text-left mb-4 group"
       >
-        <h3 className="text-lg font-palanquin font-semibold text-white group-hover:text-nike-coral transition-colors">
+        <h3 className="text-lg font-palanquin font-semibold text-white group-hover:text-yellow-500 transition-colors">
           {title}
         </h3>
         {expandedSections[section] ? (
-          <ChevronUp className="text-white/60 group-hover:text-nike-coral transition-colors" size={20} />
+          <ChevronUp className="text-white/60 group-hover:text-yellow-500 transition-colors" size={20} />
         ) : (
-          <ChevronDown className="text-white/60 group-hover:text-nike-coral transition-colors" size={20} />
+          <ChevronDown className="text-white/60 group-hover:text-yellow-500 transition-colors" size={20} />
         )}
       </button>
       
@@ -135,13 +135,13 @@ const FilterSidebar = ({
         <div className="flex items-center gap-3">
           <button
             onClick={clearAllFilters}
-            className="text-sm text-nike-coral hover:text-nike-amber transition-colors font-semibold"
+            className="text-sm text-yellow-500 hover:text-yellow-400 transition-colors font-semibold"
           >
             Clear All
           </button>
           <button
             onClick={onClose}
-            className="text-white/60 hover:text-nike-coral transition-colors lg:hidden"
+            className="text-white/60 hover:text-yellow-500 transition-colors lg:hidden"
           >
             <X size={20} />
           </button>
@@ -165,8 +165,8 @@ const FilterSidebar = ({
                 />
                 <div className={`w-4 h-4 rounded border-2 mr-3 flex items-center justify-center transition-all ${
                   filters.category === category.value
-                    ? 'bg-nike-coral border-nike-coral'
-                    : 'border-white/30 hover:border-nike-coral'
+                    ? 'bg-yellow-500 border-yellow-500'
+                    : 'border-white/30 hover:border-yellow-500'
                 }`}>
                   {filters.category === category.value && (
                     <div className="w-2 h-2 bg-white rounded-full" />
@@ -174,8 +174,8 @@ const FilterSidebar = ({
                 </div>
                 <span className={`font-montserrat transition-colors ${
                   filters.category === category.value
-                    ? 'text-nike-coral font-semibold'
-                    : 'text-white/80 group-hover:text-nike-coral'
+                    ? 'text-yellow-500 font-semibold'
+                    : 'text-white/80 group-hover:text-yellow-500'
                 }`}>
                   {category.label}
                 </span>
@@ -193,7 +193,7 @@ const FilterSidebar = ({
                 placeholder="Min"
                 value={filters.priceRange?.[0] || 0}
                 onChange={(e) => updateFilter('priceRange', [parseInt(e.target.value) || 0, filters.priceRange?.[1] || 2000])}
-                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-nike-coral focus:outline-none"
+                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-yellow-500 focus:outline-none"
               />
               <span className="text-white/60">-</span>
               <input
@@ -201,7 +201,7 @@ const FilterSidebar = ({
                 placeholder="Max"
                 value={filters.priceRange?.[1] || 2000}
                 onChange={(e) => updateFilter('priceRange', [filters.priceRange?.[0] || 0, parseInt(e.target.value) || 2000])}
-                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-nike-coral focus:outline-none"
+                className="flex-1 px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:border-yellow-500 focus:outline-none"
               />
             </div>
             <div className="text-sm text-white/60">
@@ -219,7 +219,7 @@ const FilterSidebar = ({
                 onClick={() => updateFilter('colors', color.value)}
                 className={`relative w-12 h-12 rounded-full border-2 transition-all hover:scale-110 ${
                   filters.colors?.includes(color.value)
-                    ? 'border-nike-coral shadow-lg shadow-nike-coral/30'
+                    ? 'border-yellow-500 shadow-lg shadow-nike-coral/30'
                     : 'border-white/30 hover:border-white/60'
                 }`}
                 style={{ backgroundColor: color.hex }}
@@ -249,8 +249,8 @@ const FilterSidebar = ({
                 onClick={() => updateFilter('sizes', size)}
                 className={`px-3 py-2 rounded-lg border text-sm font-semibold transition-all ${
                   filters.sizes?.includes(size)
-                    ? 'bg-nike-coral border-nike-coral text-white'
-                    : 'border-white/30 text-white/80 hover:border-nike-coral hover:text-nike-coral'
+                    ? 'bg-yellow-500 border-yellow-500 text-white'
+                    : 'border-white/30 text-white/80 hover:border-yellow-500 hover:text-yellow-500'
                 }`}
               >
                 {size}
@@ -272,8 +272,8 @@ const FilterSidebar = ({
                 />
                 <div className={`w-4 h-4 rounded border-2 mr-3 flex items-center justify-center transition-all ${
                   filters.offers?.includes(offer.value)
-                    ? 'bg-nike-coral border-nike-coral'
-                    : 'border-white/30 hover:border-nike-coral'
+                    ? 'bg-yellow-500 border-yellow-500'
+                    : 'border-white/30 hover:border-yellow-500'
                 }`}>
                   {filters.offers?.includes(offer.value) && (
                     <div className="w-2 h-2 bg-white rounded-sm" />
@@ -281,8 +281,8 @@ const FilterSidebar = ({
                 </div>
                 <span className={`font-montserrat transition-colors ${
                   filters.offers?.includes(offer.value)
-                    ? 'text-nike-coral font-semibold'
-                    : 'text-white/80 group-hover:text-nike-coral'
+                    ? 'text-yellow-500 font-semibold'
+                    : 'text-white/80 group-hover:text-yellow-500'
                 }`}>
                   {offer.label}
                 </span>
@@ -306,8 +306,8 @@ const FilterSidebar = ({
                 />
                 <div className={`w-4 h-4 rounded border-2 mr-3 flex items-center justify-center transition-all ${
                   filters.sport === sport.value
-                    ? 'bg-nike-coral border-nike-coral'
-                    : 'border-white/30 hover:border-nike-coral'
+                    ? 'bg-yellow-500 border-yellow-500'
+                    : 'border-white/30 hover:border-yellow-500'
                 }`}>
                   {filters.sport === sport.value && (
                     <div className="w-2 h-2 bg-white rounded-full" />
@@ -315,8 +315,8 @@ const FilterSidebar = ({
                 </div>
                 <span className={`font-montserrat transition-colors ${
                   filters.sport === sport.value
-                    ? 'text-nike-coral font-semibold'
-                    : 'text-white/80 group-hover:text-nike-coral'
+                    ? 'text-yellow-500 font-semibold'
+                    : 'text-white/80 group-hover:text-yellow-500'
                 }`}>
                   {sport.label}
                 </span>

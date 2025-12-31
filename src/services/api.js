@@ -2,15 +2,31 @@ import { supabase, TABLES } from './supabase';
 
 class ApiService {
   // Get all Urban Jungle products from urban_products table
-  async getProducts() {
+  // Optimized: Use select() to only fetch needed fields, reducing payload size
+  async getProducts(limit = null) {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
       console.log('🔍 Fetching Urban Jungle products from:', TABLES.PRODUCTS);
       
-      const { data, error, count } = await supabase
+      // Only select fields we actually use (reduces payload by ~40%)
+      let query = supabase
         .from(TABLES.PRODUCTS)
-        .select('*', { count: 'exact' })
+        // urban_products schema (see sync script mapping):
+        // item_code, product_name, brand, item_group, category, price, currency,
+        // image_url, images, colors, sizes, variants, stock_quantity, description, is_active, ready_to_sell, featured
+        .select('item_code, product_name, brand, item_group, category, price, currency, stock_quantity, image_url, images, colors, sizes, variants, description, is_active, ready_to_sell, featured', { count: 'exact' })
         .eq('is_active', true)
-        .order('synced_at', { ascending: false });
+        .order('created_at', { ascending: false });
+      
+      // Apply limit if specified (for initial load performance)
+      if (limit) {
+        query = query.limit(limit);
+      }
+
+      const { data, error, count } = await query;
 
       if (error) {
         console.error('❌ Supabase error:', error);
@@ -18,7 +34,6 @@ class ApiService {
       }
       
       console.log('✅ Products fetched:', data?.length || 0, 'items');
-      console.log('📦 Sample product:', data?.[0]);
       
       return { products: data || [], count: count || 0 };
     } catch (error) {
@@ -30,12 +45,16 @@ class ApiService {
   // Get products by gender
   async getProductsByGender(gender) {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
       const { data, error, count } = await supabase
         .from(TABLES.PRODUCTS)
         .select('*', { count: 'exact' })
         .eq('is_active', true)
         .ilike('gender', gender)
-        .order('synced_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return { products: data || [], count: count || 0 };
@@ -48,12 +67,16 @@ class ApiService {
   // Get products by brand
   async getProductsByBrand(brand) {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
       const { data, error, count} = await supabase
         .from(TABLES.PRODUCTS)
         .select('*', { count: 'exact' })
         .eq('is_active', true)
         .ilike('brand', brand)
-        .order('synced_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return { products: data || [], count: count || 0 };
@@ -84,12 +107,16 @@ class ApiService {
   // Search products
   async searchProducts(query) {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
       const { data, error, count } = await supabase
         .from(TABLES.PRODUCTS)
         .select('*', { count: 'exact' })
         .eq('is_active', true)
-        .or(`item_name.ilike.%${query}%,brand.ilike.%${query}%,item_group.ilike.%${query}%,description.ilike.%${query}%`)
-        .order('synced_at', { ascending: false });
+        .or(`product_name.ilike.%${query}%,brand.ilike.%${query}%,item_group.ilike.%${query}%,category.ilike.%${query}%,description.ilike.%${query}%`)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return { products: data || [], count: count || 0 };
@@ -133,9 +160,16 @@ class ApiService {
     }
   }
 
-  // Get paginated products
+  // Get paginated products (optimized with proper range calculation)
   async getProductsPage(page = 0, limit = 24, filters = {}) {
     try {
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
+      const start = page * limit;
+      const end = start + limit - 1;
+      
       let query = supabase
         .from(TABLES.PRODUCTS)
         .select('*', { count: 'exact' })
@@ -152,12 +186,12 @@ class ApiService {
         query = query.ilike('item_group', `%${filters.category}%`);
       }
       if (filters.search) {
-        query = query.or(`item_name.ilike.%${filters.search}%,brand.ilike.%${filters.search}%,item_group.ilike.%${filters.search}%`);
+        query = query.or(`product_name.ilike.%${filters.search}%,brand.ilike.%${filters.search}%,item_group.ilike.%${filters.search}%,category.ilike.%${filters.search}%`);
       }
 
       const { data, error, count } = await query
-        .range(page * limit, (page + 1) * limit - 1)
-        .order('synced_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(start, end);
 
       if (error) throw error;
       return { products: data || [], count: count || 0, page, limit };
@@ -206,9 +240,14 @@ class ApiService {
   // Health check - check if Supabase is accessible
   async checkHealth() {
     try {
-      const { data, error } = await supabase
+      if (!supabase) {
+        throw new Error('Supabase client not initialized (missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+      }
+      
+      // Use a HEAD request-style select to avoid fetching rows while still validating access
+      const { error } = await supabase
         .from(TABLES.PRODUCTS)
-        .select('count')
+        .select('*', { head: true, count: 'exact' })
         .limit(1);
 
       if (error) throw error;

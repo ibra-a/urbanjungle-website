@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState, memo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { ShoppingCart } from 'lucide-react';
@@ -8,28 +8,80 @@ import { useApp } from '../context/AppContext';
 import { star } from "../assets/icons";
 import { shoe8 } from "../assets/images";
 import FavoriteButton from './FavoriteButton';
+import { extractBaseName as getBaseProductName } from '../utils/productNameUtils';
 
-const LiveProductCard = ({ product, className = "" }) => {
+const LiveProductCard = memo(({ product, className = "" }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoading, setImageLoading] = useState(true);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   const { actions } = useApp();
   const navigate = useNavigate();
+  
+  // Get product images (could have multiple) - same as Tommy CK
+  const productImages = Array.isArray(product?.images) && product.images.length > 0
+    ? product.images
+    : product?.image_url
+    ? [product.image_url]
+    : product?.image
+    ? [product.image]
+    : [];
+
+  const hasMultipleImages = productImages.length > 1;
+  
+  // Display: use base name (before first "—") to avoid long variant strings in grids
+  // getBaseProductName is imported from '../utils/productNameUtils' (extractBaseName)
+  
+  const fullName = product?.product_name || product?.item_name || '';
+  const baseName = getBaseProductName(fullName) || fullName || 'Product';
+  
+  // Small subtitle for variant/colorway (best-effort)
+  const variantLabel =
+    (Array.isArray(product?.colors) && product.colors[0] && typeof product.colors[0] === 'object' && product.colors[0].color)
+      ? product.colors[0].color
+      : (() => {
+          const parts = fullName.split('—').map(p => p.trim()).filter(Boolean);
+          return parts.length > 1 ? parts.slice(1).join(' — ') : '';
+        })();
 
   const handleImageError = () => {
-    console.log(`Image error for ${product.item_code}`);
+    console.log(`Image error for ${baseName || product.item_code}`);
     setImageError(true);
     setImageLoading(false);
   };
 
   const handleImageLoad = () => {
-    console.log(`Image loaded for ${product.item_code}`);
+    console.log(`Image loaded for ${baseName || product.item_code}`);
     setImageLoading(false);
   };
 
   // Fallback image from assets
   const fallbackImage = shoe8;
+
+  // Get current image URL - same as Tommy CK
+  const getCurrentImageUrl = () => {
+    if (imageError) return null;
+    if (productImages.length > 0) {
+      return productImages[currentImageIndex] || productImages[0];
+    }
+    return null;
+  };
+
+  const primaryImageUrl = getCurrentImageUrl();
+
+  // Handle hover to show alternate image - same as Tommy CK
+  const handleMouseEnter = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(1);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (hasMultipleImages) {
+      setCurrentImageIndex(0);
+    }
+  };
 
   // Format price in Djiboutian Franc
   const formatPrice = (price) => {
@@ -53,9 +105,9 @@ const LiveProductCard = ({ product, className = "" }) => {
       // Create cart item from product data
       const cartItem = {
         id: product.item_code, // Using item_code as unique ID
-        name: product.item_name || 'Product',
+        name: product.product_name || product.item_name || 'Product',
         price: parseFloat(product.price) || 200,
-        image: imageError ? fallbackImage : (product.image_url || apiService.getImageUrl(product)),
+        image: imageError ? fallbackImage : (primaryImageUrl || fallbackImage),
         quantity: 1,
         size: 'M', // Default size for now, will be enhanced in product detail
         category: product.item_group || 'Product',
@@ -68,7 +120,7 @@ const LiveProductCard = ({ product, className = "" }) => {
       actions.addToCart(cartItem);
       
       // Show success toast
-      toast.success(`${product.item_name} added to cart!`, {
+      toast.success(`${product.product_name || product.item_name || 'Product'} added to cart!`, {
         icon: '🛒',
         style: {
           borderRadius: '10px',
@@ -87,41 +139,49 @@ const LiveProductCard = ({ product, className = "" }) => {
 
   return (
     <motion.div 
-      className={`flex flex-1 flex-col w-full max-sm:w-full group cursor-pointer ${className}`}
+      className={`group cursor-pointer ${className}`}
+      onClick={handleCardClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
-      onClick={handleCardClick}
     >
-      {/* Image container with white styling to match Men's page */}
-      <div className='relative overflow-hidden rounded-2xl bg-white p-8 modern-card border border-gray-200 shadow-sm'>
+      <div className="relative aspect-[3/4] bg-gray-100 mb-4 overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-shadow duration-300 flex items-center justify-center p-4">
         {imageLoading && !imageError && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-coral-red"></div>
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
           </div>
         )}
         
-        {!imageError && (product.image_url || product.item_code) ? (
-          <motion.img 
-            src={product.image_url || apiService.getImageUrl(product)}
-            alt={product.item_name}
-            className={`w-full h-[280px] object-contain transition-transform duration-500 group-hover:scale-110 ${
-              imageLoading ? 'opacity-0' : 'opacity-100'
-            }`}
-            whileHover={{ rotateY: 5 }}
-            transition={{ duration: 0.3 }}
-            onError={handleImageError}
-            onLoad={handleImageLoad}
-          />
-        ) : (
-          <motion.img 
-            src={fallbackImage}
-            alt={product.item_name}
-            className="w-full h-[280px] object-contain transition-transform duration-500 group-hover:scale-110 opacity-100"
-            whileHover={{ rotateY: 5 }}
-            transition={{ duration: 0.3 }}
-            onLoad={() => setImageLoading(false)}
-          />
-        )}
+        {/* Product Image with crossfade - same as Tommy CK */}
+        <AnimatePresence mode="wait">
+          {!imageError && primaryImageUrl ? (
+            <motion.img 
+              key={currentImageIndex}
+              src={primaryImageUrl}
+              alt={baseName}
+              className="w-full h-full object-contain"
+              loading="lazy"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: imageLoading ? 0 : 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onError={handleImageError}
+              onLoad={handleImageLoad}
+            />
+          ) : (
+            <motion.img 
+              src={fallbackImage}
+              alt={baseName}
+              className="w-full h-full object-contain"
+              loading="lazy"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              onLoad={() => setImageLoading(false)}
+            />
+          )}
+        </AnimatePresence>
         
         {/* Gradient overlay on hover */}
         <div className='absolute inset-0 bg-gradient-to-t from-gray-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl' />
@@ -180,8 +240,15 @@ const LiveProductCard = ({ product, className = "" }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
-          {product.item_name || 'Product'}
+          {baseName}
         </motion.h3>
+        
+        {/* Variant / colorway (optional) */}
+        {variantLabel && variantLabel.toLowerCase() !== baseName.toLowerCase() && (
+          <p className="text-sm text-black/50 font-montserrat">
+            {variantLabel}
+          </p>
+        )}
 
         {/* Category */}
         <motion.p 
@@ -200,7 +267,7 @@ const LiveProductCard = ({ product, className = "" }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <p className='font-montserrat font-bold text-2xl leading-normal bg-gradient-to-r from-orange-500 to-pink-500 bg-clip-text text-transparent'>
+          <p className='font-montserrat font-bold text-2xl leading-normal bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent'>
             {formatPrice(product.price)}
           </p>
           <p className='text-slate-600 text-sm font-montserrat font-medium'>
@@ -221,8 +288,8 @@ const LiveProductCard = ({ product, className = "" }) => {
             handleCardClick();
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
           <span className="relative block py-3 px-6 text-white font-semibold tracking-wide">
             View Details
           </span>
@@ -230,6 +297,8 @@ const LiveProductCard = ({ product, className = "" }) => {
       </div>
     </motion.div>
   );
-};
+});
+
+LiveProductCard.displayName = 'LiveProductCard';
 
 export default LiveProductCard; 

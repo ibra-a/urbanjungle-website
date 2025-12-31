@@ -19,7 +19,7 @@ const SuperQuality = () => {
           designed to bring you premium footwear at unbeatable prices.
         </p>
         <p className='mt-6 lg:max-w-lg info-text'>
-          Our promotional campaigns ensure you get the best value for the latest Nike collections
+          Our promotional campaigns ensure you get the best value for the latest collections from top brands
         </p>
         <div className='mt-11'>
           <Button label='View promotions' />
@@ -35,7 +35,7 @@ const SuperQuality = () => {
           <div className="mbappe-glow-border">
             <img
               src={mbappeNike}
-              alt='Nike Mbappe Collection'
+              alt='Urban Jungle Collection'
               width={570}
               height={522}
               className='mbappe-image'
