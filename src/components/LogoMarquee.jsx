@@ -6,18 +6,18 @@ const LogoMarquee = ({
 }) => {
   // Logo data array using paths to the logos in assets
   const logos = [
-    { src: '/src/assets/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/src/assets/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
-    { src: '/src/assets/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/src/assets/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
-    { src: '/src/assets/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/src/assets/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
-    { src: '/src/assets/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/src/assets/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
-    { src: '/src/assets/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/src/assets/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
-    { src: '/src/assets/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/src/assets/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' }
+    { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
+    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
+    { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
+    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
+    { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
+    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
+    { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
+    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
+    { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
+    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
+    { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
+    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' }
   ];
 
   // Create multiple duplicates for seamless infinite flow
