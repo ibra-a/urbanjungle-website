@@ -24,9 +24,9 @@ export const createOrder = async (orderData) => {
       customerName
     } = orderData;
 
-    // Urban Jungle uses urban_orders table
+    // Use unified orders table with store_name
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .insert([
         {
           customer_id: userId || null,
@@ -93,13 +93,14 @@ export const createCODOrder = async (orderData) => {
       customerName
     } = orderData;
 
-    console.log('💵 Creating COD order in urban_orders for Urban Jungle');
+    console.log('💵 Creating COD order in orders table for Urban Jungle');
 
     // Extract phone from shippingAddress
     const customerPhone = shippingAddress?.phone || shippingAddress?.phoneNumber;
 
+    // Use unified orders table with store_name
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .insert([
         {
           customer_id: userId || null,

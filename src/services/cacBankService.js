@@ -335,11 +335,12 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
       updateData.paid_at = new Date().toISOString();
     }
 
-    // Urban Jungle uses urban_orders table
+    // Use unified orders table with store_name filter
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .update(updateData)
       .eq('id', orderId)
+      .eq('store_name', 'Urban Jungle')
       .select()
       .single();
 
@@ -375,11 +376,12 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
  */
 export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
   try {
-    // Urban Jungle uses urban_orders table
+    // Use unified orders table with store_name filter
     const { data: order, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
       .eq('id', orderId)
+      .eq('store_name', 'Urban Jungle')
       .single();
 
     if (error) throw error;
@@ -463,10 +465,12 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
  */
 export const getOrder = async (orderId) => {
   try {
+    // Use unified orders table with store_name filter
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
       .eq('id', orderId)
+      .eq('store_name', 'Urban Jungle')
       .single();
 
     if (error) throw error;
@@ -491,10 +495,11 @@ export const getOrder = async (orderId) => {
  */
 export const getUserOrders = async (userId) => {
   try {
-    // Urban Jungle uses urban_orders table
+    // Use unified orders table with store_name filter
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
+      .eq('store_name', 'Urban Jungle')
       .or(`user_id.eq.${userId},customer_id.eq.${userId}`)
       .order('created_at', { ascending: false });
 

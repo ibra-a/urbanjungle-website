@@ -33,7 +33,8 @@ const Orders = () => {
       
       // Fetch orders from urban_orders table (Urban Jungle orders)
       const { data, error } = await supabase
-        .from('urban_orders')
+        .from('orders')
+        .eq('store_name', 'Urban Jungle')
         .select('*')
         .or(`customer_id.eq.${state.user.id},customer_email.eq.${state.user.email}`)
         .order('created_at', { ascending: false });
