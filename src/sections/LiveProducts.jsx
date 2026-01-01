@@ -116,7 +116,7 @@ const LiveProducts = () => {
   };
 
   return (
-    <section className='max-container mt-20' ref={ref}>
+    <section className='max-container mt-12 sm:mt-16 lg:mt-20 px-4 sm:px-6 lg:px-8' ref={ref}>
       <motion.div 
         className='flex flex-col justify-start gap-5'
         variants={containerVariants}
@@ -124,19 +124,19 @@ const LiveProducts = () => {
         animate={inView ? "visible" : "hidden"}
       >
         {/* Header with Status */}
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <motion.div variants={itemVariants}>
-            <h2 className='section-title font-palanquin font-bold'>
-              Live <span className='gradient-text'>ERPNext</span> Inventory
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <motion.div variants={itemVariants} className="flex-1">
+            <h2 className='text-3xl sm:text-4xl lg:text-5xl font-palanquin font-bold mb-3'>
+              Live <span className='chrome-yellow-gradient'>Products</span>
             </h2>
-            <p className='lg:max-w-lg mt-2 font-montserrat text-slate-gray leading-relaxed'>
+            <p className='lg:max-w-lg mt-2 font-montserrat text-white/70 leading-relaxed text-base sm:text-lg'>
               Real-time Urban Jungle inventory from our ERPNext system. Fresh data every 5 minutes.
             </p>
           </motion.div>
           
           {/* Status Indicator */}
           <motion.div 
-            className="flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-lg px-4 py-3 shadow-lg border border-white/20"
+            className="flex items-center gap-3 bg-white/80 backdrop-blur-sm rounded-lg px-3 sm:px-4 py-2 sm:py-3 shadow-lg border border-white/20 w-full sm:w-auto"
             variants={itemVariants}
           >
             <div className={`w-3 h-3 rounded-full ${getStatusColor()} ${backendStatus === 'connected' ? 'animate-pulse' : ''}`}></div>
@@ -219,11 +219,29 @@ const LiveProducts = () => {
             >
               <Link to="/shop">
                 <motion.button
-                  className="bg-yellow-500 text-white px-6 py-3 rounded-lg hover:bg-yellow-600 transition-colors font-medium"
-                  whileHover={{ scale: 1.05 }}
+                  className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-8 py-4 rounded-full font-montserrat font-semibold text-base sm:text-lg transition-all duration-300 relative overflow-hidden group"
+                  whileHover={{ 
+                    scale: 1.05, 
+                    boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)"
+                  }}
                   whileTap={{ scale: 0.95 }}
+                  style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
                 >
-                  View All {products.length} Products
+                  <span className='relative z-10'>View All {products.length} Products</span>
+                  <motion.div
+                    className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100'
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      backgroundSize: '200% 100%'
+                    }}
+                  />
                 </motion.button>
               </Link>
             </motion.div>

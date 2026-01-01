@@ -23,8 +23,8 @@ const PopularProductCard = ({ imgURL, name, price, product }) => {
       transition={{ duration: 0.3 }}
       onClick={handleCardClick}
     >
-      {/* Image container with modern styling */}
-      <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 modern-card'>
+      {/* Image container with modern styling and yellow glow on hover */}
+      <div className='relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-50 to-gray-100 p-8 modern-card border-2 border-transparent group-hover:border-yellow-500/30 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-yellow-500/20'>
         <motion.img 
           src={imgURL} 
           alt={name} 

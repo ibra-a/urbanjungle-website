@@ -17,6 +17,7 @@ import AuthModal from './AuthModal'
 import FavoriteButton from './FavoriteButton'
 import EnhancedFavoriteButton from './EnhancedFavoriteButton'
 import MegaMenu from './MegaMenu'
+import ScrollToTopButton from './ScrollToTopButton'
 
 export {
     Button,
@@ -39,5 +40,6 @@ export {
     AuthModal,
     FavoriteButton,
     EnhancedFavoriteButton,
-    MegaMenu
+    MegaMenu,
+    ScrollToTopButton
 }

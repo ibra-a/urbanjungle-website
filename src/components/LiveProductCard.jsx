@@ -146,7 +146,7 @@ const LiveProductCard = memo(({ product, className = "" }) => {
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="relative aspect-[3/4] bg-gray-100 mb-4 overflow-hidden rounded-lg shadow-md group-hover:shadow-xl transition-shadow duration-300 flex items-center justify-center p-4">
+      <div className="relative aspect-[3/4] bg-gray-100 mb-4 overflow-hidden rounded-lg shadow-md group-hover:shadow-xl group-hover:shadow-yellow-500/20 transition-all duration-300 flex items-center justify-center p-4 border-2 border-transparent group-hover:border-yellow-500/30">
         {imageLoading && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
@@ -210,22 +210,25 @@ const LiveProductCard = memo(({ product, className = "" }) => {
           <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
         </div>
 
-        {/* Cart Icon Button - appears on hover */}
+        {/* Cart Icon Button - appears on hover with yellow glow */}
         <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <motion.button
-            className={`bg-coral-red text-white p-3 rounded-full transition-all duration-300 hover:bg-coral-red/90 flex items-center justify-center ${
-              (product.stock_quantity || 0) === 0 ? 'opacity-50 cursor-not-allowed' : ''
+            className={`bg-gradient-to-r from-yellow-500 to-yellow-400 text-black p-3 rounded-full transition-all duration-300 flex items-center justify-center shadow-lg ${
+              (product.stock_quantity || 0) === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:shadow-yellow-500/50'
             }`}
-            whileHover={{ scale: (product.stock_quantity || 0) === 0 ? 1 : 1.1 }}
+            whileHover={{ 
+              scale: (product.stock_quantity || 0) === 0 ? 1 : 1.1,
+              boxShadow: (product.stock_quantity || 0) === 0 ? 'none' : "0 8px 20px rgba(251, 191, 36, 0.5)"
+            }}
             whileTap={{ scale: (product.stock_quantity || 0) === 0 ? 1 : 0.9 }}
             onClick={handleAddToCart}
             disabled={isAddingToCart || (product.stock_quantity || 0) === 0}
             title={(product.stock_quantity || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
           >
             {isAddingToCart ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
             ) : (
-              <ShoppingCart size={20} />
+              <ShoppingCart size={20} className="text-black" />
             )}
           </motion.button>
         </div>

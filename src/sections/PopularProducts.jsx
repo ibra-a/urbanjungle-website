@@ -132,7 +132,7 @@ const PopularProducts = () => {
 
   return (
     <>
-      <section id='products' className='max-container max-sm:mt-12'>
+      <section id='products' className='max-container max-sm:mt-12 px-4 sm:px-6 lg:px-8'>
         {/* Section Title */}
         <motion.div
           className='text-center mb-8 md:mb-12'
@@ -141,10 +141,10 @@ const PopularProducts = () => {
           transition={{ duration: 0.6 }}
           viewport={{ once: true }}
         >
-          <h2 className='font-palanquin text-3xl sm:text-4xl lg:text-5xl font-bold mb-3'>
-            Featured <span className='text-yellow-500'>Brands</span>
+          <h2 className='font-palanquin text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 text-white'>
+            Featured <span className='chrome-yellow-gradient'>Brands</span>
           </h2>
-          <p className='text-slate-gray text-base sm:text-lg max-w-2xl mx-auto font-montserrat'>
+          <p className='text-white/70 text-base sm:text-lg max-w-2xl mx-auto font-montserrat'>
             Discover premium collections from the world's most iconic athletic brands
           </p>
         </motion.div>
@@ -272,7 +272,7 @@ const PopularProducts = () => {
 
       {/* Jordan Video Section - Full Width */}
       <motion.section 
-        className="w-full max-container mt-8"
+        className="w-full max-container mt-8 px-4 sm:px-6 lg:px-8"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}

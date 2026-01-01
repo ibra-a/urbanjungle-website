@@ -32,7 +32,11 @@ dist-ssr
 .vercel
 
 # Large video files (host externally)
-*.mp4
+# Allow compressed videos in assets folder
+!src/assets/videos/*.mp4
+# But exclude very large uncompressed originals
+src/assets/videos/*-original.mp4
+src/assets/videos/*-backup.mp4
 *.mov
 *.avi
 
