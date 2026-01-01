@@ -193,3 +193,6 @@ Your Urban Jungle website is now fully integrated with Supabase! The application
 **Server**: Running on http://localhost:5173/
 
 
+
+
+

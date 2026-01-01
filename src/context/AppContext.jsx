@@ -252,13 +252,13 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Check authentication on mount
+  // Check authentication on mount - Supabase (like Tommy CK)
   useEffect(() => {
     const checkAuth = async () => {
       dispatch({ type: actionTypes.SET_AUTH_LOADING, payload: true });
       
       try {
-        const { data: { user }, error } = await backend.supabase.auth.getUser();
+        const { user, error } = await backend.auth.getCurrentUser();
         if (user && !error) {
           dispatch({ type: actionTypes.SET_USER, payload: user });
           await syncFavorites(user.id);
@@ -273,8 +273,8 @@ export const AppProvider = ({ children }) => {
 
     checkAuth();
 
-    // Listen for auth changes
-    const { data: { subscription } } = backend.supabase.auth.onAuthStateChange(
+    // Listen for auth changes (social login redirects) - like Tommy CK
+    const { data: authListener } = backend.supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (event === 'SIGNED_IN' && session?.user) {
           dispatch({ type: actionTypes.SET_USER, payload: session.user });
@@ -285,7 +285,9 @@ export const AppProvider = ({ children }) => {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      authListener?.subscription?.unsubscribe();
+    };
   }, []);
 
   // Load cart from localStorage on mount
@@ -344,11 +346,37 @@ export const AppProvider = ({ children }) => {
         const { data, error } = await backend.auth.signUp(
           userData.email, 
           userData.password, 
-          userData
+          {
+            first_name: userData.first_name,
+            last_name: userData.last_name
+          }
         );
         
         if (data?.user && !error) {
           dispatch({ type: actionTypes.SET_USER, payload: data.user });
+          
+          // Create/update profile with additional data (like Tommy CK)
+          if (data.user.id) {
+            await backend.supabase
+              .from('profiles')
+              .upsert({
+                id: data.user.id,
+                first_name: userData.first_name,
+                last_name: userData.last_name,
+                phone: userData.phone || null,
+                nationality: userData.nationality || null
+              }, {
+                onConflict: 'id'
+              });
+          }
+          
+          // Auto-import addresses from guest orders (if any) - run in background (like Tommy CK)
+          if (data.user.email) {
+            import('../services/addressService').then(({ autoImportAddressesOnSignup }) => {
+              autoImportAddressesOnSignup(data.user.id, data.user.email);
+            }).catch(err => console.error('Error importing addresses:', err));
+          }
+          
           return { success: true, data: { user: data.user } };
         } else {
           dispatch({ type: actionTypes.SET_AUTH_LOADING, payload: false });

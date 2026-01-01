@@ -106,9 +106,18 @@ const EcommerceNav = () => {
     setIsAuthModalOpen(true);
   };
 
-  const handleLogout = () => {
-    actions.logout();
-    setIsUserMenuOpen(false);
+  const handleLogout = async () => {
+    try {
+      const result = await actions.logout();
+      if (result?.success) {
+        setIsUserMenuOpen(false);
+        navigate('/');
+      } else {
+        console.error('Logout failed:', result?.error);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const toggleMobileSubmenu = (menuKey) => {

@@ -34,6 +34,17 @@ const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
 const AdminOrders = lazy(() => import('./pages/admin/Orders'));
 const AdminProducts = lazy(() => import('./pages/admin/Products'));
 
+// Driver Pages - Lazy loaded
+const DriverLogin = lazy(() => import('./pages/driver/Login'));
+const DriverDashboard = lazy(() => import('./pages/driver/Dashboard'));
+
+// Account Pages - Lazy loaded
+const Account = lazy(() => import('./pages/Account'));
+const AccountOrders = lazy(() => import('./pages/account/Orders'));
+const AccountAddresses = lazy(() => import('./pages/account/Addresses'));
+const AccountAddressForm = lazy(() => import('./pages/account/AddressForm'));
+const AccountSettings = lazy(() => import('./pages/account/Settings'));
+
 const AppContent = () => {
   const [isInitialLoading, setIsInitialLoading] = useState(true);
   const { state, actions } = useApp();
@@ -52,6 +63,10 @@ const AppContent = () => {
       <ScrollToTop />
       <Suspense fallback={<UJLoadingScreen />}>
         <Routes>
+          {/* Driver Routes - No shop navbar */}
+          <Route path="/driver/login" element={<DriverLogin />} />
+          <Route path="/driver/dashboard" element={<DriverDashboard />} />
+          
           {/* Admin Routes - No shop navbar */}
           <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
             <Route index element={<AdminDashboard />} />
@@ -87,6 +102,12 @@ const AppContent = () => {
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/account" element={<Account />} />
+                <Route path="/account/orders" element={<AccountOrders />} />
+                <Route path="/account/addresses" element={<AccountAddresses />} />
+                <Route path="/account/addresses/new" element={<AccountAddressForm />} />
+                <Route path="/account/addresses/edit" element={<AccountAddressForm />} />
+                <Route path="/account/settings" element={<AccountSettings />} />
                 <Route path="/test" element={<TestPage />} />
               </Routes>
             </>

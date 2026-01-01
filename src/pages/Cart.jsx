@@ -383,21 +383,6 @@ const Cart = () => {
                 </div>
               </div>
 
-              {/* Payment Options */}
-              <div className="mb-6">
-                <p className="text-sm text-gray-600 mb-3">
-                  Split up to 4 equal payments of <span className="font-medium">{(cart.total / 4).toLocaleString('fr-DJ')} DJF</span> with
-                </p>
-                <div className="flex space-x-2">
-                  <div className="bg-green-100 border border-green-300 rounded-md px-3 py-2 flex-1 text-center">
-                    <span className="text-green-800 font-medium text-sm">tabby</span>
-                  </div>
-                  <div className="bg-yellow-100 border border-yellow-300 rounded-md px-3 py-2 flex-1 text-center">
-                    <span className="text-yellow-800 font-medium text-sm">tamara</span>
-                  </div>
-                </div>
-              </div>
-
               {/* Checkout Button */}
               <motion.button
                 onClick={handleCheckout}

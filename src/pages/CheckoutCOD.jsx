@@ -5,6 +5,7 @@ import { ArrowLeft, Lock, Banknote, Loader2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
 import { supabase, orders } from '../services/supabase';
+import NationalityInput from '../components/NationalityInput';
 
 const CheckoutCOD = () => {
   const navigate = useNavigate();
@@ -22,7 +23,8 @@ const CheckoutCOD = () => {
     city: '',
     region: '',
     country: 'Djibouti',
-    zipCode: ''
+    zipCode: '',
+    nationality: ''
   });
 
   // Redirect if cart is empty
@@ -55,11 +57,12 @@ const CheckoutCOD = () => {
     setIsProcessing(true);
 
     try {
-      // Create order in Supabase
+      // Create order in unified orders table
       const { data: order, error } = await supabase
-        .from('urban_orders')
+        .from('orders')
         .insert({
           user_id: user?.id,
+          customer_id: user?.id,
           customer_name: `${shippingData.firstName} ${shippingData.lastName}`,
           customer_email: shippingData.email,
           customer_phone: shippingData.phone,
@@ -74,6 +77,7 @@ const CheckoutCOD = () => {
             image: item.image
           })),
           total_amount: total,
+          currency: 'DJF',
           payment_method: 'Cash on Delivery',
           payment_status: 'pending', // Will be paid on delivery
           status: 'confirmed',
@@ -243,6 +247,16 @@ const CheckoutCOD = () => {
                       className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-900 mb-2">Nationality (Optional)</label>
+                  <NationalityInput
+                    value={shippingData.nationality}
+                    onChange={(value) => setShippingData({ ...shippingData, nationality: value })}
+                    placeholder="Select Nationality"
+                    className="w-full"
+                  />
                 </div>
 
                 <button

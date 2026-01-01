@@ -168,3 +168,6 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 
 **No more duplicate tables. No more missing data. Just clean, efficient product management!** 🚀
 
+
+
+

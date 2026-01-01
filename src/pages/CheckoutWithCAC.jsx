@@ -7,6 +7,7 @@ import * as cacBankService from '../services/cacBankService';
 import toast from 'react-hot-toast';
 import PaymentProcessing from '../components/PaymentProcessing';
 import cacLogoVertical from '../assets/logos/For-White-BG-Vertical.png';
+import NationalityInput from '../components/NationalityInput';
 
 const CheckoutWithCAC = () => {
   const navigate = useNavigate();
@@ -29,7 +30,8 @@ const CheckoutWithCAC = () => {
     city: '',
     region: '',
     country: 'Djibouti',
-    zipCode: ''
+    zipCode: '',
+    nationality: ''
   });
 
   // Payment state
@@ -397,6 +399,16 @@ const CheckoutWithCAC = () => {
                         className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
                       />
                     </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-900 mb-2">Nationality (Optional)</label>
+                    <NationalityInput
+                      value={shippingData.nationality}
+                      onChange={(value) => setShippingData({ ...shippingData, nationality: value })}
+                      placeholder="Select Nationality"
+                      className="w-full"
+                    />
                   </div>
 
                   <button

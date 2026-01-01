@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { Eye, RefreshCw, X, AlertCircle, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import DeliveryManager from '../../components/admin/DeliveryManager';
 
 const ITEMS_PER_PAGE = 10;
 
@@ -9,22 +10,29 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
+  const [storeFilter, setStoreFilter] = useState('all'); // 'all', 'Tommy CK', 'Urban Jungle'
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [syncing, setSyncing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   
   useEffect(() => {
     loadOrders();
-  }, [filter]);
+  }, [filter, storeFilter]);
   
   const loadOrders = async () => {
     try {
       setLoading(true);
       let query = supabase
-        .from('urban_orders')
+        .from('orders')
         .select('*')
         .order('created_at', { ascending: false });
       
+      // Store filter
+      if (storeFilter !== 'all') {
+        query = query.eq('store_name', storeFilter);
+      }
+      
+      // Status filter
       if (filter !== 'all') {
         query = query.eq('status', filter);
       }
@@ -42,9 +50,18 @@ const Orders = () => {
   
   const updateOrderStatus = async (orderId, newStatus) => {
     try {
+      // Update both status and delivery_status for consistency
       const { error } = await supabase
-        .from('urban_orders')
-        .update({ status: newStatus })
+        .from('orders')
+        .update({ 
+          status: newStatus,
+          delivery_status: newStatus === 'pending' ? 'pending' : 
+                         newStatus === 'processing' ? 'ready' :
+                         newStatus === 'shipped' ? 'out_for_delivery' :
+                         newStatus === 'completed' ? 'delivered' :
+                         newStatus === 'cancelled' ? 'cancelled' : 
+                         undefined
+        })
         .eq('id', orderId);
       
       if (error) throw error;
@@ -59,10 +76,20 @@ const Orders = () => {
   const syncToERP = async (orderId) => {
     try {
       setSyncing(orderId);
+      // Get order to determine store
+      const { data: order } = await supabase
+        .from('orders')
+        .select('store_name')
+        .eq('id', orderId)
+        .single();
+      
       const response = await fetch('/api/sync-order-to-erp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderId })
+        body: JSON.stringify({ 
+          orderId,
+          storeType: order?.store_name === 'Urban Jungle' ? 'urban' : 'gab'
+        })
       });
       
       const result = await response.json();
@@ -117,7 +144,25 @@ const Orders = () => {
         </button>
       </div>
       
-      {/* Filters */}
+      {/* Store Filter */}
+      <div className="flex gap-2 mb-4 flex-wrap">
+        <span className="text-gray-400 text-sm self-center mr-2">Store:</span>
+        {['all', 'Tommy CK', 'Urban Jungle'].map(store => (
+          <button
+            key={store}
+            onClick={() => setStoreFilter(store)}
+            className={`px-4 py-2 rounded font-medium transition-colors ${
+              storeFilter === store 
+                ? 'bg-white text-black' 
+                : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
+            }`}
+          >
+            {store === 'all' ? 'All Stores' : store}
+          </button>
+        ))}
+      </div>
+      
+      {/* Status Filters */}
       <div className="flex gap-2 mb-6 flex-wrap">
         {filterOptions.map(option => (
           <button
@@ -151,12 +196,14 @@ const Orders = () => {
               <table className="w-full">
                 <thead className="bg-gray-900/50 border-b border-gray-700">
                   <tr>
+                    <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Store</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Order ID</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Customer</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Items</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Total</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Status</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">ERP Status</th>
+                    <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Delivery</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Date</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Actions</th>
                   </tr>
@@ -164,6 +211,15 @@ const Orders = () => {
                 <tbody className="divide-y divide-gray-700">
                   {paginatedOrders.map(order => (
                   <tr key={order.id} className="hover:bg-gray-700/50">
+                    <td className="p-4">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded ${
+                        order.store_name === 'Urban Jungle'
+                          ? 'bg-green-900/50 text-green-300 border border-green-700'
+                          : 'bg-red-900/50 text-red-300 border border-red-700'
+                      }`}>
+                        {order.store_name || 'Tommy CK'}
+                      </span>
+                    </td>
                     <td className="p-4">
                       <div className="font-medium text-sm text-white">#{order.id.slice(0, 8)}</div>
                     </td>
@@ -173,7 +229,9 @@ const Orders = () => {
                         <div className="text-xs text-gray-400">{order.customer_email || 'N/A'}</div>
                       </div>
                     </td>
-                    <td className="p-4 text-sm text-gray-300">{order.order_items?.length || 0} items</td>
+                    <td className="p-4 text-sm text-gray-300">
+                      {Array.isArray(order.items) ? order.items.length : (order.order_items?.length || 0)} items
+                    </td>
                     <td className="p-4">
                       <div className="font-medium text-sm text-white">{order.total_amount?.toLocaleString() || 0} DJF</div>
                     </td>
@@ -191,7 +249,7 @@ const Orders = () => {
                       </select>
                     </td>
                     <td className="p-4">
-                      {order.synced_to_erp ? (
+                      {order.synced_to_erp || order.erp_synced ? (
                         <div className="flex items-center gap-1 text-green-400">
                           <CheckCircle className="w-4 h-4" />
                           <span className="text-xs">Synced</span>
@@ -199,6 +257,9 @@ const Orders = () => {
                       ) : (
                         <span className="text-xs text-gray-500">Not synced</span>
                       )}
+                    </td>
+                    <td className="p-4">
+                      <DeliveryManager order={order} onUpdate={loadOrders} />
                     </td>
                     <td className="p-4 text-sm text-gray-400">
                       {new Date(order.created_at).toLocaleDateString()}
@@ -214,9 +275,9 @@ const Orders = () => {
                         </button>
                         <button 
                           onClick={() => syncToERP(order.id)}
-                          disabled={syncing === order.id || order.synced_to_erp}
+                          disabled={syncing === order.id || order.synced_to_erp || order.erp_synced}
                           className="p-2 hover:bg-gray-600 rounded transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-gray-300"
-                          title={order.synced_to_erp ? 'Already synced' : 'Sync to ERP'}
+                          title={order.synced_to_erp || order.erp_synced ? 'Already synced' : 'Sync to ERP'}
                         >
                           <RefreshCw className={`w-4 h-4 ${syncing === order.id ? 'animate-spin' : ''}`} />
                         </button>
@@ -321,7 +382,7 @@ const Orders = () => {
               <div>
                 <h3 className="font-semibold text-gray-900 mb-2">Order Items</h3>
                 <div className="border border-gray-200 rounded-lg overflow-hidden">
-                  {selectedOrder.order_items?.map((item, idx) => (
+                  {(selectedOrder.items || selectedOrder.order_items || []).map((item, idx) => (
                     <div key={idx} className="flex justify-between items-center py-3 px-4 border-b border-gray-200 last:border-0">
                       <div className="flex-1">
                         <p className="font-medium text-sm">{item.product_name || item.item_name}</p>
@@ -345,7 +406,7 @@ const Orders = () => {
             </div>
             
             <div className="flex gap-3 mt-6">
-              {!selectedOrder.synced_to_erp && (
+              {!selectedOrder.synced_to_erp && !selectedOrder.erp_synced && (
                 <button 
                   onClick={() => {
                     syncToERP(selectedOrder.id);

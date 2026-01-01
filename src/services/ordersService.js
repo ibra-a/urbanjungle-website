@@ -35,9 +35,15 @@ class OrdersService {
         payment_status: 'pending'
       };
 
+      // Use unified orders table with store_name
+      const orderWithStore = {
+        ...orderPayload,
+        store_name: 'Urban Jungle' // Ensure store_name is set
+      };
+      
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
-        .insert([orderPayload])
+        .from('orders')
+        .insert([orderWithStore])
         .select()
         .single();
 
@@ -58,9 +64,10 @@ class OrdersService {
       }
 
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .select('*')
-        .eq('user_id', userId)
+        .or(`user_id.eq.${userId},customer_id.eq.${userId}`)
+        .eq('store_name', 'Urban Jungle')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -76,9 +83,10 @@ class OrdersService {
   async getOrderById(orderId) {
     try {
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .select('*')
         .eq('id', orderId)
+        .eq('store_name', 'Urban Jungle')
         .single();
 
       if (error) throw error;
@@ -94,9 +102,10 @@ class OrdersService {
   async getOrderByNumber(orderNumber) {
     try {
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .select('*')
         .eq('order_number', orderNumber)
+        .eq('store_name', 'Urban Jungle')
         .single();
 
       if (error) throw error;
@@ -132,9 +141,10 @@ class OrdersService {
       }
 
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .update(updatePayload)
         .eq('id', orderId)
+        .eq('store_name', 'Urban Jungle')
         .select()
         .single();
 
@@ -151,12 +161,13 @@ class OrdersService {
   async updateOrderStatus(orderId, status) {
     try {
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .update({
           status: status,
           updated_at: new Date().toISOString()
         })
         .eq('id', orderId)
+        .eq('store_name', 'Urban Jungle')
         .select()
         .single();
 
@@ -173,13 +184,14 @@ class OrdersService {
   async cancelOrder(orderId, userId) {
     try {
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .update({
           status: 'cancelled',
           updated_at: new Date().toISOString()
         })
         .eq('id', orderId)
-        .eq('user_id', userId) // Ensure user owns the order
+        .or(`user_id.eq.${userId},customer_id.eq.${userId}`)
+        .eq('store_name', 'Urban Jungle')
         .select()
         .single();
 
@@ -196,9 +208,10 @@ class OrdersService {
   async getOrdersByEmail(email) {
     try {
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .select('*')
         .eq('customer_email', email)
+        .eq('store_name', 'Urban Jungle')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -218,9 +231,10 @@ class OrdersService {
       }
 
       const { data, error } = await supabase
-        .from(TABLES.ORDERS)
+        .from('orders')
         .select('status, total_amount, payment_status')
-        .eq('user_id', userId);
+        .or(`user_id.eq.${userId},customer_id.eq.${userId}`)
+        .eq('store_name', 'Urban Jungle');
 
       if (error) throw error;
 

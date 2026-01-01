@@ -23,6 +23,7 @@ const PaymentSuccess = () => {
         .from('orders')
         .select('*')
         .eq('id', orderId)
+        .eq('store_name', 'Urban Jungle') // Filter for Urban Jungle orders
         .single();
 
       if (error) throw error;

@@ -21,28 +21,28 @@ const Dashboard = () => {
     try {
       const today = new Date().toISOString().split('T')[0];
       
-      // Today's orders
+      // Today's orders (all stores)
       const { data: todayOrders } = await supabase
-        .from('urban_orders')
+        .from('orders')
         .select('*')
         .gte('created_at', today);
       
-      // Pending orders
+      // Pending orders (all stores)
       const { data: pending } = await supabase
-        .from('urban_orders')
+        .from('orders')
         .select('*')
         .eq('status', 'pending');
       
-      // Low stock products
+      // Low stock products (Urban Jungle)
       const { data: lowStock } = await supabase
         .from('urban_products')
         .select('*')
         .lt('stock_quantity', 10)
         .gt('stock_quantity', 0);
       
-      // Recent orders
+      // Recent orders (all stores)
       const { data: recent } = await supabase
-        .from('urban_orders')
+        .from('orders')
         .select('*')
         .order('created_at', { ascending: false })
         .limit(10);
@@ -93,7 +93,7 @@ const Dashboard = () => {
     <div>
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-400 mt-1">Welcome to Tommy CK Admin</p>
+        <p className="text-gray-400 mt-1">Welcome to Admin Dashboard - Tommy CK & Urban Jungle</p>
       </div>
       
       {/* Stats Grid */}

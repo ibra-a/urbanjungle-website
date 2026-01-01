@@ -45,7 +45,7 @@ if (typeof window !== 'undefined') {
 // Urban Jungle table names
 export const TABLES = {
   PRODUCTS: 'urban_products', // ✅ Use urban_products table (faster - only Urban Jungle items, no filtering needed)
-  ORDERS: 'urban_orders',
+  ORDERS: 'orders', // ✅ Use unified orders table with store_name filter
   FAVORITES: 'urban_user_favorites',
   CART: 'urban_user_cart'
 };
@@ -140,53 +140,62 @@ export const products = {
   }
 };
 
-// Orders helper functions
+// Orders helper functions - Using unified orders table
 export const orders = {
-  // Create new order
+  // Create new order (for Urban Jungle)
   create: async (orderData) => {
+    // Ensure store_name is set for Urban Jungle
+    const orderWithStore = {
+      ...orderData,
+      store_name: orderData.store_name || 'Urban Jungle'
+    };
     const { data, error } = await supabase
-      .from('urban_orders')
-      .insert([orderData])
+      .from('orders')
+      .insert([orderWithStore])
       .select()
     return { data, error }
   },
 
-  // Get user orders
-  getUserOrders: async (userId) => {
+  // Get user orders (filter by store_name for Urban Jungle)
+  getUserOrders: async (userId, storeName = 'Urban Jungle') => {
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
-      .eq('customer_id', userId)
+      .or(`customer_id.eq.${userId},user_id.eq.${userId}`)
+      .eq('store_name', storeName)
       .order('created_at', { ascending: false })
     return { data, error }
   },
 
-  // Get orders by email (for guest checkout)
-  getOrdersByEmail: async (email) => {
+  // Get orders by email (for guest checkout, filter by store)
+  getOrdersByEmail: async (email, storeName = 'Urban Jungle') => {
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
       .eq('customer_email', email)
+      .eq('store_name', storeName)
       .order('created_at', { ascending: false })
     return { data, error }
   },
 
-  // Get single order by ID
-  getById: async (orderId) => {
+  // Get single order by ID (filter by store to ensure correct order)
+  getById: async (orderId, storeName = 'Urban Jungle') => {
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .select('*')
       .eq('id', orderId)
+      .eq('store_name', storeName)
       .single()
     return { data, error }
   },
 
   // Update order status
-  updateStatus: async (orderId, status) => {
+  updateStatus: async (orderId, status, storeName = 'Urban Jungle') => {
     const { data, error } = await supabase
-      .from('urban_orders')
+      .from('orders')
       .update({ status, updated_at: new Date().toISOString() })
       .eq('id', orderId)
+      .eq('store_name', storeName) // Ensure we're updating the right store's order
       .select()
     return { data, error }
   }
