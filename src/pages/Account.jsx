@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, Heart, MapPin, Settings, LogOut } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { Button } from '../components/ui/button';
+import { Button } from '../components/Button';
 import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import toast from 'react-hot-toast';
 

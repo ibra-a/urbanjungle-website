@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/ui/button';
+import { Button } from '../../components/Button';
 import toast from 'react-hot-toast';
 import { supabase } from '../../lib/supabase';
 
