@@ -191,11 +191,12 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
               console.log('✅ Order auto-synced to ERP on delivery photo');
               toast.success('Order synced to ERP. Submitting documents...');
               
-              // Refresh order data after sync
+              // Refresh order data after sync (with store_name filter)
               const { data: refreshedOrder } = await supabase
                 .from('orders')
-                .select('synced_to_erp, erp_order_id')
+                .select('synced_to_erp, erp_order_id, delivery_note_id, sales_invoice_id')
                 .eq('id', orderId)
+                .eq('store_name', 'Urban Jungle')
                 .single();
               
               if (refreshedOrder?.synced_to_erp && refreshedOrder?.erp_order_id) {

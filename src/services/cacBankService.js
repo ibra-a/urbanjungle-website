@@ -407,14 +407,29 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
+      let errorText;
+      try {
+        const errorJson = await response.json();
+        errorText = errorJson.error || errorJson.message || JSON.stringify(errorJson);
+      } catch {
+        errorText = await response.text();
+      }
       console.error('❌ Edge Function error:', errorText);
+      console.error('Response status:', response.status);
       throw new Error(`ERPNext sync failed: ${errorText}`);
     }
 
     const result = await response.json();
+    
+    // Check if result has success field
+    if (!result.success) {
+      console.error('❌ ERP sync returned success: false', result);
+      throw new Error(result.error || result.message || 'ERP sync failed');
+    }
+    
     console.log('✅ Order synced to ERPNext:');
-    console.log('   Sales Order:', result.salesOrderId);
+    console.log('   Sales Order:', result.salesOrderId || result.erp_order_id);
+    console.log('   Delivery Note:', result.deliveryNoteId);
     console.log('   Sales Invoice:', result.salesInvoiceId);
     console.log('   Stock reduced automatically ✅');
 
@@ -424,9 +439,11 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
     // The Edge Function sets this, but we verify it here for reliability
     // This ensures the flag is set even if there's a race condition
     if (result.success && !result.alreadySynced) {
+      const salesOrderId = result.salesOrderId || result.erp_order_id;
+      
       const updateData = { 
         synced_to_erp: true,
-        erp_order_id: result.salesOrderId
+        erp_order_id: salesOrderId
       };
       
       // Add optional fields if they exist in the response
@@ -478,7 +495,8 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
 
     return {
       success: true,
-      salesOrderId: result.salesOrderId,
+      salesOrderId: result.salesOrderId || result.erp_order_id,
+      deliveryNoteId: result.deliveryNoteId,
       salesInvoiceId: result.salesInvoiceId
     };
   } catch (error) {
