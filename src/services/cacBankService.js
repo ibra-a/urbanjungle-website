@@ -335,19 +335,18 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
       updateData.paid_at = new Date().toISOString();
     }
 
-    // Use unified orders table with store_name filter
+    // Use unified orders table (id is unique, no need to filter by store_name)
     const { data, error } = await supabase
       .from('orders')
       .update(updateData)
       .eq('id', orderId)
-      .eq('store_name', 'Urban Jungle')
       .select()
       .single();
 
     if (error) throw error;
 
     // If payment is confirmed and paid, sync to ERPNext
-    if (paymentStatus === 'paid' && status === 'confirmed') {
+    if (paymentStatus === 'paid' && (status === 'ready' || status === 'confirmed')) {
       console.log('💰 Payment confirmed - syncing to ERPNext...');
       syncOrderToERPNext(orderId, 'urban').catch(err => {
         console.error('⚠️ ERPNext sync failed (non-blocking):', err);

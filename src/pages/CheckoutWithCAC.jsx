@@ -230,11 +230,11 @@ const CheckoutWithCAC = () => {
       const orderId = orderResult.order.id;
 
       // STEP 3: Update order with payment details and mark as paid
-      // This will automatically trigger ERP sync (paymentStatus === 'paid' && status === 'confirmed')
+      // This will automatically trigger ERP sync (paymentStatus === 'paid' && status === 'ready')
       await cacBankService.updateOrderPayment(orderId, {
         paymentRequestId: transaction.paymentRequestId,
         transactionId: confirmResult.reference || transaction.paymentRequestId,
-        status: 'confirmed',
+        status: 'ready',
         paymentStatus: 'paid',
         reference: confirmResult.reference,
         confirmReference: confirmResult.confirmReference
@@ -243,10 +243,9 @@ const CheckoutWithCAC = () => {
       // Update transaction state with orderId
       setTransaction(prev => ({ ...prev, orderId }));
 
-      // Fetch complete order details for store notification
-      const ordersTable = transaction.storeType === 'urban' ? 'urban_orders' : 'orders';
+      // Fetch complete order details for store notification (using unified orders table)
       const { data: order, error: orderError } = await supabase
-        .from(ordersTable)
+        .from('orders')
         .select('*')
         .eq('id', orderId)
         .single();
