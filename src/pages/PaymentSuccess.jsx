@@ -19,11 +19,11 @@ const PaymentSuccess = () => {
 
   const loadOrderDetails = async () => {
     try {
+      // Urban Jungle uses urban_orders table
       const { data, error } = await supabase
-        .from('orders')
+        .from('urban_orders')
         .select('*')
         .eq('id', orderId)
-        .eq('store_name', 'Urban Jungle') // Filter for Urban Jungle orders
         .single();
 
       if (error) throw error;
