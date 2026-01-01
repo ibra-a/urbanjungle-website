@@ -418,6 +418,39 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
     console.log('   Sales Invoice:', result.salesInvoiceId);
     console.log('   Stock reduced automatically ✅');
 
+    // ============================================================================
+    // CRITICAL: Ensure synced_to_erp flag is set after successful sync
+    // ============================================================================
+    // The Edge Function sets this, but we verify it here for reliability
+    // This ensures the flag is set even if there's a race condition
+    if (result.success && !result.alreadySynced) {
+      const updateData = { 
+        synced_to_erp: true,
+        erp_order_id: result.salesOrderId
+      };
+      
+      // Add optional fields if they exist in the response
+      if (result.deliveryNoteId) {
+        updateData.delivery_note_id = result.deliveryNoteId;
+      }
+      if (result.salesInvoiceId) {
+        updateData.sales_invoice_id = result.salesInvoiceId;
+      }
+      
+      const { error: updateError } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId)
+        .eq('store_name', 'Urban Jungle');
+      
+      if (updateError) {
+        console.warn('⚠️ Failed to update synced_to_erp flag:', updateError);
+        // Don't fail - Edge Function should have set it
+      } else {
+        console.log('✅ synced_to_erp flag confirmed and order updated');
+      }
+    }
+
     // Send order confirmation email
     try {
       console.log('📧 Sending order confirmation email...');

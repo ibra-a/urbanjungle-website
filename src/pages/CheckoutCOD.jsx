@@ -85,6 +85,31 @@ const CheckoutCOD = () => {
 
       const order = orderResult.order;
 
+      // Sync COD order to ERPNext immediately (but skip Payment Entry)
+      try {
+        console.log('📤 Syncing COD order to ERPNext...');
+        const syncResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-order-to-erp`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({ orderId: order.id })
+        });
+
+        if (!syncResponse.ok) {
+          const syncError = await syncResponse.json();
+          console.error('ERP sync failed (non-blocking):', syncError);
+          // Don't fail checkout - order is created, sync can be retried manually
+        } else {
+          const syncResult = await syncResponse.json();
+          console.log('✅ COD order synced to ERPNext:', syncResult);
+        }
+      } catch (syncError) {
+        console.error('ERP sync error (non-blocking):', syncError);
+        // Don't fail checkout - order is created, sync can be retried manually
+      }
+
       // Store order ID for processing screen
       setOrderId(order.id);
 

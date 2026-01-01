@@ -76,26 +76,24 @@ const Orders = () => {
   const syncToERP = async (orderId) => {
     try {
       setSyncing(orderId);
-      // Get order to determine store
-      const { data: order } = await supabase
-        .from('orders')
-        .select('store_name')
-        .eq('id', orderId)
-        .single();
       
-      const response = await fetch('/api/sync-order-to-erp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          orderId,
-          storeType: order?.store_name === 'Urban Jungle' ? 'urban' : 'gab'
-        })
-      });
+      // Call Supabase Edge Function (same as Tommy CK)
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-order-to-erp`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
+          },
+          body: JSON.stringify({ orderId })
+        }
+      );
       
       const result = await response.json();
       
       if (result.success) {
-        toast.success(`Order synced to ERPNext! Sales Order: ${result.erp_order_id}`);
+        toast.success(`Order synced to ERPNext! Sales Order: ${result.salesOrderId}`);
         loadOrders();
       } else {
         toast.error(result.error || 'Failed to sync order to ERP');

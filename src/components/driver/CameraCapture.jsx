@@ -162,11 +162,12 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
         // 3. Then submit ERP documents (SO, DN, SI)
         // ============================================================================
         try {
-          // Fetch current order status
+          // Fetch current order status from unified orders table
           const { data: orderData } = await supabase
             .from('orders')
-            .select('synced_to_erp, erp_order_id, payment_method, payment_status')
+            .select('synced_to_erp, erp_order_id, payment_method, payment_status, store_name')
             .eq('id', orderId)
+            .eq('store_name', 'Urban Jungle')
             .single();
 
           if (!orderData) {
@@ -254,6 +255,7 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
             .from('orders')
             .select('*')
             .eq('id', orderId)
+            .eq('store_name', 'Urban Jungle')
             .single();
 
           if (fullOrder) {
