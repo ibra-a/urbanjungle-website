@@ -497,7 +497,8 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
       success: true,
       salesOrderId: result.salesOrderId || result.erp_order_id,
       deliveryNoteId: result.deliveryNoteId,
-      salesInvoiceId: result.salesInvoiceId
+      salesInvoiceId: result.salesInvoiceId,
+      message: result.message
     };
   } catch (error) {
     console.error('❌ ERPNext sync error:', error);
