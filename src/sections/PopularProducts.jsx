@@ -133,6 +133,22 @@ const PopularProducts = () => {
   return (
     <>
       <section id='products' className='max-container max-sm:mt-12'>
+        {/* Section Title */}
+        <motion.div
+          className='text-center mb-8 md:mb-12'
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          viewport={{ once: true }}
+        >
+          <h2 className='font-palanquin text-3xl sm:text-4xl lg:text-5xl font-bold mb-3'>
+            Featured <span className='text-yellow-500'>Brands</span>
+          </h2>
+          <p className='text-slate-gray text-base sm:text-lg max-w-2xl mx-auto font-montserrat'>
+            Discover premium collections from the world's most iconic athletic brands
+          </p>
+        </motion.div>
+
         {/* Desktop Grid Layout */}
         <div className='hidden md:grid md:grid-cols-3 gap-6 h-96'>
           {items.map((item, index) => (
@@ -143,14 +159,52 @@ const PopularProducts = () => {
                 <h3 className='text-white font-montserrat font-bold text-xl mb-4'>{item.title}</h3>
                 {item.title === "Nike" ? (
                   <Link to="/men">
-                    <button className='bg-white text-black px-6 py-3 rounded-full font-montserrat font-semibold hover:bg-gray-100 transition-colors duration-300 w-fit'>
-                      Shop now
-                    </button>
+                    <motion.button 
+                      className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold transition-all duration-300 w-fit relative overflow-hidden group'
+                      whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
+                    >
+                      <span className='relative z-10'>Shop now</span>
+                      <motion.div
+                        className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100'
+                        animate={{
+                          backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                        style={{
+                          backgroundSize: '200% 100%'
+                        }}
+                      />
+                    </motion.button>
                   </Link>
                 ) : (
-                  <button className='bg-white text-black px-6 py-3 rounded-full font-montserrat font-semibold hover:bg-gray-100 transition-colors duration-300 w-fit'>
-                    Shop now
-                  </button>
+                  <motion.button 
+                    className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold transition-all duration-300 w-fit relative overflow-hidden group'
+                    whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
+                  >
+                    <span className='relative z-10'>Shop now</span>
+                    <motion.div
+                      className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100'
+                      animate={{
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "linear"
+                      }}
+                      style={{
+                        backgroundSize: '200% 100%'
+                      }}
+                    />
+                  </motion.button>
                 )}
               </div>
             </div>
@@ -176,14 +230,24 @@ const PopularProducts = () => {
                     <h3 className='text-white font-montserrat font-bold text-xl mb-4'>{item.title}</h3>
                     {item.title === "Nike" ? (
                       <Link to="/men">
-                        <button className='bg-white text-black px-6 py-3 rounded-full font-montserrat font-semibold w-fit'>
-                          Shop now
-                        </button>
+                        <motion.button 
+                          className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold w-fit relative overflow-hidden group'
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
+                        >
+                          <span className='relative z-10'>Shop now</span>
+                        </motion.button>
                       </Link>
                     ) : (
-                      <button className='bg-white text-black px-6 py-3 rounded-full font-montserrat font-semibold w-fit'>
-                        Shop now
-                      </button>
+                      <motion.button 
+                        className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold w-fit relative overflow-hidden group'
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
+                      >
+                        <span className='relative z-10'>Shop now</span>
+                      </motion.button>
                     )}
                   </div>
                 </div>
@@ -248,11 +312,26 @@ const PopularProducts = () => {
               </p>
               <Link to="/men">
                 <motion.button
-                  className="bg-gradient-to-r from-yellow-500 to-yellow-400 text-white px-8 py-4 rounded-full font-montserrat font-bold text-lg hover:from-yellow-400 hover:to-yellow-500 transition-all duration-300 transform hover:scale-105 shadow-lg"
-                  whileHover={{ scale: 1.05 }}
+                  className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-8 py-4 rounded-full font-montserrat font-bold text-lg transition-all duration-300 relative overflow-hidden group"
+                  whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
                   whileTap={{ scale: 0.95 }}
+                  style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
                 >
-                  Shop Jordan Collection
+                  <span className='relative z-10'>Shop Jordan Collection</span>
+                  <motion.div
+                    className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100'
+                    animate={{
+                      backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "linear"
+                    }}
+                    style={{
+                      backgroundSize: '200% 100%'
+                    }}
+                  />
                 </motion.button>
               </Link>
             </motion.div>

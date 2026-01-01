@@ -27,8 +27,8 @@ const Button = ({
         ${getButtonClasses()}
         ${fullWidth && "w-full"}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-        hover:shadow-lg active:scale-95
-        focus:outline-none focus:ring-4 focus:ring-white/20
+        relative overflow-hidden group
+        focus:outline-none focus:ring-4 focus:ring-yellow-500/30
       `}
       whileHover={!disabled ? { 
         scale: 1.02,

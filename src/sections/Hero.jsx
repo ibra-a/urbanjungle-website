@@ -77,26 +77,26 @@ const Hero = () => {
         
         {/* Main Content - Left positioned */}
         <motion.div
-          className='flex-1 flex flex-col justify-center items-start pt-20 px-8 sm:px-16 ml-8 sm:ml-16'
+          className='flex-1 flex flex-col justify-center items-start pt-24 sm:pt-28 md:pt-32 lg:pt-20 px-4 sm:px-8 md:px-16 ml-4 sm:ml-8 md:ml-16'
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
           {/* Main Headline */}
           <motion.h1
-            className='font-montserrat text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white max-w-4xl'
+            className='font-montserrat text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight text-white max-w-4xl'
             variants={itemVariants}
           >
             <span className='block'>
-              Fuel <span className='chrome-red-gradient'>your Game.</span>
+              Fuel <span className='chrome-yellow-gradient'>your Game.</span>
             </span>
             <span className='block mt-2'>Shop The Brands.</span> 
-            <span className='chrome-red-gradient block mt-2'>You Love.</span>
+            <span className='chrome-yellow-gradient block mt-2'>You Love.</span>
           </motion.h1>
 
           {/* Description */}
           <motion.p
-            className='font-montserrat text-white/90 text-lg lg:text-xl leading-relaxed mt-8 max-w-lg font-light'
+            className='font-montserrat text-white/90 text-base sm:text-lg lg:text-xl leading-relaxed mt-4 sm:mt-6 md:mt-8 max-w-lg font-light'
             variants={itemVariants}
           >
             Discover premium athletic gear from your favorite brands. Experience the perfect blend of style, performance, and innovation.
@@ -105,30 +105,51 @@ const Hero = () => {
 
         {/* Bottom Buttons Section - Nike UAE Style */}
         <motion.div
-          className='pb-12 flex flex-col sm:flex-row gap-4 sm:gap-6 px-8 sm:px-16 ml-8 sm:ml-16'
+          className='pb-6 sm:pb-8 md:pb-12 flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-6 px-4 sm:px-8 md:px-16 ml-4 sm:ml-8 md:ml-16'
           variants={buttonVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
         >
-          {/* Primary Shop All Button */}
-          <Link to="/shop">
+          {/* Primary Shop All Button - Urban Jungle Yellow with Glow */}
+          <Link to="/shop" className="w-full sm:w-auto">
             <motion.button
-              className='bg-white text-black px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-gray-100 transition-all duration-300 transform hover:scale-105'
-              whileHover={{ scale: 1.05 }}
+              className='w-full sm:w-auto bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 sm:px-8 py-3 sm:py-4 rounded-full font-montserrat font-semibold text-base sm:text-lg transition-all duration-300 relative overflow-hidden group'
+              whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
               whileTap={{ scale: 0.95 }}
+              style={{
+                boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)"
+              }}
             >
-              Shop All
+              <span className='relative z-10'>Shop All</span>
+              <motion.div
+                className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
+                animate={{
+                  backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "linear"
+                }}
+                style={{
+                  backgroundSize: '200% 100%'
+                }}
+              />
             </motion.button>
           </Link>
 
-          {/* Secondary Shop Kids Button */}
-          <Link to="/kids">
+          {/* Secondary Shop Kids Button - Yellow Fill on Hover */}
+          <Link to="/kids" className="w-full sm:w-auto">
             <motion.button
-              className='bg-transparent border-2 border-white text-white px-8 py-4 rounded-full font-montserrat font-semibold text-lg hover:bg-white hover:text-black transition-all duration-300'
-              whileHover={{ scale: 1.05 }}
+              className='w-full sm:w-auto bg-transparent border-2 border-white text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-montserrat font-semibold text-base sm:text-lg transition-all duration-300 relative overflow-hidden group'
+              whileHover={{ 
+                scale: 1.05, 
+                backgroundColor: "#fbbf24",
+                boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)"
+              }}
               whileTap={{ scale: 0.95 }}
             >
-              Shop Kids'
+              <span className='relative z-10 group-hover:text-black transition-colors duration-300'>Shop Kids'</span>
             </motion.button>
           </Link>
         </motion.div>

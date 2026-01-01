@@ -88,31 +88,32 @@ export const reviews = [
 
 export const footerLinks = [
     {
-        title: "Products",
+        title: "Shop",
         links: [
-            { name: "Air Force 1", link: "/" },
-            { name: "Air Max 1", link: "/" },
-            { name: "Air Jordan 1", link: "/" },
-            { name: "Air Force 2", link: "/" },
-            { name: "Nike Waffle Racer", link: "/" },
-            { name: "Nike Cortez", link: "/" },
+            { name: "All Products", link: "/shop" },
+            { name: "Men", link: "/men" },
+            { name: "Women", link: "/women" },
+            { name: "Kids", link: "/kids" },
+            { name: "Brands", link: "/brands" },
+            { name: "Sale", link: "/shop?sale=true" },
         ],
     },
     {
-        title: "Help",
+        title: "Customer Service",
         links: [
-            { name: "About us", link: "/" },
+            { name: "Contact Us", link: "/" },
             { name: "FAQs", link: "/" },
-            { name: "How it works", link: "/" },
-            { name: "Privacy policy", link: "/" },
-            { name: "Payment policy", link: "/" },
+            { name: "Shipping Info", link: "/" },
+            { name: "Returns", link: "/" },
+            { name: "Track Order", link: "/" },
         ],
     },
     {
-        title: "Get in touch",
+        title: "Legal",
         links: [
-            { name: "customer@nike.com", link: "mailto:customer@nike.com" },
-            { name: "+92554862354", link: "tel:+92554862354" },
+            { name: "Privacy Policy", link: "/privacy-policy" },
+            { name: "Terms & Conditions", link: "/terms-and-conditions" },
+            { name: "About Us", link: "/" },
         ],
     },
 ];

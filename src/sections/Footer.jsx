@@ -1,7 +1,8 @@
 import { copyrightSign } from "../assets/icons";
-import { footerLogo } from "../assets/images";
+import { headerLogo } from "../assets/images";
 import { footerLinks, socialMedia } from "../constants";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const getSocialButtonStyle = (platform) => {
@@ -41,18 +42,17 @@ const Footer = () => {
     <footer className='max-container'>
       <div className='flex justify-between items-start gap-20 flex-wrap max-lg:flex-col'>
         <div className='flex flex-col items-start'>
-          <a href='/'>
+          <Link to='/'>
             <img
-              src={footerLogo}
-              alt='logo'
+              src={headerLogo}
+              alt='Urban Jungle logo'
               width={150}
               height={46}
-              className='m-0 filter brightness-0 invert'
+              className='m-0'
             />
-          </a>
+          </Link>
           <p className='mt-6 text-base leading-7 font-montserrat text-white/70 sm:max-w-sm font-light'>
-            Discover the latest fashion trends at Urban Jungle. Find
-            Your perfect style. Get Rewards
+            Discover premium athletic gear from your favorite brands. Experience the perfect blend of style, performance, and innovation at Urban Jungle.
           </p>
           
           {/* Updated Social Media Buttons - Chatbot Style */}
@@ -126,9 +126,15 @@ const Footer = () => {
                     className='mt-3 font-montserrat text-base leading-normal text-white/70 hover:text-white transition-colors duration-300 font-light'
                     key={link.name}
                   >
-                    <a href={link.link} className="hover:underline underline-offset-4">
-                      {link.name}
-                    </a>
+                    {link.link.startsWith('http') || link.link.startsWith('mailto') || link.link.startsWith('tel') ? (
+                      <a href={link.link} className="hover:underline underline-offset-4">
+                        {link.name}
+                      </a>
+                    ) : (
+                      <Link to={link.link} className="hover:underline underline-offset-4">
+                        {link.name}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -148,8 +154,18 @@ const Footer = () => {
           />
           <p>Copyright. All rights reserved.</p>
         </div>
-        <p className='font-montserrat cursor-pointer hover:text-white transition-colors duration-300 font-light hover:underline underline-offset-4'>
+        <Link 
+          to="/terms-and-conditions"
+          className='font-montserrat cursor-pointer hover:text-white transition-colors duration-300 font-light hover:underline underline-offset-4'
+        >
           Terms & Conditions
+        </Link>
+      </div>
+
+      {/* Powered by GABAISOLUTIONS */}
+      <div className='flex justify-center items-center mt-6 pb-4'>
+        <p className='text-white/50 text-sm font-montserrat font-light'>
+          Powered by <span className='text-white/70 font-medium'>GABAISOLUTIONS</span>
         </p>
       </div>
     </footer>

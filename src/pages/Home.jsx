@@ -13,40 +13,56 @@ import { LogoMarquee, FloatingChat, PromoSections } from "../components";
 
 const Home = () => {
   return (
-    <div>
+    <div className="scroll-smooth">
       {/* Hero Section - Full width for video background */}
       <section>
         <Hero />
       </section>
       
-      <section className='padding'>
+      {/* Popular Products Section */}
+      <section className='padding py-16 sm:py-20'>
         <PopularProducts />
       </section>
       
       {/* Logo Marquee Section - Below PopularProducts */}
-      <LogoMarquee 
-        animationDuration={80}
-        gap={150}
-      />
+      <section className='py-8 sm:py-12'>
+        <LogoMarquee 
+          animationDuration={80}
+          gap={150}
+        />
+      </section>
       
       {/* Promotional Sections - Kobe & African Heritage */}
-      <PromoSections />
+      <section className='py-8 sm:py-12'>
+        <PromoSections />
+      </section>
       
-      <section className='padding'>
+      {/* Live Products Section */}
+      <section className='padding py-16 sm:py-20'>
         <LiveProducts />
       </section>
-      <section className='padding'>
+      
+      {/* Super Quality Section */}
+      <section className='padding py-16 sm:py-20'>
         <SuperQuality />
       </section>
+      
+      {/* Services Section */}
       <section className='padding-x py-10'>
         <Services />
       </section>
-      <section className='padding'>
+      
+      {/* Special Offer Section */}
+      <section className='padding py-16 sm:py-20'>
         <SpecialOffer />
       </section>
-      <section className='padding-x sm:py-32 py-16 w-full'>
+      
+      {/* Subscribe Section */}
+      <section className='padding-x sm:py-32 py-16 w-full bg-black'>
         <Subscribe />
       </section>
+      
+      {/* Footer Section */}
       <section className='bg-black padding-x padding-t pb-8'>
         <Footer />
       </section>

@@ -90,26 +90,18 @@ const UJLoadingScreen = ({ onLoadingComplete }) => {
               />
             </motion.div>
 
-            {/* Nike Branded Text with staggered timing */}
+            {/* Branded Text with staggered timing */}
             <motion.div
               className="mb-8"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <motion.h2 
-                className="text-white text-2xl font-montserrat font-light tracking-wider mb-2"
+              <motion.p 
+                className="text-white text-xl sm:text-2xl font-montserrat font-light tracking-widest"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5 }}
-              >
-                URBAN JUNGLE
-              </motion.h2>
-              <motion.p 
-                className="text-white/70 text-sm font-montserrat tracking-widest"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.7 }}
               >
                 EXPLORE YOUR STYLE
               </motion.p>

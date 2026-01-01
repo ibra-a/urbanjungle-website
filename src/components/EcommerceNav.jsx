@@ -184,8 +184,8 @@ const EcommerceNav = () => {
       transition={{ duration: 0.5 }}
     >
       {/* Promotional Banner - Reduced height */}
-      <div className="bg-yellow-500 text-white text-center py-1 text-xs font-medium">
-        Free shipping on orders over 5,000 DJF | Shop now and save
+      <div className="bg-nike-coral text-white text-center py-1 text-xs font-medium">
+        Free shipping on orders over AED 300 | Shop now and save
       </div>
 
       {/* Main Navigation - Reduced height */}
@@ -199,7 +199,7 @@ const EcommerceNav = () => {
                 <img 
                   src={headerLogo}
                   alt="Urban Jungle"
-                  className="h-6 w-auto"
+                  className="h-[50px] w-auto"
                 />
               </Link>
             </div>
@@ -218,7 +218,7 @@ const EcommerceNav = () => {
                   <input
                     type="text"
                     placeholder="Search Nike.com"
-                    className="bg-white/10 border border-white/20 rounded-full pl-10 pr-4 py-1.5 text-sm text-white placeholder-white/60 focus:outline-none focus:border-yellow-500 focus:bg-white/20 transition-all w-48"
+                    className="bg-white/10 border border-white/20 rounded-full pl-10 pr-4 py-1.5 text-sm text-white placeholder-white/60 focus:outline-none focus:border-nike-coral focus:bg-white/20 transition-all w-48"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -232,7 +232,7 @@ const EcommerceNav = () => {
                   <button 
                     type="button"
                     onClick={handleFavoritesClick}
-                    className="p-1.5 text-white hover:text-yellow-500 transition-colors relative"
+                    className="p-1.5 text-white hover:text-nike-coral transition-colors relative"
                   >
                     <Heart className="w-4 h-4" />
                   </button>
@@ -240,11 +240,11 @@ const EcommerceNav = () => {
                 
                 <Link 
                   to="/cart"
-                  className="p-1.5 text-white hover:text-yellow-500 transition-colors relative"
+                  className="p-1.5 text-white hover:text-nike-coral transition-colors relative"
                 >
                   <ShoppingBag className="w-4 h-4" />
                   {state.cart.itemCount > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-semibold">
+                    <span className="absolute -top-1 -right-1 bg-nike-coral text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-semibold">
                       {state.cart.itemCount}
                     </span>
                   )}
@@ -254,7 +254,7 @@ const EcommerceNav = () => {
                 <div className="relative user-menu-container">
                   <button 
                     type="button"
-                    className="p-1.5 text-white hover:text-yellow-500 transition-colors flex items-center gap-1"
+                    className="p-1.5 text-white hover:text-nike-coral transition-colors flex items-center gap-1"
                     onClick={() => {
                       if (state.isAuthenticated) {
                         setIsUserMenuOpen(!isUserMenuOpen);
@@ -334,7 +334,7 @@ const EcommerceNav = () => {
 
                 <button 
                   type="button"
-                  className="lg:hidden p-1.5 text-white hover:text-yellow-500 transition-colors"
+                  className="lg:hidden p-1.5 text-white hover:text-nike-coral transition-colors"
                   onClick={() => setIsOpen(true)}
                 >
                   <Menu className="w-4 h-4" />
@@ -381,7 +381,7 @@ const EcommerceNav = () => {
             >
               {/* Mobile Menu Header */}
               <div className="flex justify-between items-center p-4 border-b border-gray-200">
-                <img src={headerLogo} alt="Urban Jungle logo" width={50} height={18} />
+                <img src={headerLogo} alt="Nike logo" width={50} height={18} />
                 <motion.button
                   type="button"
                   onClick={closeMenu}
@@ -524,7 +524,7 @@ const EcommerceNav = () => {
                               >
                                 <Link
                                   to={subItem.href}
-                                  className="flex items-center justify-between pl-8 pr-4 py-3 text-gray-700 hover:bg-white hover:text-yellow-500 transition-colors border-b border-gray-200"
+                                  className="flex items-center justify-between pl-8 pr-4 py-3 text-gray-700 hover:bg-white hover:text-nike-coral transition-colors border-b border-gray-200"
                                   onClick={closeMenu}
                                 >
                                   <span className="font-medium">{subItem.label}</span>
@@ -561,7 +561,7 @@ const EcommerceNav = () => {
                   <Link to="/cart" className="p-2 relative" onClick={closeMenu}>
                     <ShoppingBag size={20} className="text-gray-600" />
                     {state.cart.itemCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-yellow-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
+                      <span className="absolute -top-1 -right-1 bg-nike-coral text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-semibold">
                         {state.cart.itemCount}
                       </span>
                     )}
