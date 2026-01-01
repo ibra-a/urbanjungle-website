@@ -37,7 +37,7 @@ const CheckoutCOD = () => {
 
   // Calculate totals (DJF currency)
   const subtotal = cart.total;
-  const shipping = subtotal > 30000 ? 0 : 2000; // Free shipping over DJF 30,000
+  const shipping = 0; // ⚠️ TESTING: Shipping disabled for testing purposes
   const total = subtotal + shipping;
 
   const formatPrice = (amount) => {
