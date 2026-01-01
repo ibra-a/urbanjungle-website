@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Lock, Banknote, Loader2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
-import { createCODOrder } from '../services/cacBankService';
+import { createCODOrder } from '../services/ordersService';
 import PaymentProcessing from '../components/PaymentProcessing';
 import NationalityInput from '../components/NationalityInput';
 

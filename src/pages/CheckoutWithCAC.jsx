@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Lock, CreditCard, Phone, User, Mail, MapPin, Loader2, Check, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import * as cacBankService from '../services/cacBankService';
+import { createOrder } from '../services/ordersService';
 import { supabase } from '../services/supabase';
 import toast from 'react-hot-toast';
 import PaymentProcessing from '../components/PaymentProcessing';
@@ -220,7 +221,7 @@ const CheckoutWithCAC = () => {
         throw new Error('Order data missing. Please start over.');
       }
 
-      const orderResult = await cacBankService.createOrder(transaction.orderData);
+      const orderResult = await createOrder(transaction.orderData);
 
       if (!orderResult.success) {
         throw new Error('Failed to create order after payment confirmation');
