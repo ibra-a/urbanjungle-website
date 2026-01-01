@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Lock, Banknote, Loader2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
-import { supabase, orders } from '../services/supabase';
+import { createCODOrder } from '../services/cacBankService';
+import PaymentProcessing from '../components/PaymentProcessing';
 import NationalityInput from '../components/NationalityInput';
 
 const CheckoutCOD = () => {
@@ -13,6 +14,8 @@ const CheckoutCOD = () => {
   const { cart, user } = state;
 
   const [isProcessing, setIsProcessing] = useState(false);
+  const [showProcessing, setShowProcessing] = useState(false);
+  const [orderId, setOrderId] = useState(null);
   const [shippingData, setShippingData] = useState({
     firstName: '',
     lastName: '',
@@ -57,45 +60,42 @@ const CheckoutCOD = () => {
     setIsProcessing(true);
 
     try {
-      // Create order in unified orders table
-      const { data: order, error } = await supabase
-        .from('orders')
-        .insert({
-          user_id: user?.id,
-          customer_id: user?.id,
-          customer_name: `${shippingData.firstName} ${shippingData.lastName}`,
-          customer_email: shippingData.email,
-          customer_phone: shippingData.phone,
-          shipping_address: shippingData,
-          items: cart.items.map(item => ({
-            item_code: item.itemCode || item.id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            size: item.size,
-            color: item.color,
-            image: item.image
-          })),
-          total_amount: total,
-          currency: 'DJF',
-          payment_method: 'Cash on Delivery',
-          payment_status: 'pending', // Will be paid on delivery
-          status: 'confirmed',
-          delivery_status: 'pending',
-          synced_to_erp: false,
-          store_name: 'Urban Jungle' // Store identifier
-        })
-        .select()
-        .single();
+      // Create COD order using service function (same pattern as Tommy CK)
+      const orderResult = await createCODOrder({
+        userId: user?.id,
+        items: cart.items.map(item => ({
+          item_code: item.itemCode || item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          size: item.size,
+          color: item.color,
+          image: item.image,
+          brand: item.brand // Include brand for store detection
+        })),
+        totalAmount: total,
+        shippingAddress: shippingData, // Phone is included in shipping_address
+        customerEmail: shippingData.email,
+        customerName: `${shippingData.firstName} ${shippingData.lastName}`
+      });
 
-      if (error) throw error;
+      if (!orderResult.success) {
+        throw new Error(orderResult.error || 'Failed to create order');
+      }
 
-      // Clear cart
-      actions.clearCart();
+      const order = orderResult.order;
 
-      // Redirect to success page
-      toast.success('Order placed successfully!');
-      navigate(`/payment-success?orderId=${order.id}`);
+      // Store order ID for processing screen
+      setOrderId(order.id);
+
+      // Show processing animation FIRST (before clearing cart)
+      console.log('🎬 Showing processing animation for COD order:', order.id);
+      setShowProcessing(true);
+      
+      // Clear cart after a delay (so page doesn't redirect immediately)
+      setTimeout(() => {
+        actions.clearCart();
+      }, 3000);
 
     } catch (error) {
       console.error('Order creation error:', error);
@@ -105,8 +105,21 @@ const CheckoutCOD = () => {
     }
   };
 
-  if (cart.items.length === 0) {
+  // Don't render checkout if cart is empty AND we're not showing processing screen
+  if (cart.items.length === 0 && !showProcessing) {
     return null;
+  }
+
+  // If showing processing screen, only render that
+  if (showProcessing) {
+    return (
+      <PaymentProcessing 
+        isCOD={true}
+        onComplete={() => {
+          navigate(`/payment-success?orderId=${orderId}`);
+        }}
+      />
+    );
   }
 
   return (

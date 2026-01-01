@@ -315,8 +315,9 @@ export const createOrder = async (orderData) => {
       customerName
     } = orderData;
 
+    // Urban Jungle uses urban_orders table
     const { data, error } = await supabase
-      .from('orders')
+      .from('urban_orders')
       .insert([
         {
           customer_id: userId || null,
@@ -327,6 +328,7 @@ export const createOrder = async (orderData) => {
           shipping_address: shippingAddress,
           customer_email: customerEmail,
           customer_name: customerName,
+          customer_phone: phoneNumber || shippingAddress?.phone || shippingAddress?.phoneNumber,
           status: 'pending',
           payment_status: 'pending',
           payment_method: 'CAC Bank Mobile Money',
@@ -402,8 +404,9 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
       updateData.paid_at = new Date().toISOString();
     }
 
+    // Urban Jungle uses urban_orders table
     const { data, error } = await supabase
-      .from('orders')
+      .from('urban_orders')
       .update(updateData)
       .eq('id', orderId)
       .select()
@@ -441,12 +444,11 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
  */
 export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
   try {
-    // Use unified orders table with store_name filter
+    // Urban Jungle uses urban_orders table
     const { data: order, error } = await supabase
-      .from('orders')
+      .from('urban_orders')
       .select('*')
       .eq('id', orderId)
-      .eq('store_name', 'Urban Jungle') // Ensure it's Urban Jungle order
       .single();
 
     if (error) throw error;
@@ -523,6 +525,87 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
 };
 
 /**
+ * Create Cash on Delivery (COD) order in Supabase
+ * @param {Object} orderData - Order details
+ * @returns {Promise<Object>} Created order
+ */
+export const createCODOrder = async (orderData) => {
+  try {
+    const {
+      userId,
+      items,
+      totalAmount,
+      shippingAddress,
+      customerEmail,
+      customerName
+    } = orderData;
+
+    console.log('💵 Creating COD order in urban_orders for Urban Jungle');
+
+    // Extract phone from shippingAddress
+    const customerPhone = shippingAddress?.phone || shippingAddress?.phoneNumber;
+
+    const { data, error } = await supabase
+      .from('urban_orders')
+      .insert([
+        {
+          customer_id: userId || null,
+          user_id: userId || null,
+          items: items,
+          total_amount: totalAmount,
+          currency: 'DJF',
+          shipping_address: shippingAddress,
+          customer_email: customerEmail,
+          customer_name: customerName,
+          customer_phone: customerPhone,
+          status: 'pending', // Start as pending (matches constraint)
+          payment_status: 'pending', // Will be paid on delivery
+          payment_method: 'Cash on Delivery',
+          delivery_status: 'pending',
+          synced_to_erp: false,
+          store_name: 'Urban Jungle' // Store identifier
+        }
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('❌ Supabase COD Insert Error:', error);
+      throw error;
+    }
+
+    console.log('✅ COD order created successfully:', data);
+
+    // Auto-save address if user is logged in
+    if (userId && shippingAddress) {
+      try {
+        const { autoSaveAddressAfterCheckout } = await import('./addressService');
+        autoSaveAddressAfterCheckout(userId, data);
+      } catch (addrError) {
+        console.warn('⚠️ Address save failed (non-critical):', addrError);
+      }
+    }
+
+    return {
+      success: true,
+      order: data
+    };
+  } catch (error) {
+    console.error('❌ Create COD Order Error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      details: error.details,
+      hint: error.hint,
+      code: error.code
+    });
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+};
+
+/**
  * Get order by ID
  * @param {string} orderId - Order ID
  * @returns {Promise<Object>} Order details
@@ -530,10 +613,9 @@ export const syncOrderToERPNext = async (orderId, storeType = 'urban') => {
 export const getOrder = async (orderId) => {
   try {
     const { data, error } = await supabase
-      .from('orders')
+      .from('urban_orders')
       .select('*')
       .eq('id', orderId)
-      .eq('store_name', 'Urban Jungle')
       .single();
 
     if (error) throw error;
@@ -558,11 +640,11 @@ export const getOrder = async (orderId) => {
  */
 export const getUserOrders = async (userId) => {
   try {
+    // Urban Jungle uses urban_orders table
     const { data, error } = await supabase
-      .from('orders')
+      .from('urban_orders')
       .select('*')
       .or(`user_id.eq.${userId},customer_id.eq.${userId}`)
-      .eq('store_name', 'Urban Jungle')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -588,6 +670,7 @@ export default {
   confirmPayment,
   verifyPayment,
   createOrder,
+  createCODOrder,
   updateOrderPayment,
   getOrder,
   getUserOrders
