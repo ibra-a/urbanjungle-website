@@ -208,8 +208,10 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
                 return;
               }
             } else {
-              console.error('❌ Auto-sync failed:', syncResult.error);
-              toast.error('Failed to sync order to ERP. Admin must sync manually.');
+              console.error('❌ Auto-sync failed:', syncResult);
+              const errorMsg = syncResult.error || syncResult.message || 'Unknown error';
+              console.error('Full sync result:', JSON.stringify(syncResult, null, 2));
+              toast.error(`Failed to sync order to ERP: ${errorMsg}. Admin must sync manually.`);
               return;
             }
           }
