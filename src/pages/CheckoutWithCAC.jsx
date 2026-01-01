@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Lock, CreditCard, Phone, User, Mail, MapPin, Loader2, Check, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import * as cacBankService from '../services/cacBankService';
+import { supabase } from '../services/supabase';
 import toast from 'react-hot-toast';
 import PaymentProcessing from '../components/PaymentProcessing';
 import cacLogoVertical from '../assets/logos/For-White-BG-Vertical.png';
@@ -44,8 +45,17 @@ const CheckoutWithCAC = () => {
   const [transaction, setTransaction] = useState({
     orderId: null,
     transactionId: null,
-    reference: null
+    reference: null,
+    storeType: null, // Track store type for order updates
+    paymentRequestId: null, // Store payment request ID from initiation
+    orderData: null // Store order data for creation after payment confirmation
   });
+
+  // Helper to determine store type (Urban Jungle)
+  const getStoreType = (items = []) => {
+    // Urban Jungle website - always return 'urban'
+    return 'urban';
+  };
 
   // Redirect if cart is empty
   useEffect(() => {
@@ -99,64 +109,71 @@ const CheckoutWithCAC = () => {
     setTransaction({
       orderId: null,
       paymentRequestId: null,
-      reference: null
+      reference: null,
+      storeType: null,
+      orderData: null
     });
 
     setIsProcessing(true);
 
     try {
-      // Create order in Supabase
-      const orderResult = await cacBankService.createOrder({
-        userId: user?.id,
-        items: cart.items.map(item => ({
-          item_code: item.itemCode || item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          size: item.size,
-          color: item.color,
-          image: item.image
-        })),
-        totalAmount: total,
-        shippingAddress: shippingData,
-        phoneNumber: paymentData.phoneNumber,
-        customerEmail: shippingData.email,
-        customerName: `${shippingData.firstName} ${shippingData.lastName}`
-      });
+      // Determine store type from cart items
+      const storeType = getStoreType(cart.items);
+      const storeName = storeType === 'urban' ? 'Urban Jungle' : 'GAB Fashion House';
 
-      if (!orderResult.success) {
-        throw new Error('Failed to create order');
-      }
-
-      const orderId = orderResult.order.id;
-      setTransaction(prev => ({ ...prev, orderId }));
-
-      // Initiate CAC Bank payment
+      // STEP 1: Initiate CAC Bank payment FIRST (before creating order)
       const paymentResult = await cacBankService.initiatePayment({
         amount: total,
         phoneNumber: paymentData.phoneNumber,
         customerName: `${shippingData.firstName} ${shippingData.lastName}`,
         customerEmail: shippingData.email,
-        orderId: orderId,
-        description: `Urban Jungle - Order ${cart.items.length} items`
+        orderId: null, // No order ID yet - will create after payment confirmation
+        description: `${storeName} - Order ${cart.items.length} items`
       });
 
+      // Check for error 155 (CAC Wallet not active)
       if (!paymentResult.success) {
-        throw new Error(paymentResult.error || 'Payment initiation failed');
+        const errorMsg = paymentResult.error || '';
+        const errorCode = paymentResult.errorCode || paymentResult.details?.errorCode;
+        
+        if (errorCode === 155 || errorMsg.includes('CAC Wallet') || errorMsg.includes('6363')) {
+          toast.error('This phone number needs CAC Wallet. Call 6363 to activate it, then try again.');
+          setIsProcessing(false);
+          return; // STOP - don't create order
+        }
+        
+        // Other errors
+        throw new Error(errorMsg || 'Payment initiation failed');
       }
 
-      // Update order with transaction details
-      await cacBankService.updateOrderPayment(orderId, {
-        paymentRequestId: paymentResult.paymentRequestId,
-        transactionId: paymentResult.paymentRequestId,
-        status: 'pending',
-        paymentStatus: 'pending' // Changed from 'processing' to match constraint
-      });
-
+      // STEP 2: Payment initiated successfully - store payment_request_id in state
+      // DON'T create order yet - wait for payment confirmation
+      // Store shipping data and cart items in state for later order creation
       setTransaction({
-        orderId,
+        orderId: null, // No order yet
         paymentRequestId: paymentResult.paymentRequestId,
-        reference: paymentResult.paymentRequestId
+        reference: paymentResult.paymentRequestId,
+        storeType,
+        // Store order data for later creation
+        orderData: {
+          userId: user?.id,
+          items: cart.items.map(item => ({
+            item_code: item.itemCode || item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            size: item.size,
+            color: item.color,
+            image: item.image,
+            brand: item.brand
+          })),
+          totalAmount: total,
+          shippingAddress: shippingData,
+          phoneNumber: paymentData.phoneNumber,
+          customerEmail: shippingData.email,
+          customerName: `${shippingData.firstName} ${shippingData.lastName}`,
+          storeType: storeType
+        }
       });
 
       toast.success('OTP sent to your phone! Please check your messages.');
@@ -179,10 +196,15 @@ const CheckoutWithCAC = () => {
       return;
     }
 
+    if (!transaction.paymentRequestId) {
+      toast.error('Payment session expired. Please start over.');
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
-      // Confirm payment with OTP
+      // STEP 1: Confirm payment with OTP
       const confirmResult = await cacBankService.confirmPayment({
         paymentRequestId: transaction.paymentRequestId,
         otp: paymentData.otp,
@@ -193,21 +215,98 @@ const CheckoutWithCAC = () => {
         throw new Error(confirmResult.error || 'Payment confirmation failed');
       }
 
-      // Payment confirmed successfully - no separate verification needed
-      // CAC Bank confirmation is the final step
-      
-      // Update order status to completed
-      await cacBankService.updateOrderPayment(transaction.orderId, {
+      // STEP 2: Payment confirmed successfully - NOW create order
+      if (!transaction.orderData) {
+        throw new Error('Order data missing. Please start over.');
+      }
+
+      const orderResult = await cacBankService.createOrder(transaction.orderData);
+
+      if (!orderResult.success) {
+        throw new Error('Failed to create order after payment confirmation');
+      }
+
+      const orderId = orderResult.order.id;
+
+      // STEP 3: Update order with payment details and mark as paid
+      // This will automatically trigger ERP sync (paymentStatus === 'paid' && status === 'confirmed')
+      await cacBankService.updateOrderPayment(orderId, {
         paymentRequestId: transaction.paymentRequestId,
         transactionId: confirmResult.reference || transaction.paymentRequestId,
         status: 'confirmed',
         paymentStatus: 'paid',
         reference: confirmResult.reference,
         confirmReference: confirmResult.confirmReference
-      });
+      }, transaction.storeType || 'urban');
+
+      // Update transaction state with orderId
+      setTransaction(prev => ({ ...prev, orderId }));
+
+      // Fetch complete order details for store notification
+      const ordersTable = transaction.storeType === 'urban' ? 'urban_orders' : 'orders';
+      const { data: order, error: orderError } = await supabase
+        .from(ordersTable)
+        .select('*')
+        .eq('id', orderId)
+        .single();
+
+      if (!orderError && order) {
+        // Send SMS notification to store
+        try {
+          // Test mode: route to test number if enabled
+          const testMode = import.meta.env.VITE_SMS_TEST_MODE === 'true';
+          const storePhone = testMode 
+            ? (import.meta.env.VITE_SMS_TEST_PHONE || '+25377317849')
+            : '+25377200129';
+
+          // Build order summary message
+          const items = Array.isArray(order.items) ? order.items : [];
+          const itemsList = items.map(item => 
+            `• ${item.name}${item.quantity > 1 ? ` (x${item.quantity})` : ''}`
+          ).join('\n');
+          
+          const address = typeof order.shipping_address === 'object'
+            ? `${order.shipping_address.address || ''}, ${order.shipping_address.city || ''}, ${order.shipping_address.region || ''}`
+            : (order.shipping_address || 'N/A');
+
+          // Get phone from shipping address (where it's actually stored)
+          const customerPhone = typeof order.shipping_address === 'object' 
+            ? (order.shipping_address.phone || order.shipping_address.phoneNumber || 'N/A')
+            : 'N/A';
+
+          const orderSummary = `🛒 NEW ORDER #${order.id.slice(0, 8).toUpperCase()}
+
+👤 Customer: ${order.customer_name || 'N/A'}
+📞 Phone: ${customerPhone}
+📧 Email: ${order.customer_email || 'N/A'}
+
+💰 Total: ${order.total_amount?.toLocaleString() || 0} DJF
+💳 Payment: CAC Mobile Money (PAID ✅)
+
+📦 Items (${items.length}):
+${itemsList || 'No items'}
+
+📍 Delivery Address:
+${address}
+
+⏰ Order Time: ${new Date(order.created_at).toLocaleString('en-US', { 
+  month: 'short', 
+  day: 'numeric', 
+  hour: '2-digit', 
+  minute: '2-digit' 
+})}`;
+
+          // Send WhatsApp message (using same service as Tommy CK)
+          const whatsappUrl = `https://wa.me/${storePhone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(orderSummary)}`;
+          window.open(whatsappUrl, '_blank');
+        } catch (notifError) {
+          console.error('Failed to send notification:', notifError);
+          // Don't fail the order if notification fails
+        }
+      }
 
       // Show processing animation FIRST (before clearing cart)
-      console.log('🎬 Showing processing animation for order:', transaction.orderId);
+      console.log('🎬 Showing processing animation for order:', orderId);
       setShowProcessing(true);
       
       // Clear cart after a delay (so page doesn't redirect)
