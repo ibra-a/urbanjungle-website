@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import { Eye, RefreshCw, X, AlertCircle, CheckCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
 import DeliveryManager from '../../components/admin/DeliveryManager';
@@ -10,7 +10,7 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
-  const [storeFilter, setStoreFilter] = useState('all'); // 'all', 'Tommy CK', 'Urban Jungle'
+  const [storeFilter, setStoreFilter] = useState('Urban Jungle'); // Default to Urban Jungle
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [syncing, setSyncing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);

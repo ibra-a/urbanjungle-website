@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { CheckCircle, Download, Mail, ArrowLeft } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../services/supabase';
 
 const PaymentSuccess = () => {
   const navigate = useNavigate();

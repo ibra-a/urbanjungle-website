@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Package, Truck, CheckCircle, X, AlertCircle, User, DollarSign } from 'lucide-react';
 import { updateDeliveryStatus, getDeliveryStatusColor, getDeliveryStatusName } from '../../services/delivery.service';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import toast from 'react-hot-toast';
 
 const DeliveryManager = ({ order, onUpdate }) => {

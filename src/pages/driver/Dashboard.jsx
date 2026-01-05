@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import { Package, Truck, CheckCircle, Phone, MapPin, DollarSign, LogOut, User, Navigation, Camera, MessageCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { showDriverToast, showErrorToast } from '../../utils/toastUtils.jsx';

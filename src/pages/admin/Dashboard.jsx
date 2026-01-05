@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import { DollarSign, ShoppingBag, Package, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

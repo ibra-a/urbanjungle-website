@@ -5,7 +5,7 @@
 
 import { useState, useRef } from 'react';
 import { Camera, X, RotateCcw, Check } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import toast from 'react-hot-toast';
 
 export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCancel }) {

@@ -2,7 +2,7 @@ import { Link, Outlet, useLocation } from 'react-router-dom';
 import { Home, Package, ShoppingCart, LogOut, Store, ExternalLink, Bell, User } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 
 const AdminLayout = () => {
   const location = useLocation();

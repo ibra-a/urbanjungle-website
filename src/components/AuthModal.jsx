@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { auth } from '../lib/supabase';
+import { auth } from '../services/supabase';
 import toast from 'react-hot-toast';
 import NationalityInput from './NationalityInput';
 

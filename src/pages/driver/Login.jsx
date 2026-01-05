@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Truck, Phone, Lock } from 'lucide-react';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '../../services/supabase';
 import toast from 'react-hot-toast';
 import gabLogo from '../../assets/logos/GABFASHIONLOGOUPDATED.jpeg';
 import AdminFooter from '../../components/AdminFooter';

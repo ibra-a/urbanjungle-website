@@ -8,7 +8,7 @@
  * because they are under the same GAB company and account number.
  */
 
-import { supabase } from '../lib/supabase';
+import { supabase } from './supabase';
 import toast from 'react-hot-toast';
 import JSONbig from 'json-bigint';
 

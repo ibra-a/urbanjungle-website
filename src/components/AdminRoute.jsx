@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../services/supabase';
 
 const AdminRoute = ({ children }) => {
   const { state } = useApp();
