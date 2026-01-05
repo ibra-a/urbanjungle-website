@@ -342,7 +342,7 @@ export const createOrder = async (orderData) => {
       shipping_address: shippingAddress,
       customer_email: customerEmail,
       customer_name: customerName,
-      status: 'confirmed', // Order is confirmed since payment is done
+      status: 'processing', // Order is processing since payment is confirmed (allowed: pending, processing, shipped, completed, cancelled)
       payment_status: 'paid', // ✅ Payment already confirmed via OTP
       payment_method: 'CAC Bank Mobile Money',
       delivery_status: 'pending',
@@ -452,7 +452,7 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
     if (error) throw error;
 
     // If payment is confirmed and paid, sync to ERPNext and release reservation
-    if (paymentStatus === 'paid' && status === 'confirmed') {
+    if (paymentStatus === 'paid' && (status === 'processing' || status === 'confirmed')) {
       console.log('💰 Payment confirmed - syncing to ERPNext...');
       
       // Get order items to release reservation
