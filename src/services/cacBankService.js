@@ -360,6 +360,11 @@ export const createOrder = async (orderData) => {
     }
     // Note: 'reference' column doesn't exist in orders table - use transaction_id instead
 
+    // DEBUG: Log the exact payload being sent
+    console.log('🔍 Order payload being inserted:', JSON.stringify(orderPayload, null, 2));
+    console.log('🔍 Status value:', orderPayload.status);
+    console.log('🔍 Payment status value:', orderPayload.payment_status);
+
     const { data, error } = await supabase
       .from('orders')
       .insert([orderPayload])
