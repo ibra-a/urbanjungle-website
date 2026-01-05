@@ -55,7 +55,7 @@ const CheckoutWithCAC = () => {
 
   // Calculate totals (DJF currency)
   const subtotal = cart.total;
-  const shipping = subtotal > 30000 ? 0 : 2000; // Free shipping over DJF 30,000
+  const shipping = 0; // Free delivery for all orders
   const total = subtotal + shipping;
 
   // Format price in DJF
@@ -122,11 +122,18 @@ const CheckoutWithCAC = () => {
         customerName: `${shippingData.firstName} ${shippingData.lastName}`
       });
 
-      if (!orderResult.success) {
+      if (!orderResult.success || !orderResult.order) {
         throw new Error('Failed to create order');
       }
 
       const orderId = orderResult.order.id;
+      
+      // Verify order was created successfully before proceeding
+      if (!orderId) {
+        throw new Error('Order creation failed - no order ID returned');
+      }
+
+      // Only proceed with payment after order is confirmed/created
       setTransaction(prev => ({ ...prev, orderId }));
 
       // Initiate CAC Bank payment
@@ -157,7 +164,8 @@ const CheckoutWithCAC = () => {
         reference: paymentResult.paymentRequestId
       });
 
-      toast.success('OTP sent to your phone! Please check your messages.');
+      // Only show OTP popup after order is confirmed and payment is initiated
+      toast.success('Order confirmed! OTP sent to your phone. Please check your messages.');
       setStep(3); // Move to OTP verification
 
     } catch (error) {

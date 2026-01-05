@@ -360,7 +360,7 @@ const Cart = () => {
                   </div>
                   <div>
                     <p className="text-sm text-gray-700">
-                      Delivery fee (if applicable) will be calculated at checkout.
+                      Free delivery on all orders.
                     </p>
                   </div>
                 </div>
