@@ -201,36 +201,48 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
           // ============================================================================
           // STEP 1: Ensure order is synced to ERP (fallback if missed)
           // ============================================================================
+          // ✅ CAC ORDERS: Stock already reduced on payment - skip sync to avoid double reduction
+          // ✅ COD ORDERS: Sync only if not already synced (stock will be reduced on sync)
+          const isCOD = orderData.payment_method === 'Cash on Delivery';
+          
           if (!orderData.synced_to_erp || !orderData.erp_order_id) {
-            console.log('⚠️ Order not synced to ERP yet, auto-syncing now...');
-            
-            // Import sync function dynamically to avoid circular dependency
-            const { syncOrderToERPNext } = await import('../../services/cacBankService');
-            
-            const syncResult = await syncOrderToERPNext(orderId);
-            
-            if (syncResult.success) {
-              console.log('✅ Order auto-synced to ERP on delivery photo');
-              toast.success('Order synced to ERP. Submitting documents...');
+            if (isCOD) {
+              // COD: Sync to ERP (stock will be reduced here)
+              console.log('⚠️ COD order not synced to ERP yet, auto-syncing now...');
               
-              // Refresh order data after sync
-              const { data: refreshedOrder } = await supabase
-                .from('orders')
-                .select('synced_to_erp, erp_order_id')
-                .eq('id', orderId)
-                .single();
+              // Import sync function dynamically to avoid circular dependency
+              const { syncOrderToERPNext } = await import('../../services/cacBankService');
               
-              if (refreshedOrder?.synced_to_erp && refreshedOrder?.erp_order_id) {
-                orderData.synced_to_erp = true;
-                orderData.erp_order_id = refreshedOrder.erp_order_id;
+              const syncResult = await syncOrderToERPNext(orderId);
+              
+              if (syncResult.success) {
+                console.log('✅ COD order auto-synced to ERP on delivery photo');
+                toast.success('Order synced to ERP. Submitting documents...');
+                
+                // Refresh order data after sync
+                const { data: refreshedOrder } = await supabase
+                  .from('orders')
+                  .select('synced_to_erp, erp_order_id')
+                  .eq('id', orderId)
+                  .single();
+                
+                if (refreshedOrder?.synced_to_erp && refreshedOrder?.erp_order_id) {
+                  orderData.synced_to_erp = true;
+                  orderData.erp_order_id = refreshedOrder.erp_order_id;
+                } else {
+                  console.error('⚠️ Sync completed but flag not set, skipping ERP submission');
+                  toast.error('Order synced but ERP documents cannot be submitted. Admin can retry.');
+                  return;
+                }
               } else {
-                console.error('⚠️ Sync completed but flag not set, skipping ERP submission');
-                toast.error('Order synced but ERP documents cannot be submitted. Admin can retry.');
+                console.error('❌ Auto-sync failed:', syncResult.error);
+                toast.error('Failed to sync order to ERP. Admin must sync manually.');
                 return;
               }
             } else {
-              console.error('❌ Auto-sync failed:', syncResult.error);
-              toast.error('Failed to sync order to ERP. Admin must sync manually.');
+              // CAC: Should already be synced, but if not, admin must sync manually
+              console.error('⚠️ CAC order not synced to ERP - this should not happen. Stock was already reduced on payment.');
+              toast.error('Order not synced to ERP. Admin must sync manually to avoid double stock reduction.');
               return;
             }
           }
