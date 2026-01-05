@@ -39,9 +39,13 @@ const Orders = () => {
       }
       
       // Payment status filter - only show paid orders by default
-      if (paymentFilter !== 'all') {
-        query = query.eq('payment_status', paymentFilter);
+      // STRICT: Only show orders with payment_status = 'paid' (exclude null, undefined, or 'pending')
+      if (paymentFilter === 'paid') {
+        query = query.eq('payment_status', 'paid');
+      } else if (paymentFilter === 'pending') {
+        query = query.eq('payment_status', 'pending');
       }
+      // If 'all', show all orders regardless of payment status
       
       const { data, error } = await query;
       if (error) throw error;
