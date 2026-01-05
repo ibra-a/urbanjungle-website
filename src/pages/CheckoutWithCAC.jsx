@@ -103,48 +103,19 @@ const CheckoutWithCAC = () => {
     setIsProcessing(true);
 
     try {
-      // Create order in Supabase
-      const orderResult = await cacBankService.createOrder({
-        userId: user?.id,
-        items: cart.items.map(item => ({
-          item_code: item.itemCode || item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          size: item.size,
-          color: item.color,
-          image: item.image
-        })),
-        totalAmount: total,
-        shippingAddress: shippingData,
-        phoneNumber: paymentData.phoneNumber,
-        customerEmail: shippingData.email,
-        customerName: `${shippingData.firstName} ${shippingData.lastName}`
-      });
-
-      if (!orderResult.success || !orderResult.order) {
-        const errorMsg = orderResult.error || 'Failed to create order';
-        console.error('❌ Order creation failed:', errorMsg);
-        throw new Error(errorMsg);
-      }
-
-      const orderId = orderResult.order.id;
+      // ✅ NEW FLOW: Don't create order yet - only initiate payment
+      // Order will be created AFTER OTP confirmation (when payment is guaranteed)
       
-      // Verify order was created successfully before proceeding
-      if (!orderId) {
-        throw new Error('Order creation failed - no order ID returned');
-      }
+      // Generate a temporary order reference for payment initiation
+      const tempOrderRef = `UJ-${Date.now()}`;
 
-      // Only proceed with payment after order is confirmed/created
-      setTransaction(prev => ({ ...prev, orderId }));
-
-      // Initiate CAC Bank payment
+      // Initiate CAC Bank payment (no order created yet)
       const paymentResult = await cacBankService.initiatePayment({
         amount: total,
         phoneNumber: paymentData.phoneNumber,
         customerName: `${shippingData.firstName} ${shippingData.lastName}`,
         customerEmail: shippingData.email,
-        orderId: orderId,
+        orderId: tempOrderRef, // Temporary reference
         description: `Urban Jungle - Order ${cart.items.length} items`
       });
 
@@ -152,46 +123,19 @@ const CheckoutWithCAC = () => {
         throw new Error(paymentResult.error || 'Payment initiation failed');
       }
 
-      // Update order with transaction details
-      await cacBankService.updateOrderPayment(orderId, {
-        paymentRequestId: paymentResult.paymentRequestId,
-        transactionId: paymentResult.paymentRequestId,
-        status: 'pending',
-        paymentStatus: 'pending' // Changed from 'processing' to match constraint
-      });
-
+      // Store payment request ID for OTP confirmation
       setTransaction({
-        orderId,
+        orderId: null, // No order yet - will be created after OTP
         paymentRequestId: paymentResult.paymentRequestId,
         reference: paymentResult.paymentRequestId
       });
 
-      // Only show OTP popup after order is confirmed and payment is initiated
-      toast.success('Order confirmed! OTP sent to your phone. Please check your messages.');
+      // Show OTP popup - order will be created after OTP confirmation
+      toast.success('OTP sent to your phone. Please check your messages.');
       setStep(3); // Move to OTP verification
 
     } catch (error) {
       console.error('Payment initiation error:', error);
-      
-      // Release stock reservation if payment initiation fails
-      if (transaction.orderId) {
-        try {
-          const { data: order } = await supabase
-            .from('orders')
-            .select('items')
-            .eq('id', transaction.orderId)
-            .single();
-          
-          if (order?.items) {
-            const { releaseStock } = await import('../services/stockReservationService');
-            await releaseStock(order.items);
-            console.log('✅ Stock reservation released due to payment initiation failure');
-          }
-        } catch (releaseError) {
-          console.error('⚠️ Failed to release stock reservation:', releaseError);
-        }
-      }
-      
       toast.error(error.message || 'Failed to initiate payment');
     } finally {
       setIsProcessing(false);
@@ -210,7 +154,7 @@ const CheckoutWithCAC = () => {
     setIsProcessing(true);
 
     try {
-      // Confirm payment with OTP
+      // Step 1: Confirm payment with OTP
       const confirmResult = await cacBankService.confirmPayment({
         paymentRequestId: transaction.paymentRequestId,
         otp: paymentData.otp,
@@ -221,21 +165,44 @@ const CheckoutWithCAC = () => {
         throw new Error(confirmResult.error || 'Payment confirmation failed');
       }
 
-      // Payment confirmed successfully - no separate verification needed
-      // CAC Bank confirmation is the final step
-      
-      // Update order status to completed
-      await cacBankService.updateOrderPayment(transaction.orderId, {
+      // ✅ Step 2: Payment confirmed - NOW create the order with payment_status: 'paid'
+      // This ensures order only exists after payment is confirmed
+      const orderResult = await cacBankService.createOrder({
+        userId: user?.id,
+        items: cart.items.map(item => ({
+          item_code: item.itemCode || item.id,
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          size: item.size,
+          color: item.color,
+          image: item.image
+        })),
+        totalAmount: total,
+        shippingAddress: shippingData,
+        phoneNumber: paymentData.phoneNumber,
+        customerEmail: shippingData.email,
+        customerName: `${shippingData.firstName} ${shippingData.lastName}`,
+        // Payment details - order is created as 'paid' since payment is already confirmed
         paymentRequestId: transaction.paymentRequestId,
         transactionId: confirmResult.reference || transaction.paymentRequestId,
-        status: 'confirmed',
-        paymentStatus: 'paid',
         reference: confirmResult.reference,
         confirmReference: confirmResult.confirmReference
       });
 
+      if (!orderResult.success || !orderResult.order) {
+        const errorMsg = orderResult.error || 'Failed to create order';
+        console.error('❌ Order creation failed after payment:', errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      const orderId = orderResult.order.id;
+      
+      // Update transaction with order ID
+      setTransaction(prev => ({ ...prev, orderId }));
+
       // Show processing animation FIRST (before clearing cart)
-      console.log('🎬 Showing processing animation for order:', transaction.orderId);
+      console.log('🎬 Showing processing animation for order:', orderId);
       setShowProcessing(true);
       
       // Clear cart after a delay (so page doesn't redirect)
@@ -245,26 +212,6 @@ const CheckoutWithCAC = () => {
 
     } catch (error) {
       console.error('Payment confirmation error:', error);
-      
-      // Release stock reservation if payment fails
-      if (transaction.orderId) {
-        try {
-          const { data: order } = await supabase
-            .from('orders')
-            .select('items')
-            .eq('id', transaction.orderId)
-            .single();
-          
-          if (order?.items) {
-            const { releaseStock } = await import('../services/stockReservationService');
-            await releaseStock(order.items);
-            console.log('✅ Stock reservation released due to payment failure');
-          }
-        } catch (releaseError) {
-          console.error('⚠️ Failed to release stock reservation:', releaseError);
-        }
-      }
-      
       toast.error(error.message || 'Payment confirmation failed. Please try again.');
     } finally {
       setIsProcessing(false);
