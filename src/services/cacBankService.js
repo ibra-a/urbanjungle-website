@@ -342,7 +342,7 @@ export const createOrder = async (orderData) => {
       shipping_address: shippingAddress,
       customer_email: customerEmail,
       customer_name: customerName,
-      status: 'processing', // Order is processing since payment is confirmed (allowed: pending, processing, shipped, completed, cancelled)
+      status: 'pending', // Order status (allowed: pending, processing, shipped, completed, cancelled) - will be updated to processing after ERP sync
       payment_status: 'paid', // ✅ Payment already confirmed via OTP
       payment_method: 'CAC Bank Mobile Money',
       delivery_status: 'pending',
