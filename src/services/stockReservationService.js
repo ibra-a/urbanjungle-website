@@ -50,33 +50,20 @@ export const reserveStock = async (items) => {
         };
       }
 
-      // Reserve stock
-      const { error: reserveError } = await supabase.rpc('increment_reserved_quantity', {
-        p_item_code: itemCode,
-        p_quantity: quantity
-      });
+      // Reserve stock using direct update (RPC functions not needed)
+      const currentReserved = product.reserved_quantity || 0;
+      const { error: updateError } = await supabase
+        .from(TABLES.PRODUCTS)
+        .update({ 
+          reserved_quantity: currentReserved + quantity 
+        })
+        .eq('item_code', itemCode);
 
-      // Fallback: If RPC doesn't exist, use direct update
-      if (reserveError && reserveError.code === '42883') {
-        const { error: updateError } = await supabase
-          .from(TABLES.PRODUCTS)
-          .update({ 
-            reserved_quantity: (product.reserved_quantity || 0) + quantity 
-          })
-          .eq('item_code', itemCode);
-
-        if (updateError) {
-          console.error(`❌ Failed to reserve stock for ${itemCode}:`, updateError);
-          return {
-            success: false,
-            error: `Failed to reserve stock for ${item.name || itemCode}`
-          };
-        }
-      } else if (reserveError) {
-        console.error(`❌ Failed to reserve stock for ${itemCode}:`, reserveError);
+      if (updateError) {
+        console.error(`❌ Failed to reserve stock for ${itemCode}:`, updateError);
         return {
           success: false,
-          error: `Failed to reserve stock for ${item.name || itemCode}`
+          error: `Failed to reserve stock for ${item.name || itemCode}: ${updateError.message}`
         };
       }
 
@@ -130,29 +117,23 @@ export const releaseStock = async (items) => {
       
       if (!itemCode) continue;
 
-      // Release stock using RPC or direct update
-      const { error: releaseError } = await supabase.rpc('decrement_reserved_quantity', {
-        p_item_code: itemCode,
-        p_quantity: quantity
-      });
+      // Release stock using direct update
+      const { data: product } = await supabase
+        .from(TABLES.PRODUCTS)
+        .select('reserved_quantity')
+        .eq('item_code', itemCode)
+        .single();
 
-      // Fallback: If RPC doesn't exist, use direct update
-      if (releaseError && releaseError.code === '42883') {
-        const { data: product } = await supabase
+      if (product) {
+        const newReserved = Math.max(0, (product.reserved_quantity || 0) - quantity);
+        const { error: releaseError } = await supabase
           .from(TABLES.PRODUCTS)
-          .select('reserved_quantity')
-          .eq('item_code', itemCode)
-          .single();
-
-        if (product) {
-          const newReserved = Math.max(0, (product.reserved_quantity || 0) - quantity);
-          await supabase
-            .from(TABLES.PRODUCTS)
-            .update({ reserved_quantity: newReserved })
-            .eq('item_code', itemCode);
+          .update({ reserved_quantity: newReserved })
+          .eq('item_code', itemCode);
+        
+        if (releaseError) {
+          console.error(`⚠️ Failed to release stock for ${itemCode}:`, releaseError);
         }
-      } else if (releaseError) {
-        console.error(`⚠️ Failed to release stock for ${itemCode}:`, releaseError);
       }
     }
 
