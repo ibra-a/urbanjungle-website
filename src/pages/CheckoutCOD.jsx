@@ -4,9 +4,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Lock, Banknote, Loader2, Check } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import toast from 'react-hot-toast';
-import { createCODOrder } from '../services/ordersService';
-import PaymentProcessing from '../components/PaymentProcessing';
-import NationalityInput from '../components/NationalityInput';
+import { supabase, orders } from '../services/supabase';
 
 const CheckoutCOD = () => {
   const navigate = useNavigate();
@@ -14,8 +12,6 @@ const CheckoutCOD = () => {
   const { cart, user } = state;
 
   const [isProcessing, setIsProcessing] = useState(false);
-  const [showProcessing, setShowProcessing] = useState(false);
-  const [orderId, setOrderId] = useState(null);
   const [shippingData, setShippingData] = useState({
     firstName: '',
     lastName: '',
@@ -26,8 +22,7 @@ const CheckoutCOD = () => {
     city: '',
     region: '',
     country: 'Djibouti',
-    zipCode: '',
-    nationality: ''
+    zipCode: ''
   });
 
   // Redirect if cart is empty
@@ -40,7 +35,7 @@ const CheckoutCOD = () => {
 
   // Calculate totals (DJF currency)
   const subtotal = cart.total;
-  const shipping = 0; // ⚠️ TESTING: Shipping disabled for testing purposes
+  const shipping = subtotal > 30000 ? 0 : 2000; // Free shipping over DJF 30,000
   const total = subtotal + shipping;
 
   const formatPrice = (amount) => {
@@ -60,67 +55,45 @@ const CheckoutCOD = () => {
     setIsProcessing(true);
 
     try {
-      // Create COD order using service function (same pattern as Tommy CK)
-      const orderResult = await createCODOrder({
-        userId: user?.id,
-        items: cart.items.map(item => ({
-          item_code: item.itemCode || item.id,
-          name: item.name,
-          quantity: item.quantity,
-          price: item.price,
-          size: item.size,
-          color: item.color,
-          image: item.image,
-          brand: item.brand // Include brand for store detection
-        })),
-        totalAmount: total,
-        shippingAddress: shippingData, // Phone is included in shipping_address
-        customerEmail: shippingData.email,
-        customerName: `${shippingData.firstName} ${shippingData.lastName}`
-      });
+      // Create order in unified orders table
+      const { data: order, error } = await supabase
+        .from('orders')
+        .insert({
+          user_id: user?.id,
+          customer_id: user?.id,
+          customer_name: `${shippingData.firstName} ${shippingData.lastName}`,
+          customer_email: shippingData.email,
+          customer_phone: shippingData.phone,
+          shipping_address: shippingData,
+          items: cart.items.map(item => ({
+            item_code: item.itemCode || item.id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            size: item.size,
+            color: item.color,
+            image: item.image
+          })),
+          total_amount: total,
+          currency: 'DJF',
+          payment_method: 'Cash on Delivery',
+          payment_status: 'pending', // Will be paid on delivery
+          status: 'confirmed',
+          delivery_status: 'pending',
+          synced_to_erp: false,
+          store_name: 'Urban Jungle' // Store identifier
+        })
+        .select()
+        .single();
 
-      if (!orderResult.success) {
-        throw new Error(orderResult.error || 'Failed to create order');
-      }
+      if (error) throw error;
 
-      const order = orderResult.order;
+      // Clear cart
+      actions.clearCart();
 
-      // Sync COD order to ERPNext immediately (but skip Payment Entry)
-      try {
-        console.log('📤 Syncing COD order to ERPNext...');
-        const syncResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/sync-order-to-erp`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-          },
-          body: JSON.stringify({ orderId: order.id })
-        });
-
-        if (!syncResponse.ok) {
-          const syncError = await syncResponse.json();
-          console.error('ERP sync failed (non-blocking):', syncError);
-          // Don't fail checkout - order is created, sync can be retried manually
-        } else {
-          const syncResult = await syncResponse.json();
-          console.log('✅ COD order synced to ERPNext:', syncResult);
-        }
-      } catch (syncError) {
-        console.error('ERP sync error (non-blocking):', syncError);
-        // Don't fail checkout - order is created, sync can be retried manually
-      }
-
-      // Store order ID for processing screen
-      setOrderId(order.id);
-
-      // Show processing animation FIRST (before clearing cart)
-      console.log('🎬 Showing processing animation for COD order:', order.id);
-      setShowProcessing(true);
-      
-      // Clear cart after a delay (so page doesn't redirect immediately)
-      setTimeout(() => {
-        actions.clearCart();
-      }, 3000);
+      // Redirect to success page
+      toast.success('Order placed successfully!');
+      navigate(`/payment-success?orderId=${order.id}`);
 
     } catch (error) {
       console.error('Order creation error:', error);
@@ -130,21 +103,8 @@ const CheckoutCOD = () => {
     }
   };
 
-  // Don't render checkout if cart is empty AND we're not showing processing screen
-  if (cart.items.length === 0 && !showProcessing) {
+  if (cart.items.length === 0) {
     return null;
-  }
-
-  // If showing processing screen, only render that
-  if (showProcessing) {
-    return (
-      <PaymentProcessing 
-        isCOD={true}
-        onComplete={() => {
-          navigate(`/payment-success?orderId=${orderId}`);
-        }}
-      />
-    );
   }
 
   return (
@@ -285,16 +245,6 @@ const CheckoutCOD = () => {
                       className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
                     />
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-900 mb-2">Nationality (Optional)</label>
-                  <NationalityInput
-                    value={shippingData.nationality}
-                    onChange={(value) => setShippingData({ ...shippingData, nationality: value })}
-                    placeholder="Select Nationality"
-                    className="w-full"
-                  />
                 </div>
 
                 <button

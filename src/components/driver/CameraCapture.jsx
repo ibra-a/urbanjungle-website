@@ -162,12 +162,11 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
         // 3. Then submit ERP documents (SO, DN, SI)
         // ============================================================================
         try {
-          // Fetch current order status from unified orders table
+          // Fetch current order status
           const { data: orderData } = await supabase
             .from('orders')
-            .select('synced_to_erp, erp_order_id, payment_method, payment_status, store_name')
+            .select('synced_to_erp, erp_order_id, payment_method, payment_status')
             .eq('id', orderId)
-            .eq('store_name', 'Urban Jungle')
             .single();
 
           if (!orderData) {
@@ -184,19 +183,17 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
             // Import sync function dynamically to avoid circular dependency
             const { syncOrderToERPNext } = await import('../../services/cacBankService');
             
-            // Use 'urban' as storeType for Urban Jungle orders
-            const syncResult = await syncOrderToERPNext(orderId, 'urban');
+            const syncResult = await syncOrderToERPNext(orderId);
             
             if (syncResult.success) {
               console.log('✅ Order auto-synced to ERP on delivery photo');
               toast.success('Order synced to ERP. Submitting documents...');
               
-              // Refresh order data after sync (with store_name filter)
+              // Refresh order data after sync
               const { data: refreshedOrder } = await supabase
                 .from('orders')
-                .select('synced_to_erp, erp_order_id, delivery_note_id, sales_invoice_id')
+                .select('synced_to_erp, erp_order_id')
                 .eq('id', orderId)
-                .eq('store_name', 'Urban Jungle')
                 .single();
               
               if (refreshedOrder?.synced_to_erp && refreshedOrder?.erp_order_id) {
@@ -208,10 +205,8 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
                 return;
               }
             } else {
-              console.error('❌ Auto-sync failed:', syncResult);
-              const errorMsg = syncResult.error || syncResult.message || 'Unknown error';
-              console.error('Full sync result:', JSON.stringify(syncResult, null, 2));
-              toast.error(`Failed to sync order to ERP: ${errorMsg}. Admin must sync manually.`);
+              console.error('❌ Auto-sync failed:', syncResult.error);
+              toast.error('Failed to sync order to ERP. Admin must sync manually.');
               return;
             }
           }
@@ -258,7 +253,6 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
             .from('orders')
             .select('*')
             .eq('id', orderId)
-            .eq('store_name', 'Urban Jungle')
             .single();
 
           if (fullOrder) {

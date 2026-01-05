@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { africanike } from '../assets/images';
+import { africanike, crocsCollection, pumaImage, vansImage } from '../assets/images';
 import { Link } from 'react-router-dom';
 
 const PopularProducts = () => {
@@ -11,24 +11,44 @@ const PopularProducts = () => {
   const currentX = useRef(0);
   const isDragging = useRef(false);
 
+  // 2-3 Layout: Top row (videos) + Bottom row (images)
+  // Top row: Nike, Converse (videos - larger)
+  // Bottom row: Crocs, Puma, Vans (images - smaller)
   const items = [
-    {
-      type: "video",
-      src: "/videos/Epic Adidas shoe commercial concept _ product video B-ROLL.mp4",
-      alt: "Epic Adidas Shoe",
-      title: "Adidas"
-    },
     {
       type: "video",
       src: "/videos/3dairforcebuttonshow.mp4",
       alt: "3D Air Force Show",
-      title: "Nike"
+      title: "Nike",
+      row: "top"
     },
     {
       type: "video",
       src: "/videos/Converse Weapon l Create History Not Hype.mp4",
       alt: "Converse Weapon",
-      title: "Converse"
+      title: "Converse",
+      row: "top"
+    },
+    {
+      type: "image",
+      src: crocsCollection,
+      alt: "Urban Jungle Crocs Collection",
+      title: "Crocs",
+      row: "bottom"
+    },
+    {
+      type: "image",
+      src: pumaImage,
+      alt: "Urban Jungle Puma Collection",
+      title: "Puma",
+      row: "bottom"
+    },
+    {
+      type: "image",
+      src: vansImage,
+      alt: "Urban Jungle Vans Collection",
+      title: "Vans",
+      row: "bottom"
     }
   ];
 
@@ -149,16 +169,42 @@ const PopularProducts = () => {
           </p>
         </motion.div>
 
-        {/* Desktop Grid Layout */}
-        <div className='hidden md:grid md:grid-cols-3 gap-6 h-96'>
-          {items.map((item, index) => (
-            <div key={index} className='relative group overflow-hidden rounded-lg'>
-              {renderMediaContent(item, index)}
-              <div className='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300'></div>
-              <div className='absolute inset-0 flex flex-col justify-end p-6'>
-                <h3 className='text-white font-montserrat font-bold text-xl mb-4'>{item.title}</h3>
-                {item.title === "Nike" ? (
-                  <Link to="/men">
+        {/* Desktop Grid Layout - 2-3 Layout */}
+        <div className='hidden md:grid gap-6'>
+          {/* Top Row: 2 Large Cards (Videos) */}
+          <div className='grid grid-cols-2 gap-6 mb-6'>
+            {items.filter(item => item.row === 'top').map((item, index) => (
+              <div key={index} className='relative group overflow-hidden rounded-lg h-96'>
+                {renderMediaContent(item, index)}
+                <div className='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300'></div>
+                <div className='absolute inset-0 flex flex-col justify-end p-6'>
+                  <h3 className='text-white font-montserrat font-bold text-xl mb-4'>{item.title}</h3>
+                  {item.title === "Nike" ? (
+                    <Link to="/men">
+                      <motion.button 
+                        className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold transition-all duration-300 w-fit relative overflow-hidden group'
+                        whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
+                        whileTap={{ scale: 0.95 }}
+                        style={{ boxShadow: "0 4px 15px rgba(251, 191, 36, 0.3)" }}
+                      >
+                        <span className='relative z-10'>Shop now</span>
+                        <motion.div
+                          className='absolute inset-0 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 opacity-0 group-hover:opacity-100'
+                          animate={{
+                            backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                          style={{
+                            backgroundSize: '200% 100%'
+                          }}
+                        />
+                      </motion.button>
+                    </Link>
+                  ) : (
                     <motion.button 
                       className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold transition-all duration-300 w-fit relative overflow-hidden group'
                       whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
@@ -181,8 +227,20 @@ const PopularProducts = () => {
                         }}
                       />
                     </motion.button>
-                  </Link>
-                ) : (
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Bottom Row: 3 Smaller Cards (Images) */}
+          <div className='grid grid-cols-3 gap-6'>
+            {items.filter(item => item.row === 'bottom').map((item, index) => (
+              <div key={index} className='relative group overflow-hidden rounded-lg h-80'>
+                {renderMediaContent(item, index)}
+                <div className='absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-colors duration-300'></div>
+                <div className='absolute inset-0 flex flex-col justify-end p-6'>
+                  <h3 className='text-white font-montserrat font-bold text-xl mb-4'>{item.title}</h3>
                   <motion.button 
                     className='bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-6 py-3 rounded-full font-montserrat font-semibold transition-all duration-300 w-fit relative overflow-hidden group'
                     whileHover={{ scale: 1.05, boxShadow: "0 8px 30px rgba(251, 191, 36, 0.5), 0 0 20px rgba(251, 191, 36, 0.3)" }}
@@ -205,10 +263,10 @@ const PopularProducts = () => {
                       }}
                     />
                   </motion.button>
-                )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         {/* Mobile Swiper Layout */}

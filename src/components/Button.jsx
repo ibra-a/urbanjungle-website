@@ -9,18 +9,14 @@ const Button = ({
   fullWidth,
   onClick,
   disabled = false,
-  variant = "primary",
-  children,
-  className = ""
+  variant = "primary"
 }) => {
   const getButtonClasses = () => {
-    if (variant === "secondary" || variant === "outline") {
+    if (variant === "secondary") {
       return "uj-button-secondary";
     }
     return "uj-button-primary";
   };
-
-  const buttonContent = children || label;
 
   return (
     <motion.button
@@ -33,7 +29,6 @@ const Button = ({
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
         relative overflow-hidden group
         focus:outline-none focus:ring-4 focus:ring-yellow-500/30
-        ${className}
       `}
       whileHover={!disabled ? { 
         scale: 1.02,
@@ -47,7 +42,7 @@ const Button = ({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <span className="relative z-10">{buttonContent}</span>
+      <span className="relative z-10">{label}</span>
 
       {iconURL && (
         <motion.img
@@ -71,4 +66,3 @@ const Button = ({
 };
 
 export default Button;
-export { Button };

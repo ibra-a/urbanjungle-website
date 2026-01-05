@@ -225,6 +225,17 @@ export const auth = {
     return { data, error };
   },
 
+  // Sign in with OAuth (Apple)
+  signInWithApple: async () => {
+    const { data, error } = await supabase.auth.signInWithOAuth({
+      provider: 'apple',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`
+      }
+    });
+    return { data, error };
+  },
+
   // Get current session
   getCurrentSession: async () => {
     const { data: { session }, error } = await supabase.auth.getSession();

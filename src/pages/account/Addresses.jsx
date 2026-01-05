@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/Button';
+import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
-import { supabase } from '../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const Addresses = () => {
   const { state } = useApp();

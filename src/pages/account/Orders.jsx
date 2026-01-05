@@ -2,9 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, Package, Truck, CheckCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/Button';
+import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
-import { supabase } from '../../lib/supabase';
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+);
 
 const Orders = () => {
   const { state } = useApp();
@@ -31,10 +36,9 @@ const Orders = () => {
     try {
       setLoading(true);
       
-      // Fetch orders from urban_orders table (Urban Jungle orders)
+      // Fetch orders by customer_id (logged-in) OR customer_email (guest orders that match user email)
       const { data, error } = await supabase
         .from('orders')
-        .eq('store_name', 'Urban Jungle')
         .select('*')
         .or(`customer_id.eq.${state.user.id},customer_email.eq.${state.user.email}`)
         .order('created_at', { ascending: false });

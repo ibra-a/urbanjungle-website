@@ -76,7 +76,7 @@ const UJLoadingScreen = ({ onLoadingComplete }) => {
           </div>
 
           <div className="text-center relative z-10">
-            {/* Nike Logo with smooth entrance */}
+            {/* Urban Jungle Logo with smooth entrance */}
             <motion.div
               className="mb-8"
               initial={{ scale: 0.8, opacity: 0 }}

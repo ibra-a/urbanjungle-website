@@ -19,12 +19,11 @@ const PaymentSuccess = () => {
 
   const loadOrderDetails = async () => {
     try {
-      // Use unified orders table with store_name filter
       const { data, error } = await supabase
         .from('orders')
         .select('*')
         .eq('id', orderId)
-        .eq('store_name', 'Urban Jungle')
+        .eq('store_name', 'Urban Jungle') // Filter for Urban Jungle orders
         .single();
 
       if (error) throw error;

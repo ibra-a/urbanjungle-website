@@ -143,3 +143,7 @@ async function addOpeningStock(itemCode, qty, rate) {
 
 createTestItem();
 
+
+
+
+

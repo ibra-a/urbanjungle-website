@@ -390,7 +390,7 @@ const EcommerceNav = () => {
             >
               {/* Mobile Menu Header */}
               <div className="flex justify-between items-center p-4 border-b border-gray-200">
-                <img src={headerLogo} alt="Nike logo" width={50} height={18} />
+                <img src={headerLogo} alt="Urban Jungle logo" width={50} height={18} />
                 <motion.button
                   type="button"
                   onClick={closeMenu}

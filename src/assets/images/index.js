@@ -33,6 +33,15 @@ import mbappeWhite from './mbappewhitepic.png'
 // Kobe Bryant image
 import kobeBryant from './kobe-bryant-modeling-nike-shoe-4k-5o2pgt5x970wrout.jpg'
 
+// Crocs collection image
+import crocsCollection from './Urban jungle Crocs collection display.png'
+
+// Puma image
+import pumaImage from './finalpuma.png'
+
+// Vans image
+import vansImage from './vans.png'
+
 export {
     bigShoe1,
     bigShoe2,
@@ -65,5 +74,14 @@ export {
     mbappeWhite,
     
     // Kobe Bryant
-    kobeBryant
+    kobeBryant,
+    
+    // Crocs collection
+    crocsCollection,
+    
+    // Puma
+    pumaImage,
+    
+    // Vans
+    vansImage
 }

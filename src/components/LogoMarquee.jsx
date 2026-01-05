@@ -4,20 +4,15 @@ const LogoMarquee = ({
   animationDuration = 80, 
   gap = 120
 }) => {
-  // Logo data array using paths to the logos in assets
+  // Logo data array - All 6 brands: Nike, Converse, Crocs, Puma, Vans, Air Jordan
+  // Logos should be white/light colored for black background
   const logos = [
     { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
     { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
-    { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
-    { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' },
-    { src: '/logos/Nike-Logo.png', alt: 'Nike', name: 'Nike' },
-    { src: '/logos/adidaswhitefontlogo.png', alt: 'Adidas', name: 'Adidas' },
-    { src: '/logos/Converse-Logo.png', alt: 'Converse', name: 'Converse' },
-    { src: '/logos/adidaslogo.png', alt: 'Adidas Sport', name: 'Adidas Sport' }
+    { src: '/logos/Crocs-Logo.png', alt: 'Crocs', name: 'Crocs' },
+    { src: '/logos/Puma-Logo.jpg', alt: 'Puma', name: 'Puma' },
+    { src: '/logos/Vans-Logo.jpg', alt: 'Vans', name: 'Vans' },
+    { src: '/logos/Air-Jordan-Logo.jpg', alt: 'Air Jordan', name: 'Air Jordan' }
   ];
 
   // Create multiple duplicates for seamless infinite flow
@@ -47,25 +42,37 @@ const LogoMarquee = ({
               animationDuration: `${animationDuration}s`
             }}
           >
-            {duplicatedLogos.map((logo, index) => (
-              <div 
-                key={`${logo.name}-${index}`} 
-                style={{
-                  ...logoItemStyle,
-                  marginRight: `${gap}px`
-                }}
-              >
-                <img
-                  src={logo.src}
-                  alt={logo.alt}
-                  style={logoStyle}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.target.style.display = 'none';
+            {duplicatedLogos.map((logo, index) => {
+              // Air Jordan logo is vertical, so make it larger
+              const isAirJordan = logo.name === 'Air Jordan';
+              // Puma logo might also benefit from slightly larger size
+              const isPuma = logo.name === 'Puma';
+              const customLogoStyle = isAirJordan 
+                ? { ...logoStyle, maxHeight: '75px', maxWidth: '90px' }
+                : isPuma
+                ? { ...logoStyle, maxHeight: '65px', maxWidth: '120px' }
+                : logoStyle;
+              
+              return (
+                <div 
+                  key={`${logo.name}-${index}`} 
+                  style={{
+                    ...logoItemStyle,
+                    marginRight: `${gap}px`
                   }}
-                />
-              </div>
-            ))}
+                >
+                  <img
+                    src={logo.src}
+                    alt={logo.alt}
+                    style={customLogoStyle}
+                    loading="lazy"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -138,14 +145,15 @@ const logoItemStyle = {
 };
 
 const logoStyle = {
-  maxHeight: '50px',
-  maxWidth: '140px',
+  maxHeight: '60px',
+  maxWidth: '160px',
   width: 'auto',
   height: 'auto',
   objectFit: 'contain',
-  filter: 'grayscale(100%) brightness(0.6)',
-  opacity: 0.6,
-  // Removed: transition for static background effect
+  filter: 'brightness(1.1)',
+  opacity: 0.85,
+  transition: 'opacity 0.3s ease',
+  // Improved visibility while maintaining subtle aesthetic
 };
 
 const fadeLeftStyle = {

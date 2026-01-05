@@ -1,0 +1,6 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Urban Jungle Favicon - Black background with yellow UJ -->
+  <rect width="32" height="32" fill="#000000"/>
+  <!-- Simplified UJ text -->
+  <text x="16" y="22" font-family="Arial, sans-serif" font-size="18" font-weight="bold" fill="#FCD34D" text-anchor="middle">UJ</text>
+</svg>
