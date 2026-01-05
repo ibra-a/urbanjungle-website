@@ -98,6 +98,30 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
         updateData.delivery_status = 'out_for_delivery';
         updateData.status = 'out_for_delivery';
         updateData.out_for_delivery_at = timestampISO;
+        
+        // ✅ COD ORDERS: Reserve stock when driver picks up (order is committed)
+        try {
+          const { data: orderData } = await supabase
+            .from('orders')
+            .select('items, payment_method')
+            .eq('id', orderId)
+            .single();
+          
+          // Only reserve for COD orders (CAC already reserved on order creation)
+          if (orderData?.payment_method === 'Cash on Delivery' && orderData?.items) {
+            const { reserveStock } = await import('../../services/stockReservationService');
+            const reserveResult = await reserveStock(orderData.items);
+            
+            if (reserveResult.success) {
+              console.log('✅ Stock reserved on collection photo for COD order');
+            } else {
+              console.warn('⚠️ Failed to reserve stock on collection:', reserveResult.error);
+            }
+          }
+        } catch (reserveError) {
+          console.error('⚠️ Error reserving stock on collection:', reserveError);
+          // Don't fail photo upload if reservation fails
+        }
       } else {
         updateData.delivery_photo_url = photoUrl;
         updateData.delivery_photo_taken_at = timestampISO;
@@ -212,10 +236,23 @@ export default function CameraCapture({ orderId, photoType, onPhotoTaken, onCanc
           }
 
           // ============================================================================
-          // STEP 2: Submit ERP documents (SO, DN, SI)
+          // STEP 2: Submit ERP documents (SO, DN, SI) and release reservation
           // ============================================================================
           if (orderData.synced_to_erp && orderData.erp_order_id) {
             console.log('📋 Auto-submitting ERP documents on delivery photo...');
+            
+            // Get order items to release reservation
+            const { data: fullOrder } = await supabase
+              .from('orders')
+              .select('items, payment_method')
+              .eq('id', orderId)
+              .single();
+            
+            // Release stock reservation (stock already reduced in ERPNext)
+            if (fullOrder?.items) {
+              const { releaseStock } = await import('../../services/stockReservationService');
+              await releaseStock(fullOrder.items);
+            }
             
             const submitResponse = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/submit-erp-documents`, {
               method: 'POST',

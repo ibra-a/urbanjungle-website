@@ -55,6 +55,9 @@ const CheckoutCOD = () => {
     setIsProcessing(true);
 
     try {
+      // ✅ COD ORDERS: NO stock reservation (tentative order, customer can cancel)
+      // Stock will be reserved when driver takes collection photo
+      
       // Create order in unified orders table
       const { data: order, error } = await supabase
         .from('orders')

@@ -315,6 +315,17 @@ export const createOrder = async (orderData) => {
       customerName
     } = orderData;
 
+    // ✅ CAC ORDERS: Reserve stock immediately (payment is guaranteed)
+    const { reserveStock } = await import('./stockReservationService');
+    const reservationResult = await reserveStock(items);
+    
+    if (!reservationResult.success) {
+      return {
+        success: false,
+        error: reservationResult.error || 'Insufficient stock available'
+      };
+    }
+
     const { data, error } = await supabase
       .from('orders')
       .insert([
@@ -340,11 +351,14 @@ export const createOrder = async (orderData) => {
       .single();
 
     if (error) {
+      // Release reservation if order creation fails
+      const { releaseStock } = await import('./stockReservationService');
+      await releaseStock(items);
       console.error('❌ Supabase Insert Error:', error);
       throw error;
     }
 
-    console.log('✅ Order created successfully:', data);
+    console.log('✅ Order created successfully with stock reserved:', data);
 
     return {
       success: true,
@@ -411,9 +425,23 @@ export const updateOrderPayment = async (orderId, paymentDetails) => {
 
     if (error) throw error;
 
-    // If payment is confirmed and paid, sync to ERPNext
+    // If payment is confirmed and paid, sync to ERPNext and release reservation
     if (paymentStatus === 'paid' && status === 'confirmed') {
       console.log('💰 Payment confirmed - syncing to ERPNext...');
+      
+      // Get order items to release reservation
+      const { data: order } = await supabase
+        .from('orders')
+        .select('items')
+        .eq('id', orderId)
+        .single();
+      
+      // Release stock reservation (stock will be reduced in ERPNext)
+      if (order?.items) {
+        const { releaseStock } = await import('./stockReservationService');
+        await releaseStock(order.items);
+      }
+      
       syncOrderToERPNext(orderId, 'urban').catch(err => {
         console.error('⚠️ ERPNext sync failed (non-blocking):', err);
         // Don't throw - order is already paid, ERP sync can be retried later

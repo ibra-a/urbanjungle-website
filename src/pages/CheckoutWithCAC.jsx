@@ -170,6 +170,26 @@ const CheckoutWithCAC = () => {
 
     } catch (error) {
       console.error('Payment initiation error:', error);
+      
+      // Release stock reservation if payment initiation fails
+      if (transaction.orderId) {
+        try {
+          const { data: order } = await supabase
+            .from('orders')
+            .select('items')
+            .eq('id', transaction.orderId)
+            .single();
+          
+          if (order?.items) {
+            const { releaseStock } = await import('../services/stockReservationService');
+            await releaseStock(order.items);
+            console.log('✅ Stock reservation released due to payment initiation failure');
+          }
+        } catch (releaseError) {
+          console.error('⚠️ Failed to release stock reservation:', releaseError);
+        }
+      }
+      
       toast.error(error.message || 'Failed to initiate payment');
     } finally {
       setIsProcessing(false);
@@ -223,6 +243,26 @@ const CheckoutWithCAC = () => {
 
     } catch (error) {
       console.error('Payment confirmation error:', error);
+      
+      // Release stock reservation if payment fails
+      if (transaction.orderId) {
+        try {
+          const { data: order } = await supabase
+            .from('orders')
+            .select('items')
+            .eq('id', transaction.orderId)
+            .single();
+          
+          if (order?.items) {
+            const { releaseStock } = await import('../services/stockReservationService');
+            await releaseStock(order.items);
+            console.log('✅ Stock reservation released due to payment failure');
+          }
+        } catch (releaseError) {
+          console.error('⚠️ Failed to release stock reservation:', releaseError);
+        }
+      }
+      
       toast.error(error.message || 'Payment confirmation failed. Please try again.');
     } finally {
       setIsProcessing(false);
