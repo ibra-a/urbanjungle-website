@@ -185,9 +185,8 @@ const CheckoutWithCAC = () => {
         customerName: `${shippingData.firstName} ${shippingData.lastName}`,
         // Payment details - order is created as 'paid' since payment is already confirmed
         paymentRequestId: transaction.paymentRequestId,
-        transactionId: confirmResult.reference || transaction.paymentRequestId,
-        reference: confirmResult.reference,
-        confirmReference: confirmResult.confirmReference
+        transactionId: confirmResult.reference || transaction.paymentRequestId
+        // Note: reference and confirmReference not stored in orders table
       });
 
       if (!orderResult.success || !orderResult.order) {

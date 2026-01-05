@@ -358,9 +358,7 @@ export const createOrder = async (orderData) => {
     if (paymentRequestId) {
       orderPayload.cac_payment_request_id = paymentRequestId;
     }
-    if (reference) {
-      orderPayload.reference = reference;
-    }
+    // Note: 'reference' column doesn't exist in orders table - use transaction_id instead
 
     const { data, error } = await supabase
       .from('orders')
