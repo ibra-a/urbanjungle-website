@@ -11,13 +11,14 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [storeFilter, setStoreFilter] = useState('Urban Jungle'); // Default to Urban Jungle
+  const [paymentFilter, setPaymentFilter] = useState('paid'); // Default to only show paid orders
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [syncing, setSyncing] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   
   useEffect(() => {
     loadOrders();
-  }, [filter, storeFilter]);
+  }, [filter, storeFilter, paymentFilter]);
   
   const loadOrders = async () => {
     try {
@@ -35,6 +36,11 @@ const Orders = () => {
       // Status filter
       if (filter !== 'all') {
         query = query.eq('status', filter);
+      }
+      
+      // Payment status filter - only show paid orders by default
+      if (paymentFilter !== 'all') {
+        query = query.eq('payment_status', paymentFilter);
       }
       
       const { data, error } = await query;
@@ -144,10 +150,11 @@ const Orders = () => {
         </button>
       </div>
       
-      {/* Store Filter */}
-      <div className="flex gap-2 mb-4 flex-wrap">
-        <span className="text-gray-400 text-sm self-center mr-2">Store:</span>
-        {['all', 'Tommy CK', 'Urban Jungle'].map(store => (
+      {/* Filters */}
+      <div className="flex gap-4 mb-4 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
+          <span className="text-gray-400 text-sm self-center mr-2">Store:</span>
+          {['all', 'Tommy CK', 'Urban Jungle'].map(store => (
           <button
             key={store}
             onClick={() => setStoreFilter(store)}
@@ -160,6 +167,24 @@ const Orders = () => {
             {store === 'all' ? 'All Stores' : store}
           </button>
         ))}
+        </div>
+        
+        <div className="flex gap-2 flex-wrap">
+          <span className="text-gray-400 text-sm self-center mr-2">Payment:</span>
+          {['all', 'pending', 'paid'].map(status => (
+            <button
+              key={status}
+              onClick={() => setPaymentFilter(status)}
+              className={`px-4 py-2 rounded font-medium transition-colors ${
+                paymentFilter === status 
+                  ? 'bg-white text-black' 
+                  : 'bg-gray-800 border border-gray-700 text-gray-300 hover:bg-gray-700'
+              }`}
+            >
+              {status === 'all' ? 'All Payments' : status === 'paid' ? 'Paid' : 'Pending Payment'}
+            </button>
+          ))}
+        </div>
       </div>
       
       {/* Status Filters */}
@@ -201,6 +226,7 @@ const Orders = () => {
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Customer</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Items</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Total</th>
+                    <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Payment</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Status</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">ERP Status</th>
                     <th className="text-left p-4 text-xs font-medium text-gray-400 uppercase">Delivery</th>
@@ -234,6 +260,17 @@ const Orders = () => {
                     </td>
                     <td className="p-4">
                       <div className="font-medium text-sm text-white">{order.total_amount?.toLocaleString() || 0} DJF</div>
+                    </td>
+                    <td className="p-4">
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded ${
+                        order.payment_status === 'paid'
+                          ? 'bg-green-900/50 text-green-300 border border-green-700'
+                          : order.payment_status === 'pending'
+                          ? 'bg-yellow-900/50 text-yellow-300 border border-yellow-700'
+                          : 'bg-gray-700 text-gray-300 border border-gray-600'
+                      }`}>
+                        {order.payment_status === 'paid' ? 'Paid' : order.payment_status === 'pending' ? 'Pending' : order.payment_status || 'Unknown'}
+                      </span>
                     </td>
                     <td className="p-4">
                       <select
@@ -366,6 +403,11 @@ const Orders = () => {
                   <div className="space-y-1 text-sm">
                     <p><span className="text-gray-500">Order ID:</span> #{selectedOrder.id.slice(0, 8)}</p>
                     <p><span className="text-gray-500">Status:</span> {selectedOrder.status}</p>
+                    <p><span className="text-gray-500">Payment:</span> <span className={`font-semibold ${
+                      selectedOrder.payment_status === 'paid' ? 'text-green-600' : 
+                      selectedOrder.payment_status === 'pending' ? 'text-yellow-600' : 
+                      'text-gray-600'
+                    }`}>{selectedOrder.payment_status || 'Unknown'}</span></p>
                     <p><span className="text-gray-500">Date:</span> {new Date(selectedOrder.created_at).toLocaleString()}</p>
                     {selectedOrder.erp_order_id && (
                       <p><span className="text-gray-500">ERP ID:</span> {selectedOrder.erp_order_id}</p>

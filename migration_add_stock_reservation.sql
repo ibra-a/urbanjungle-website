@@ -22,3 +22,4 @@ SELECT
   SUM(COALESCE(reserved_quantity, 0)) as total_reserved
 FROM urban_products;
 
+
