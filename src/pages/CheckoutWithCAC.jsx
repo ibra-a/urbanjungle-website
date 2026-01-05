@@ -123,7 +123,9 @@ const CheckoutWithCAC = () => {
       });
 
       if (!orderResult.success || !orderResult.order) {
-        throw new Error('Failed to create order');
+        const errorMsg = orderResult.error || 'Failed to create order';
+        console.error('❌ Order creation failed:', errorMsg);
+        throw new Error(errorMsg);
       }
 
       const orderId = orderResult.order.id;

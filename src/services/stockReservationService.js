@@ -8,7 +8,15 @@ import toast from 'react-hot-toast';
  */
 export const reserveStock = async (items) => {
   try {
+    if (!items || items.length === 0) {
+      return {
+        success: false,
+        error: 'No items to reserve stock for'
+      };
+    }
+
     const reservations = [];
+    const failedItems = [];
     
     for (const item of items) {
       const itemCode = item.item_code || item.id;
@@ -16,6 +24,7 @@ export const reserveStock = async (items) => {
       
       if (!itemCode) {
         console.warn('⚠️ Skipping item without item_code:', item);
+        failedItems.push({ item, reason: 'Missing item_code' });
         continue;
       }
 
@@ -28,6 +37,7 @@ export const reserveStock = async (items) => {
 
       if (fetchError || !product) {
         console.error(`❌ Product not found: ${itemCode}`, fetchError);
+        failedItems.push({ item, reason: `Product not found: ${itemCode}`, error: fetchError });
         continue;
       }
 
@@ -73,9 +83,30 @@ export const reserveStock = async (items) => {
       reservations.push({ itemCode, quantity });
     }
 
+    // If no items were successfully reserved, return error
+    if (reservations.length === 0) {
+      const errorMsg = failedItems.length > 0 
+        ? `Failed to reserve stock: ${failedItems.map(f => f.reason).join(', ')}`
+        : 'No items could be reserved';
+      
+      return {
+        success: false,
+        error: errorMsg,
+        failedItems
+      };
+    }
+
+    // If some items failed but others succeeded, we should rollback
+    // For now, we'll return success if at least one item was reserved
+    // But log warnings for failed items
+    if (failedItems.length > 0) {
+      console.warn('⚠️ Some items failed to reserve:', failedItems);
+    }
+
     return {
       success: true,
-      reservations
+      reservations,
+      warnings: failedItems.length > 0 ? failedItems : undefined
     };
   } catch (error) {
     console.error('❌ Stock reservation error:', error);
