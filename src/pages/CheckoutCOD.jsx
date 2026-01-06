@@ -81,7 +81,7 @@ const CheckoutCOD = () => {
           currency: 'DJF',
           payment_method: 'Cash on Delivery',
           payment_status: 'pending', // Will be paid on delivery
-          status: 'confirmed',
+          status: 'pending', // CRITICAL FIX: Changed from 'confirmed' to 'pending' to match database constraint
           delivery_status: 'pending',
           synced_to_erp: false,
           store_name: 'Urban Jungle' // Store identifier
