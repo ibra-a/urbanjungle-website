@@ -14,6 +14,7 @@ const Men = lazy(() => import('./pages/Men'));
 const Women = lazy(() => import('./pages/Women'));
 const Kids = lazy(() => import('./pages/Kids'));
 const Brands = lazy(() => import('./pages/Brands'));
+const Sale = lazy(() => import('./pages/Sale'));
 const ProductDetail = lazy(() => import('./pages/ProductDetail'));
 const PaymentMethodSelection = lazy(() => import('./pages/PaymentMethodSelection'));
 const CheckoutWithCAC = lazy(() => import('./pages/CheckoutWithCAC'));
@@ -76,6 +77,7 @@ const AppContent = () => {
                 <Route path="/women" element={<Women />} />
                 <Route path="/kids" element={<Kids />} />
                 <Route path="/brands" element={<Brands />} />
+                <Route path="/sale" element={<Sale />} />
                 <Route path="/product/:itemCode" element={<ProductDetail />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<PaymentMethodSelection />} />

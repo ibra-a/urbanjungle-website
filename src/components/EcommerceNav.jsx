@@ -78,9 +78,7 @@ const EcommerceNav = () => {
       key: 'sale', 
       label: 'SALE',
       subItems: [
-        { label: 'Sale - Apparel', href: '/shop?sale=true&type=apparel' },
-        { label: 'Sale - Footwear', href: '/shop?sale=true&type=footwear' },
-        { label: 'Sale - Accessories', href: '/shop?sale=true&type=accessories' }
+        { label: 'Coming Soon', href: '/sale' }
       ]
     }
   ];
