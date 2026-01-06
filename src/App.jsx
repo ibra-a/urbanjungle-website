@@ -36,6 +36,7 @@ const Account = lazy(() => import('./pages/Account'));
 const AccountOrders = lazy(() => import('./pages/account/Orders'));
 const AccountSettings = lazy(() => import('./pages/account/Settings'));
 const AccountAddresses = lazy(() => import('./pages/account/Addresses'));
+const AccountAddressForm = lazy(() => import('./pages/account/AddressForm'));
 
 // Admin Pages - Lazy loaded (admin routes are less frequently accessed)
 const AdminRoute = lazy(() => import('./components/AdminRoute'));
@@ -105,6 +106,8 @@ const AppContent = () => {
                 <Route path="/account/orders" element={<AccountOrders />} />
                 <Route path="/account/settings" element={<AccountSettings />} />
                 <Route path="/account/addresses" element={<AccountAddresses />} />
+                <Route path="/account/addresses/new" element={<AccountAddressForm />} />
+                <Route path="/account/addresses/edit" element={<AccountAddressForm />} />
                 {/* Test route removed for production security */}
                 {/* <Route path="/test" element={<TestPage />} /> */}
               </Routes>
