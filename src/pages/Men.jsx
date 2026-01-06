@@ -331,7 +331,7 @@ const Men = () => {
 
             {!loading && !error && filteredProducts.length > 0 && (
               <>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6 items-stretch">
                   {paginatedProducts.map((product) => (
                     <LiveProductCard 
                       key={product.item_code || product.product_name || product.item_name}

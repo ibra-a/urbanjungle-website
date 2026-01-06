@@ -139,7 +139,7 @@ const LiveProductCard = memo(({ product, className = "" }) => {
 
   return (
     <motion.div 
-      className={`group cursor-pointer flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 sm:p-4 ${className}`}
+      className={`group cursor-pointer flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden ${className}`}
       onClick={handleCardClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -147,7 +147,7 @@ const LiveProductCard = memo(({ product, className = "" }) => {
       transition={{ duration: 0.3 }}
     >
       {/* Image Container - Light gray background like Tommy CK */}
-      <div className="relative aspect-[3/4] bg-gray-50 mb-3 overflow-hidden rounded-lg flex items-center justify-center p-4 border border-gray-100 group-hover:border-yellow-500/30 transition-colors">
+      <div className="relative aspect-[3/4] bg-gray-50 overflow-hidden flex items-center justify-center p-3 sm:p-4 border-b border-gray-100 group-hover:border-yellow-500/30 transition-colors">
         {imageLoading && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
@@ -185,45 +185,45 @@ const LiveProductCard = memo(({ product, className = "" }) => {
         </AnimatePresence>
         
         {/* Live Data badge - Subtle like Tommy CK */}
-        <div className='absolute top-3 left-3 bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm'>
+        <div className='absolute top-2.5 left-2.5 sm:top-3 sm:left-3 bg-green-500 text-white px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold shadow-sm z-10'>
           • Live Stock
         </div>
         
         {/* Favorite Button - Always visible like Tommy CK */}
-        <div className="absolute top-3 right-3 z-10">
+        <div className="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 z-10">
           <FavoriteButton 
             product={product} 
             size="sm" 
-            className="bg-white/90 backdrop-blur-sm shadow-sm"
+            className="bg-white/95 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow"
           />
         </div>
 
       </div>
 
       {/* Content section - Clean layout like Tommy CK */}
-      <div className='flex-1 flex flex-col space-y-2'>
-        {/* Product name - Consistent height */}
-        <h3 className='text-base sm:text-lg font-semibold font-palanquin text-black line-clamp-2 min-h-[2.5rem]'>
+      <div className='flex-1 flex flex-col p-3 sm:p-4 pt-3 sm:pt-4'>
+        {/* Product name - Consistent height with better spacing */}
+        <h3 className='text-sm sm:text-base font-semibold font-palanquin text-black line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] leading-tight mb-1.5'>
           {baseName}
         </h3>
         
-        {/* Variant / colorway - Subtle */}
+        {/* Variant / colorway - Subtle with better spacing */}
         {variantLabel && variantLabel.toLowerCase() !== baseName.toLowerCase() && (
-          <p className="text-xs sm:text-sm text-gray-500 font-montserrat line-clamp-1">
+          <p className="text-[11px] sm:text-xs text-gray-500 font-montserrat line-clamp-1 mb-2">
             {variantLabel}
           </p>
         )}
 
-        {/* Price - Prominent */}
-        <div className='mt-auto pt-2'>
-          <p className='font-montserrat font-bold text-lg sm:text-xl leading-normal text-yellow-500'>
+        {/* Price - Prominent, positioned at bottom */}
+        <div className='mt-auto pt-2 sm:pt-3 mb-3 sm:mb-4'>
+          <p className='font-montserrat font-bold text-base sm:text-lg leading-tight text-yellow-500'>
             {formatPrice(product.price)}
           </p>
         </div>
 
         {/* Add to Cart Button - Always visible like Tommy CK */}
         <motion.button
-          className="w-full mt-3 bg-white border border-gray-300 text-gray-700 py-2.5 sm:py-3 rounded font-semibold text-sm sm:text-base transition-all duration-200 hover:border-yellow-500 hover:text-yellow-500 min-h-[44px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full bg-white border border-gray-300 text-gray-700 py-2.5 sm:py-2.5 rounded font-semibold text-xs sm:text-sm transition-all duration-200 hover:border-yellow-500 hover:text-yellow-500 hover:bg-yellow-50 min-h-[40px] sm:min-h-[44px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
           whileHover={!isAddingToCart && (product.stock_quantity || 0) > 0 ? { scale: 1.01 } : {}}
           whileTap={!isAddingToCart && (product.stock_quantity || 0) > 0 ? { scale: 0.99 } : {}}
           onClick={(e) => {
@@ -233,7 +233,7 @@ const LiveProductCard = memo(({ product, className = "" }) => {
           disabled={isAddingToCart || (product.stock_quantity || 0) === 0}
         >
           {isAddingToCart ? (
-            <div className="w-5 h-5 border-2 border-gray-700 border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-gray-700 border-t-transparent rounded-full animate-spin" />
           ) : (product.stock_quantity || 0) === 0 ? (
             'Out of Stock'
           ) : (
