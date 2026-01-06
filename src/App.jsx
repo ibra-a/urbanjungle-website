@@ -90,7 +90,8 @@ const AppContent = () => {
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
-                <Route path="/test" element={<TestPage />} />
+                {/* Test route removed for production security */}
+                {/* <Route path="/test" element={<TestPage />} /> */}
               </Routes>
               <section className='bg-black padding-x padding-t pb-8'>
                 <Footer />
