@@ -40,6 +40,12 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
+  // Skip chrome-extension and other unsupported schemes
+  const url = new URL(event.request.url);
+  if (url.protocol === 'chrome-extension:' || url.protocol === 'moz-extension:' || url.protocol === 'safari-extension:') {
+    return; // Let the browser handle extension requests
+  }
+
   // Only cache GET requests
   if (event.request.method !== 'GET') {
     return;
@@ -61,7 +67,12 @@ self.addEventListener('fetch', (event) => {
 
             caches.open(CACHE_NAME)
               .then((cache) => {
-                cache.put(event.request, responseToCache);
+                // Only cache http/https requests
+                if (url.protocol === 'http:' || url.protocol === 'https:') {
+                  cache.put(event.request, responseToCache).catch((err) => {
+                    console.warn('Service Worker: Failed to cache', event.request.url, err);
+                  });
+                }
               });
 
             return response;
