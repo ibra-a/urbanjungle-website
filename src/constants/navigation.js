@@ -121,23 +121,17 @@ export const navigationData = {
       sportswear: {
         label: "Sportswear",
         items: [
-          { name: "Nike", href: "/brands/nike", featured: true },
-          { name: "Adidas", href: "/brands/adidas" },
-          { name: "Puma", href: "/brands/puma" },
-          { name: "Under Armour", href: "/brands/under-armour" },
-          { name: "New Balance", href: "/brands/new-balance" },
-          { name: "ASICS", href: "/brands/asics" }
+          { name: "Nike", href: "/shop?brand=nike", featured: true },
+          { name: "Puma", href: "/shop?brand=puma" }
         ]
       },
       lifestyle: {
         label: "Lifestyle",
         items: [
-          { name: "Jordan", href: "/brands/jordan", featured: true },
-          { name: "Converse", href: "/brands/converse", featured: true },
-          { name: "Vans", href: "/brands/vans" },
-          { name: "Timberland", href: "/brands/timberland" },
-          { name: "Crocs", href: "/brands/crocs" },
-          { name: "Birkenstock", href: "/brands/birkenstock" }
+          { name: "Jordan", href: "/shop?brand=jordan", featured: true },
+          { name: "Converse", href: "/shop?brand=converse", featured: true },
+          { name: "Vans", href: "/shop?brand=vans" },
+          { name: "Crocs", href: "/shop?brand=crocs" }
         ]
       },
       luxury: {

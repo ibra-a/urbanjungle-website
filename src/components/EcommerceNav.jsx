@@ -70,8 +70,10 @@ const EcommerceNav = () => {
       subItems: [
         { label: 'Nike', href: '/shop?brand=nike' },
         { label: 'Jordan', href: '/shop?brand=jordan' },
-        { label: 'Adidas', href: '/shop?brand=adidas' },
-        { label: 'Converse', href: '/shop?brand=converse' }
+        { label: 'Converse', href: '/shop?brand=converse' },
+        { label: 'Crocs', href: '/shop?brand=crocs' },
+        { label: 'Vans', href: '/shop?brand=vans' },
+        { label: 'Puma', href: '/shop?brand=puma' }
       ]
     },
     { 
