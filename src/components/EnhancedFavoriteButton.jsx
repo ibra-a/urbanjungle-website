@@ -109,10 +109,10 @@ const EnhancedFavoriteButton = ({ product, className = '' }) => {
     return (
       <button 
         onClick={() => navigate('/', { state: { showLogin: true } })}
-        className={`w-full py-4 border border-gray-300 rounded-full font-semibold text-lg hover:border-coral-red transition-colors flex items-center justify-center gap-2 ${className}`}
+        className={`w-full py-4 border-2 border-yellow-500 bg-transparent text-yellow-500 rounded-full font-semibold text-lg hover:bg-gradient-to-r hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-500 hover:text-black hover:shadow-lg hover:shadow-yellow-500/30 transition-all duration-300 flex items-center justify-center gap-2 ${className}`}
       >
-        <Heart size={20} />
-        Favorite ❤️
+        <Heart size={20} className="text-yellow-500" />
+        Add to Favorites
       </button>
     );
   }
@@ -123,10 +123,10 @@ const EnhancedFavoriteButton = ({ product, className = '' }) => {
       <motion.button
         onClick={toggleFavorite}
         disabled={isLoading}
-        className={`w-full py-4 border rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+        className={`w-full py-4 border-2 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
           isFavorite
-            ? 'border-red-500 bg-red-50 text-red-600 hover:bg-red-100'
-            : 'border-gray-300 hover:border-coral-red'
+            ? 'border-yellow-500 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black hover:shadow-lg hover:shadow-yellow-500/40'
+            : 'border-yellow-500 bg-transparent text-yellow-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-500 hover:text-black hover:shadow-lg hover:shadow-yellow-500/30'
         } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
         whileHover={{ scale: isLoading ? 1 : 1.02 }}
         whileTap={{ scale: isLoading ? 1 : 0.98 }}
@@ -141,10 +141,10 @@ const EnhancedFavoriteButton = ({ product, className = '' }) => {
             <Heart 
               size={20} 
               className={`transition-colors duration-200 ${
-                isFavorite ? 'fill-red-500 text-red-500' : 'fill-none'
+                isFavorite ? 'fill-black text-black' : 'fill-none text-yellow-500'
               }`}
             />
-            {isFavorite ? 'Remove from Favorites' : 'Favorite ❤️'}
+            {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
           </>
         )}
       </motion.button>

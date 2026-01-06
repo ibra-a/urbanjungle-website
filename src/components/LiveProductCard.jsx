@@ -270,7 +270,7 @@ const LiveProductCard = memo(({ product, className = "" }) => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <p className='font-montserrat font-bold text-2xl leading-normal bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent'>
+          <p className='font-montserrat font-bold text-2xl leading-normal text-yellow-500'>
             {formatPrice(product.price)}
           </p>
           <p className='text-slate-600 text-sm font-montserrat font-medium'>
@@ -291,8 +291,8 @@ const LiveProductCard = memo(({ product, className = "" }) => {
             handleCardClick();
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-xl"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
           <span className="relative block py-3 px-6 text-white font-semibold tracking-wide">
             View Details
           </span>

@@ -390,8 +390,8 @@ const Cart = () => {
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.99 }}
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-full"></div>
-                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-full"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
                 <span className="relative block py-4 text-white font-semibold text-lg tracking-wide">
                   Checkout
                 </span>

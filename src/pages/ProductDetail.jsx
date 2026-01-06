@@ -645,7 +645,7 @@ const ProductDetail = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="font-bold text-lg text-slate-900">Select Color</h3>
                   {selectedColor && (
-                    <span className="text-sm font-semibold bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent">
+                    <span className="text-sm font-semibold text-yellow-500">
                       {selectedColor.color}
                     </span>
                   )}
@@ -671,7 +671,7 @@ const ProductDetail = () => {
                       >
                         {colorObj.color}
                         {isSelected && (
-                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-500 to-pink-500 rounded-full flex items-center justify-center">
+                          <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-full flex items-center justify-center">
                             <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                             </svg>
@@ -694,7 +694,7 @@ const ProductDetail = () => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h3 className="font-bold text-lg text-slate-900">Select Size</h3>
-                <button className="bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent text-sm font-semibold hover:underline flex items-center gap-1">
+                <button className="text-yellow-500 text-sm font-semibold hover:text-yellow-400 hover:underline flex items-center gap-1 transition-colors">
                   <Info size={16} />
                   Size Guide
                 </button>
@@ -714,7 +714,7 @@ const ProductDetail = () => {
                         !sizeAvailable
                           ? 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed opacity-50'
                           : selectedSize === size
-                          ? 'border-yellow-500 bg-gradient-to-br from-yellow-500 to-pink-500 text-white shadow-lg shadow-yellow-500/40'
+                          ? 'border-yellow-500 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black shadow-lg shadow-yellow-500/40'
                           : 'border-slate-300 bg-white hover:border-yellow-500 hover:shadow-md text-slate-700 hover:scale-105'
                       }`}
                       title={sizeAvailable ? `${sizeStock} in stock` : 'Out of stock'}
@@ -736,7 +736,7 @@ const ProductDetail = () => {
                   <p className="text-slate-500 font-medium">✓ EU sizes shown</p>
                 )}
                 {hasSizeData && selectedSize && (
-                  <p className="bg-gradient-to-r from-yellow-500 to-pink-500 bg-clip-text text-transparent font-semibold">
+                  <p className="text-yellow-500 font-semibold">
                     {getSizeStock(selectedSize)} in stock for size {selectedSize}
                   </p>
                 )}
@@ -783,7 +783,7 @@ const ProductDetail = () => {
                 className={`w-full py-5 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
                   !selectedSize || getSizeStock(selectedSize) === 0
                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-yellow-500 via-red-500 to-pink-500 text-white hover:shadow-2xl hover:shadow-yellow-500/40 relative overflow-hidden'
+                    : 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black hover:shadow-2xl hover:shadow-yellow-500/40 relative overflow-hidden'
                 }`}
                 whileHover={{ scale: selectedSize && getSizeStock(selectedSize) > 0 ? 1.02 : 1 }}
                 whileTap={{ scale: selectedSize && getSizeStock(selectedSize) > 0 ? 0.98 : 1 }}
