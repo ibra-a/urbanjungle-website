@@ -81,7 +81,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
       </div>
 
       {/* Free Shipping Notice */}
-      {shipping > 0 && (
+      {shipping > 0 && subtotal < 25000 && (
         <motion.div
           className="mt-4 p-3 bg-pale-blue rounded-lg"
           initial={{ opacity: 0, scale: 0.95 }}
@@ -90,7 +90,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
         >
           <p className="text-sm text-slate-gray text-center">
             Add <span className="font-semibold text-coral-red">
-              {(200 - subtotal).toLocaleString('fr-DJ')} DJF
+              {(25000 - subtotal).toLocaleString('fr-DJ')} DJF
             </span> more for free shipping
           </p>
         </motion.div>
@@ -100,7 +100,7 @@ const OrderSummary = ({ items, subtotal, shipping, tax, total }) => {
       <div className="mt-6 space-y-3">
         <div className="flex items-center gap-3 text-sm text-slate-gray">
           <Truck size={16} className="text-coral-red flex-shrink-0" />
-          <span>Free shipping on orders over 200,000 DJF</span>
+          <span>Free shipping on orders over 25,000 DJF</span>
         </div>
         
         <div className="flex items-center gap-3 text-sm text-slate-gray">
