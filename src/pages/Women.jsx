@@ -51,13 +51,13 @@ const Women = () => {
       const fetched = Array.isArray(data) ? data : [];
       
       // Filter for women's products (WOMEN, FEMALE, UNISEX, F, W)
+      // IMPORTANT: Only show products with explicit gender match - don't show products without gender
       const womenProducts = fetched.filter(product => {
-        if (product.gender) {
-          const gender = product.gender.toUpperCase();
-          return gender === 'WOMEN' || gender === 'FEMALE' || gender === 'UNISEX' || gender === 'F' || gender === 'W';
+        if (!product.gender) {
+          return false; // Exclude products without gender
         }
-        // If no gender, include it (fallback)
-        return true;
+        const gender = product.gender.toUpperCase().trim();
+        return gender === 'WOMEN' || gender === 'FEMALE' || gender === 'UNISEX' || gender === 'F' || gender === 'W';
       });
       
       setProducts(womenProducts);

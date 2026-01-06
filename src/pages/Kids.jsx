@@ -51,13 +51,13 @@ const Kids = () => {
       const fetched = Array.isArray(data) ? data : [];
       
       // Filter for kids' products (KIDS, CHILDREN, YOUTH, JUNIOR, K)
+      // IMPORTANT: Only show products with explicit gender match - don't show products without gender
       const kidsProducts = fetched.filter(product => {
-        if (product.gender) {
-          const gender = product.gender.toUpperCase();
-          return gender === 'KIDS' || gender === 'CHILDREN' || gender === 'YOUTH' || gender === 'JUNIOR' || gender === 'K';
+        if (!product.gender) {
+          return false; // Exclude products without gender
         }
-        // If no gender, include it (fallback)
-        return true;
+        const gender = product.gender.toUpperCase().trim();
+        return gender === 'KIDS' || gender === 'CHILDREN' || gender === 'YOUTH' || gender === 'JUNIOR' || gender === 'K';
       });
       
       setProducts(kidsProducts);
