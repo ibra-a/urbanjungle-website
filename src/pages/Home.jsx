@@ -69,10 +69,6 @@ const Home = () => {
         <Subscribe />
       </section>
       
-      {/* Footer Section */}
-      <section className='bg-black padding-x padding-t pb-8'>
-        <Footer />
-      </section>
       
       {/* Floating Chat - Always visible */}
       <FloatingChat />

@@ -6,6 +6,7 @@ import { EcommerceNav } from "./components";
 import UJLoadingScreen from './components/NikeLoadingScreen';
 import FavoriteNotification from './components/FavoriteNotification';
 import ScrollToTop from './components/ScrollToTop';
+import Footer from './sections/Footer';
 
 // OPTIMIZATION: Lazy load pages for code splitting (like Tommy CK)
 const Home = lazy(() => import('./pages/Home'));
@@ -60,7 +61,7 @@ const AppContent = () => {
             <Route path="products" element={<AdminProducts />} />
           </Route>
           
-          {/* Public routes - With shop navbar */}
+          {/* Public routes - With shop navbar and footer */}
           <Route path="*" element={
             <>
               <FavoriteNotification 
@@ -91,6 +92,9 @@ const AppContent = () => {
                 <Route path="/auth/callback" element={<AuthCallback />} />
                 <Route path="/test" element={<TestPage />} />
               </Routes>
+              <section className='bg-black padding-x padding-t pb-8'>
+                <Footer />
+              </section>
             </>
           } />
         </Routes>
