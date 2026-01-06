@@ -4,6 +4,7 @@ import { Heart, Check, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import AuthModal from '../components/AuthModal';
 
 const Favorites = () => {
   const [favorites, setFavorites] = useState([]);
@@ -13,24 +14,19 @@ const Favorites = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [isAddingToBag, setIsAddingToBag] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const { state, actions } = useApp();
   const navigate = useNavigate();
 
   const sizes = ['S', 'M', 'L', 'XL', '2XL'];
 
   useEffect(() => {
-    checkAuth();
-  }, [state.user]);
-
-  const checkAuth = async () => {
-    if (!state.user) {
-      toast.error('Please sign in to view your favorites');
-      navigate('/');
-      return;
+    if (state.user) {
+      fetchFavorites();
+    } else {
+      setLoading(false);
     }
-    
-    fetchFavorites();
-  };
+  }, [state.user]);
 
   const fetchFavorites = async () => {
     try {
@@ -383,6 +379,73 @@ const Favorites = () => {
       </motion.div>
     );
   };
+
+  // Show sign-in prompt if user is not authenticated
+  if (!state.user && !loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <motion.div
+          className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center"
+          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <motion.div
+            className="w-20 h-20 bg-gradient-to-br from-yellow-500 via-yellow-400 to-yellow-500 rounded-full flex items-center justify-center mx-auto mb-6"
+            animate={{ 
+              boxShadow: [
+                "0 10px 25px rgba(251, 191, 36, 0.3)",
+                "0 20px 40px rgba(251, 191, 36, 0.4)",
+                "0 10px 25px rgba(251, 191, 36, 0.3)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <Heart className="w-10 h-10 text-black" />
+          </motion.div>
+          
+          <h2 className="text-3xl font-bold text-gray-900 mb-3">
+            Sign in to view your favorites
+          </h2>
+          
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            Create an account or sign in to save your favorite products and access them anytime.
+          </p>
+          
+          <div className="space-y-3">
+            <motion.button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="w-full relative overflow-hidden group"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-full"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-full opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
+              <span className="relative block py-4 text-black font-semibold text-lg tracking-wide">
+                Sign In / Join Us
+              </span>
+            </motion.button>
+            
+            <motion.button
+              onClick={() => navigate('/shop')}
+              className="w-full py-4 border-2 border-gray-300 text-gray-700 rounded-full font-semibold text-lg hover:border-yellow-500 hover:text-yellow-500 transition-colors duration-300"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Continue Shopping
+            </motion.button>
+          </div>
+          
+          {/* Auth Modal */}
+          <AuthModal 
+            isOpen={isAuthModalOpen}
+            onClose={() => setIsAuthModalOpen(false)}
+            initialMode="login"
+          />
+        </motion.div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
