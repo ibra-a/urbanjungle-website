@@ -56,12 +56,16 @@ export const groupProductsByName = (productList) => {
     const isAlreadyGrouped = (product.colors && product.colors.length > 1) || 
                              (product.variants && product.variants.length > 1);
     
-    if (!grouped.has(groupKey)) {
+    // Include gender in group key to prevent mixing MEN and WOMEN products
+    const genderKey = product.gender ? `_${product.gender.toUpperCase().trim()}` : '_NO_GENDER';
+    const groupKeyWithGender = `${groupKey}${genderKey}`;
+    
+    if (!grouped.has(groupKeyWithGender)) {
       // First occurrence - create grouped product
       // If product already has colors array, use it (preserve properly grouped products)
       const finalColors = (product.colors && product.colors.length > 0) ? product.colors : productColors;
       
-      grouped.set(groupKey, {
+      grouped.set(groupKeyWithGender, {
         ...product,
         // Use existing colors if available (from properly grouped product), otherwise use extracted
         colors: finalColors,
@@ -80,8 +84,8 @@ export const groupProductsByName = (productList) => {
         item_name: baseName,
       });
     } else {
-      // Merge with existing product
-      const existing = grouped.get(groupKey);
+      // Merge with existing product (same base name AND same gender)
+      const existing = grouped.get(groupKeyWithGender);
       
       // PRIORITY: If existing product already has multiple colors (properly grouped), preserve it
       // Only merge if the new product has colors that don't exist
