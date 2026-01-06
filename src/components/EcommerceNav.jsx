@@ -201,9 +201,9 @@ const EcommerceNav = () => {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      {/* Promotional Banner - Reduced height */}
-      <div className="bg-nike-coral text-white text-center py-1 text-xs font-medium">
-        Free shipping on orders over AED 300 | Shop now and save
+      {/* Promotional Banner - Djibouti Local */}
+      <div className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black text-center py-2 text-xs sm:text-sm font-semibold">
+        🚚 Free shipping on orders over 25,000 DJF | Shop now and save
       </div>
 
       {/* Main Navigation - Reduced height */}
