@@ -34,6 +34,11 @@ const FloatingChat = () => {
         
         {/* Hover Text */}
         <span className="chat-tooltip">Chat on WhatsApp</span>
+        
+        {/* Notification Badge */}
+        <div className="chat-notification-badge">
+          <span>1</span>
+        </div>
       </a>
       
       {/* Pulse Animation Background */}

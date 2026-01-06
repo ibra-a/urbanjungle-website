@@ -9,7 +9,7 @@ import {
   SuperQuality,
 } from "../sections";
 import LiveProducts from "../sections/LiveProducts";
-import { LogoMarquee, FloatingChat, PromoSections, ScrollToTopButton } from "../components";
+import { LogoMarquee, FloatingChat, PromoSections } from "../components";
 
 const Home = () => {
   return (
@@ -81,11 +81,8 @@ const Home = () => {
       </section>
       
       
-      {/* Floating Chat - Always visible */}
+      {/* Floating WhatsApp Button - Always visible */}
       <FloatingChat />
-      
-      {/* Scroll to Top Button */}
-      <ScrollToTopButton />
     </div>
   );
 };
