@@ -306,14 +306,14 @@ const CheckoutWithCAC = () => {
                 <h2 className="text-2xl font-bold mb-2 text-[#003366]">Shipping Information</h2>
                 <p className="text-sm text-gray-600 mb-6">Enter your delivery details</p>
                 <form onSubmit={handleShippingSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">First Name *</label>
                       <input
                         type="text"
                         value={shippingData.firstName}
                         onChange={(e) => setShippingData({ ...shippingData, firstName: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                        className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                         required
                       />
                     </div>
@@ -323,7 +323,7 @@ const CheckoutWithCAC = () => {
                         type="text"
                         value={shippingData.lastName}
                         onChange={(e) => setShippingData({ ...shippingData, lastName: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                        className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                         required
                       />
                     </div>
@@ -335,7 +335,7 @@ const CheckoutWithCAC = () => {
                       type="email"
                       value={shippingData.email}
                       onChange={(e) => setShippingData({ ...shippingData, email: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -347,7 +347,7 @@ const CheckoutWithCAC = () => {
                       value={shippingData.phone}
                       onChange={(e) => setShippingData({ ...shippingData, phone: e.target.value })}
                       placeholder="77XXXXXX or 78XXXXXX"
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -358,7 +358,7 @@ const CheckoutWithCAC = () => {
                       type="text"
                       value={shippingData.address}
                       onChange={(e) => setShippingData({ ...shippingData, address: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -369,18 +369,18 @@ const CheckoutWithCAC = () => {
                       type="text"
                       value={shippingData.apartment}
                       onChange={(e) => setShippingData({ ...shippingData, apartment: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-900 mb-2">City *</label>
                       <input
                         type="text"
                         value={shippingData.city}
                         onChange={(e) => setShippingData({ ...shippingData, city: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                        className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                         required
                       />
                     </div>
@@ -390,14 +390,14 @@ const CheckoutWithCAC = () => {
                         type="text"
                         value={shippingData.region}
                         onChange={(e) => setShippingData({ ...shippingData, region: e.target.value })}
-                        className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base"
+                        className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-black focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       />
                     </div>
                   </div>
 
                   <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-[#003366] to-[#004488] text-white py-4 rounded-lg font-bold 
+                    className="w-full bg-gradient-to-r from-[#003366] to-[#004488] text-white py-4 sm:py-4 rounded-lg font-bold text-base sm:text-lg min-h-[52px] 
                       hover:from-[#004488] hover:to-[#003366] transition-all duration-300 
                       shadow-lg hover:shadow-xl border-2 border-[#D4AF37]"
                   >
@@ -454,7 +454,7 @@ const CheckoutWithCAC = () => {
                   <button
                     type="submit"
                     disabled={isProcessing}
-                    className="w-full bg-gradient-to-r from-[#003366] to-[#004488] text-white py-4 rounded-lg font-bold 
+                    className="w-full bg-gradient-to-r from-[#003366] to-[#004488] text-white py-4 sm:py-4 rounded-lg font-bold text-base sm:text-lg min-h-[52px] 
                       hover:from-[#004488] hover:to-[#003366] transition-all duration-300 
                       shadow-lg hover:shadow-xl border-2 border-[#D4AF37]
                       disabled:from-gray-400 disabled:to-gray-500 disabled:border-gray-300 disabled:cursor-not-allowed

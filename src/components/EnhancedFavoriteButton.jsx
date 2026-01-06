@@ -123,7 +123,7 @@ const EnhancedFavoriteButton = ({ product, className = '' }) => {
       <motion.button
         onClick={toggleFavorite}
         disabled={isLoading}
-        className={`w-full py-4 border-2 rounded-full font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+        className={`w-full py-4 sm:py-4 border-2 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 min-h-[52px] ${
           isFavorite
             ? 'border-yellow-500 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black hover:shadow-lg hover:shadow-yellow-500/40'
             : 'border-yellow-500 bg-transparent text-yellow-500 hover:bg-gradient-to-r hover:from-yellow-500 hover:via-yellow-400 hover:to-yellow-500 hover:text-black hover:shadow-lg hover:shadow-yellow-500/30'

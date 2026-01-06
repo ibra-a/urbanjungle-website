@@ -543,7 +543,7 @@ const ProductDetail = () => {
 
       {/* Main Product Content */}
       <div className="max-container">
-        <div className="grid lg:grid-cols-2 gap-12 py-8">
+        <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 py-4 sm:py-6 lg:py-8">
           
           {/* Left - Product Image */}
           <motion.div 
@@ -651,7 +651,7 @@ const ProductDetail = () => {
                   )}
                 </div>
                 
-                <div className="flex flex-wrap gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   {colorOptions.map((colorObj) => {
                     const isSelected = selectedColor && selectedColor.color === colorObj.color;
                     const isAvailable = colorObj.available && colorObj.stock > 0;
@@ -660,11 +660,11 @@ const ProductDetail = () => {
                       <button
                         key={colorObj.color}
                         onClick={() => setSelectedColor(colorObj)}
-                        className={`px-4 py-3 rounded-xl font-semibold text-sm transition-all duration-200 relative ${
+                        className={`px-4 py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-200 relative min-h-[44px] ${
                           !isAvailable
                             ? 'bg-slate-100 text-slate-400 opacity-50 hover:opacity-70'
                             : isSelected
-                            ? 'bg-gradient-to-r from-yellow-500 to-pink-500 text-white shadow-lg ring-2 ring-yellow-500 ring-offset-2'
+                            ? 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black shadow-lg ring-2 ring-yellow-500 ring-offset-2'
                             : 'bg-white border-2 border-slate-300 text-slate-700 hover:border-yellow-500 hover:shadow-md hover:scale-105'
                         }`}
                         title={isAvailable ? `${colorObj.stock} in stock` : 'Out of stock'}
@@ -710,12 +710,12 @@ const ProductDetail = () => {
                     key={size}
                       onClick={() => sizeAvailable && setSelectedSize(size)}
                       disabled={!sizeAvailable}
-                      className={`aspect-square border-2 rounded-xl font-bold text-base transition-all duration-200 relative ${
+                      className={`aspect-square border-2 rounded-xl font-bold text-base sm:text-lg transition-all duration-200 relative min-w-[48px] min-h-[48px] ${
                         !sizeAvailable
                           ? 'border-slate-200 bg-slate-100 text-slate-400 cursor-not-allowed opacity-50'
                           : selectedSize === size
                           ? 'border-yellow-500 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black shadow-lg shadow-yellow-500/40'
-                          : 'border-slate-300 bg-white hover:border-yellow-500 hover:shadow-md text-slate-700 hover:scale-105'
+                          : 'border-slate-300 bg-white hover:border-yellow-500 hover:shadow-md text-slate-700 hover:scale-105 active:scale-95'
                       }`}
                       title={sizeAvailable ? `${sizeStock} in stock` : 'Out of stock'}
                   >
@@ -746,24 +746,26 @@ const ProductDetail = () => {
             {/* Quantity Selection - Better styling (same as Tommy CK) */}
             <div className="space-y-4">
               <h3 className="font-bold text-lg text-slate-900">Quantity</h3>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
                 <div className="flex items-center border-2 border-slate-300 rounded-xl bg-white shadow-sm">
                   <button
                     onClick={() => updateQuantity(quantity - 1)}
                     disabled={quantity <= 1}
-                    className="p-4 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-3 sm:p-4 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                    aria-label="Decrease quantity"
                   >
-                    <Minus size={18} className="text-slate-700" />
+                    <Minus size={20} className="text-slate-700" />
                   </button>
-                  <span className="px-6 py-3 font-bold text-xl min-w-[80px] text-center text-slate-900">
+                  <span className="px-4 sm:px-6 py-3 font-bold text-lg sm:text-xl min-w-[60px] sm:min-w-[80px] text-center text-slate-900">
                     {quantity}
                   </span>
                   <button
                     onClick={() => updateQuantity(quantity + 1)}
                     disabled={quantity >= getSizeStock(selectedSize)}
-                    className="p-4 hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    className="p-3 sm:p-4 min-w-[44px] min-h-[44px] flex items-center justify-center hover:bg-slate-50 disabled:opacity-30 disabled:cursor-not-allowed transition-all active:scale-95"
+                    aria-label="Increase quantity"
                   >
-                    <Plus size={18} className="text-slate-700" />
+                    <Plus size={20} className="text-slate-700" />
                   </button>
                 </div>
                 <div className="text-sm">
@@ -776,14 +778,14 @@ const ProductDetail = () => {
             </div>
 
             {/* Action Buttons - Urban Jungle Theme (Tommy CK style) */}
-            <div className="space-y-4 pt-6">
+            <div className="space-y-4 sm:space-y-4 pt-4 sm:pt-6">
               <motion.button
                 onClick={handleAddToCart}
                 disabled={isAddingToCart || !selectedSize || getSizeStock(selectedSize) === 0}
-                className={`w-full py-5 rounded-2xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg ${
+                className={`w-full py-4 sm:py-5 rounded-2xl font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg min-h-[52px] ${
                   !selectedSize || getSizeStock(selectedSize) === 0
                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black hover:shadow-2xl hover:shadow-yellow-500/40 relative overflow-hidden'
+                    : 'bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black hover:shadow-2xl hover:shadow-yellow-500/40 relative overflow-hidden active:scale-98'
                 }`}
                 whileHover={{ scale: selectedSize && getSizeStock(selectedSize) > 0 ? 1.02 : 1 }}
                 whileTap={{ scale: selectedSize && getSizeStock(selectedSize) > 0 ? 0.98 : 1 }}

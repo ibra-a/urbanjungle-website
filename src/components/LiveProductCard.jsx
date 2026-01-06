@@ -210,17 +210,17 @@ const LiveProductCard = memo(({ product, className = "" }) => {
           <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
         </div>
 
-        {/* Cart Icon Button - appears on hover with yellow glow */}
-        <div className="absolute bottom-4 left-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {/* Cart Button - Always visible on mobile, hover on desktop */}
+        <div className="absolute bottom-4 left-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
           <motion.button
-            className={`bg-gradient-to-r from-yellow-500 to-yellow-400 text-black p-3 rounded-full transition-all duration-300 flex items-center justify-center shadow-lg ${
+            className={`w-full md:w-auto bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-4 py-3 md:px-3 md:py-3 rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-lg font-semibold text-sm md:text-base min-h-[44px] ${
               (product.stock_quantity || 0) === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:shadow-yellow-500/50'
             }`}
             whileHover={{ 
-              scale: (product.stock_quantity || 0) === 0 ? 1 : 1.1,
+              scale: (product.stock_quantity || 0) === 0 ? 1 : 1.05,
               boxShadow: (product.stock_quantity || 0) === 0 ? 'none' : "0 8px 20px rgba(251, 191, 36, 0.5)"
             }}
-            whileTap={{ scale: (product.stock_quantity || 0) === 0 ? 1 : 0.9 }}
+            whileTap={{ scale: (product.stock_quantity || 0) === 0 ? 1 : 0.95 }}
             onClick={handleAddToCart}
             disabled={isAddingToCart || (product.stock_quantity || 0) === 0}
             title={(product.stock_quantity || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
@@ -228,7 +228,10 @@ const LiveProductCard = memo(({ product, className = "" }) => {
             {isAddingToCart ? (
               <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
             ) : (
-              <ShoppingCart size={20} className="text-black" />
+              <>
+                <ShoppingCart size={18} className="text-black" />
+                <span className="md:hidden">Add to Cart</span>
+              </>
             )}
           </motion.button>
         </div>

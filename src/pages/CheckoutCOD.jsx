@@ -161,14 +161,14 @@ const CheckoutCOD = () => {
 
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Shipping Information</h3>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-900 mb-2">First Name *</label>
                     <input
                       type="text"
                       value={shippingData.firstName}
                       onChange={(e) => setShippingData({ ...shippingData, firstName: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -178,7 +178,7 @@ const CheckoutCOD = () => {
                       type="text"
                       value={shippingData.lastName}
                       onChange={(e) => setShippingData({ ...shippingData, lastName: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -190,7 +190,7 @@ const CheckoutCOD = () => {
                     type="email"
                     value={shippingData.email}
                     onChange={(e) => setShippingData({ ...shippingData, email: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                    className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                     required
                   />
                 </div>
@@ -202,7 +202,7 @@ const CheckoutCOD = () => {
                     value={shippingData.phone}
                     onChange={(e) => setShippingData({ ...shippingData, phone: e.target.value })}
                     placeholder="77XXXXXX or 78XXXXXX"
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                    className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                     required
                   />
                 </div>
@@ -213,7 +213,7 @@ const CheckoutCOD = () => {
                     type="text"
                     value={shippingData.address}
                     onChange={(e) => setShippingData({ ...shippingData, address: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                    className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                     required
                   />
                 </div>
@@ -224,7 +224,7 @@ const CheckoutCOD = () => {
                     type="text"
                     value={shippingData.apartment}
                     onChange={(e) => setShippingData({ ...shippingData, apartment: e.target.value })}
-                    className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                    className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                   />
                 </div>
 
@@ -235,7 +235,7 @@ const CheckoutCOD = () => {
                       type="text"
                       value={shippingData.city}
                       onChange={(e) => setShippingData({ ...shippingData, city: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                       required
                     />
                   </div>
@@ -245,7 +245,7 @@ const CheckoutCOD = () => {
                       type="text"
                       value={shippingData.region}
                       onChange={(e) => setShippingData({ ...shippingData, region: e.target.value })}
-                      className="w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base"
+                      className="w-full px-4 py-3.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-900 text-base min-h-[48px]"
                     />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ const CheckoutCOD = () => {
                 <button
                   type="submit"
                   disabled={isProcessing}
-                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 rounded-lg font-bold 
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-4 sm:py-4 rounded-lg font-bold text-base sm:text-lg min-h-[52px] 
                     hover:from-green-700 hover:to-emerald-700 transition-all duration-300 
                     shadow-lg hover:shadow-xl
                     disabled:from-gray-400 disabled:to-gray-500 disabled:cursor-not-allowed
