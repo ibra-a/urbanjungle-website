@@ -119,9 +119,9 @@ export const footerLinks = [
 ];
 
 export const socialMedia = [
-    { src: instagram, alt: "instagram logo", platform: "instagram" },
-    { src: facebook, alt: "facebook logo", platform: "facebook" },
-    { src: "data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' fill='currentColor'/%3E%3C/svg%3E", alt: "X logo", platform: "x" }
+    { src: instagram, alt: "instagram logo", platform: "instagram", url: "https://www.instagram.com/urbanjungledjibouti/" },
+    { src: facebook, alt: "facebook logo", platform: "facebook", url: "https://www.facebook.com/people/Gab-Fashion-House/61581841153044/" },
+    { src: "data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z' fill='currentColor'/%3E%3C/svg%3E", alt: "X logo", platform: "x", url: "#" }
 ];
 
 // Export navigation data

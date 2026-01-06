@@ -62,7 +62,9 @@ const Footer = () => {
               return (
                 <motion.a
                   key={social.platform}
-                  href="#"
+                  href={social.url || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className='relative w-12 h-12 rounded-full flex justify-center items-center cursor-pointer backdrop-filter backdrop-blur-10 border-2 border-white/20'
                   style={{
                     background: styles.background,
