@@ -51,10 +51,17 @@ const Men = () => {
       const fetched = Array.isArray(data) ? data : [];
       
       // Filter for men's products (MEN, MALE, UNISEX, M)
-      // IMPORTANT: Only show products with explicit gender match - don't show products without gender
+      // Also include accessories (they're unisex and don't need gender)
       const menProducts = fetched.filter(product => {
+        // Include accessories on both Men and Women pages (unisex)
+        const isAccessory = product.item_group?.toLowerCase().includes('accessories');
+        if (isAccessory) {
+          return true;
+        }
+        
+        // For other products, require explicit gender match
         if (!product.gender) {
-          return false; // Exclude products without gender
+          return false; // Exclude products without gender (except accessories)
         }
         const gender = product.gender.toUpperCase().trim();
         return gender === 'MEN' || gender === 'MALE' || gender === 'UNISEX' || gender === 'M';
