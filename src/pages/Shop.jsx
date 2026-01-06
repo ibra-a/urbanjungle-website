@@ -253,9 +253,9 @@ const Shop = () => {
         {/* Search Results Banner */}
         {searchQuery && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <p className="text-sm">
-              Showing results for <span className="font-bold">"{searchQuery}"</span> 
-              <span className="text-gray-600 ml-2">({filteredProducts.length} products found)</span>
+            <p className="text-sm text-gray-900">
+              Showing results for <span className="font-bold text-gray-900">"{searchQuery}"</span> 
+              <span className="text-gray-700 ml-2">({filteredProducts.length} products found)</span>
             </p>
           </div>
         )}
