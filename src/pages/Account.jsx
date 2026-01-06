@@ -2,8 +2,6 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, ShoppingBag, Heart, MapPin, Settings, LogOut } from 'lucide-react';
 import { useApp } from '../context/AppContext';
-import { Button } from '../components/ui/button';
-import { Avatar, AvatarImage, AvatarFallback } from '../components/ui/avatar';
 import toast from 'react-hot-toast';
 
 const Account = () => {
@@ -70,29 +68,31 @@ const Account = () => {
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm p-8 mb-8">
           <div className="flex items-center gap-6">
-            <Avatar className="w-20 h-20">
-              <AvatarImage 
-                src={state.user.user_metadata?.avatar_url || state.user.user_metadata?.picture} 
-                alt={state.user.email || 'User'}
-              />
-              <AvatarFallback className="bg-gradient-to-br from-blue-500 to-green-500 text-white text-3xl font-bold">
-              {state.user.email?.[0]?.toUpperCase() || 'U'}
-              </AvatarFallback>
-            </Avatar>
+            {/* Avatar */}
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-yellow-500 to-yellow-400 flex items-center justify-center text-white text-3xl font-bold">
+              {state.user.user_metadata?.avatar_url || state.user.user_metadata?.picture ? (
+                <img 
+                  src={state.user.user_metadata.avatar_url || state.user.user_metadata.picture} 
+                  alt={state.user.email || 'User'}
+                  className="w-full h-full rounded-full object-cover"
+                />
+              ) : (
+                <span>{state.user.email?.[0]?.toUpperCase() || 'U'}</span>
+              )}
+            </div>
             <div className="flex-1">
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
                 Welcome back!
               </h1>
               <p className="text-gray-600">{state.user.email}</p>
             </div>
-            <Button 
-              variant="outline" 
+            <button 
               onClick={handleLogout}
-              className="flex items-center gap-2 min-h-[44px]"
+              className="flex items-center gap-2 px-4 py-2 border-2 border-gray-300 rounded-lg text-gray-700 hover:border-yellow-500 hover:text-yellow-500 transition-colors min-h-[44px]"
             >
               <LogOut size={18} />
               Logout
-            </Button>
+            </button>
           </div>
         </div>
 

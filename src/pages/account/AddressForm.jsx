@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Save } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
 import { createClient } from '@supabase/supabase-js';
 
@@ -305,18 +304,17 @@ const AddressForm = () => {
 
           {/* Submit Button */}
           <div className="flex gap-4 pt-4">
-            <Button
+            <button
               type="button"
-              variant="outline"
               onClick={() => navigate('/account/addresses')}
-              className="flex-1"
+              className="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:border-yellow-500 hover:text-yellow-500 transition-colors min-h-[44px]"
             >
               Cancel
-            </Button>
-            <Button
+            </button>
+            <button
               type="submit"
               disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2"
+              className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black rounded-full font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
             >
               {loading ? (
                 'Saving...'
@@ -326,7 +324,7 @@ const AddressForm = () => {
                   {isEdit ? 'Update Address' : 'Save Address'}
                 </>
               )}
-            </Button>
+            </button>
           </div>
         </form>
       </div>

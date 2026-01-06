@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ShoppingBag, ArrowLeft, Package, Truck, CheckCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
 import { createClient } from '@supabase/supabase-js';
 
@@ -143,9 +142,12 @@ const Orders = () => {
             <p className="text-gray-600 mb-6">
               Start shopping to see your orders here
             </p>
-            <Button onClick={() => navigate('/shop')}>
+            <button 
+              onClick={() => navigate('/shop')}
+              className="px-6 py-3 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black rounded-full font-semibold hover:shadow-lg transition-all min-h-[44px]"
+            >
               Start Shopping
-            </Button>
+            </button>
           </div>
         ) : (
           <div className="space-y-4">

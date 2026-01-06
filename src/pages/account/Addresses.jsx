@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Plus, Edit, Trash2, ArrowLeft } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
 import { createClient } from '@supabase/supabase-js';
 
@@ -109,13 +108,13 @@ const Addresses = () => {
                 Manage your shipping addresses for faster checkout
               </p>
             </div>
-            <Button
+            <button
               onClick={() => navigate('/account/addresses/new')}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black rounded-full font-semibold hover:shadow-lg transition-all min-h-[44px]"
             >
               <Plus size={18} />
               Add New Address
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -133,13 +132,13 @@ const Addresses = () => {
             <p className="text-gray-600 mb-6">
               Add your first address to make checkout faster
             </p>
-            <Button
+            <button
               onClick={() => navigate('/account/addresses/new')}
-              className="flex items-center gap-2 mx-auto"
+              className="flex items-center gap-2 mx-auto px-6 py-3 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black rounded-full font-semibold hover:shadow-lg transition-all min-h-[44px]"
             >
               <Plus size={18} />
               Add Your First Address
-            </Button>
+            </button>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -156,22 +155,18 @@ const Addresses = () => {
                     </h3>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <button
                       onClick={() => navigate(`/account/addresses/edit?id=${address.id}`)}
-                      className="p-2"
+                      className="p-2 text-gray-600 hover:text-yellow-500 transition-colors rounded-lg hover:bg-gray-100 min-w-[36px] min-h-[36px] flex items-center justify-center"
                     >
                       <Edit size={16} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    </button>
+                    <button
                       onClick={() => handleDelete(address.id)}
-                      className="p-2 text-red-600 hover:text-red-700"
+                      className="p-2 text-red-600 hover:text-red-700 transition-colors rounded-lg hover:bg-red-50 min-w-[36px] min-h-[36px] flex items-center justify-center"
                     >
                       <Trash2 size={16} />
-                    </Button>
+                    </button>
                   </div>
                 </div>
                 <div className="text-gray-600 space-y-1">

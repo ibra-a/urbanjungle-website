@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Settings as SettingsIcon, ArrowLeft, User, Mail, Phone, Save } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Button } from '../../components/ui/button';
 import toast from 'react-hot-toast';
 import { createClient } from '@supabase/supabase-js';
 
@@ -172,10 +171,10 @@ const Settings = () => {
 
               {/* Submit Button */}
               <div className="pt-4">
-                <Button
+                <button
                   type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black rounded-full font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px]"
                 >
                   {loading ? (
                     'Saving...'
@@ -185,7 +184,7 @@ const Settings = () => {
                       Save Changes
                     </>
                   )}
-                </Button>
+                </button>
               </div>
             </form>
           </div>
@@ -197,27 +196,24 @@ const Settings = () => {
               Account Actions
             </h2>
             <div className="space-y-3">
-              <Button
-                variant="outline"
+              <button
                 onClick={() => navigate('/account/addresses')}
-                className="w-full justify-start"
+                className="w-full flex items-center justify-start px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:border-yellow-500 hover:text-yellow-500 transition-colors min-h-[44px]"
               >
                 Manage Addresses
-              </Button>
-              <Button
-                variant="outline"
+              </button>
+              <button
                 onClick={() => navigate('/favorites')}
-                className="w-full justify-start"
+                className="w-full flex items-center justify-start px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:border-yellow-500 hover:text-yellow-500 transition-colors min-h-[44px]"
               >
                 View Favorites
-              </Button>
-              <Button
-                variant="outline"
+              </button>
+              <button
                 onClick={() => navigate('/account/orders')}
-                className="w-full justify-start"
+                className="w-full flex items-center justify-start px-4 py-3 border-2 border-gray-300 rounded-lg text-gray-700 hover:border-yellow-500 hover:text-yellow-500 transition-colors min-h-[44px]"
               >
                 View Order History
-              </Button>
+              </button>
             </div>
           </div>
         </div>
