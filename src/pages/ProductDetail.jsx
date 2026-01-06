@@ -122,6 +122,30 @@ const ProductDetail = () => {
     };
   };
 
+  // Sort sizes properly: numeric sizes numerically, text sizes alphabetically
+  const sortSizes = (sizes) => {
+    return sizes.sort((a, b) => {
+      const aNum = parseFloat(a);
+      const bNum = parseFloat(b);
+      
+      // If both are numbers, sort numerically
+      if (!isNaN(aNum) && !isNaN(bNum)) {
+        return aNum - bNum;
+      }
+      
+      // If one is a number and one is text, numbers come first
+      if (!isNaN(aNum) && isNaN(bNum)) {
+        return -1;
+      }
+      if (isNaN(aNum) && !isNaN(bNum)) {
+        return 1;
+      }
+      
+      // Both are text, sort alphabetically
+      return a.localeCompare(b);
+    });
+  };
+
   // Size options - use real data from product or fallback to defaults (same as Tommy CK)
   const getSizeOptions = (product) => {
     // ✅ NEW: Use variants[] array if available (new database structure)
@@ -133,7 +157,7 @@ const ProductDetail = () => {
           .filter(size => size != null && size !== '')
       ));
       if (uniqueSizes.length > 0) {
-        return uniqueSizes.sort();
+        return sortSizes(uniqueSizes);
       }
     }
     
@@ -142,7 +166,7 @@ const ProductDetail = () => {
       // ✅ Deduplicate sizes (safety net against data issues)
       const uniqueSizes = Array.from(new Set(product.sizes.map(s => s.size || s).filter(Boolean)));
       if (uniqueSizes.length > 0) {
-        return uniqueSizes.sort();
+        return sortSizes(uniqueSizes);
       }
     }
     
