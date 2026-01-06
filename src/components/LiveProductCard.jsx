@@ -139,14 +139,15 @@ const LiveProductCard = memo(({ product, className = "" }) => {
 
   return (
     <motion.div 
-      className={`group cursor-pointer ${className}`}
+      className={`group cursor-pointer flex flex-col h-full ${className}`}
       onClick={handleCardClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="relative aspect-[3/4] bg-gray-100 mb-4 overflow-hidden rounded-lg shadow-md group-hover:shadow-xl group-hover:shadow-yellow-500/20 transition-all duration-300 flex items-center justify-center p-4 border-2 border-transparent group-hover:border-yellow-500/30">
+      {/* Image Container - White background like Tommy CK */}
+      <div className="relative aspect-[3/4] bg-white mb-4 overflow-hidden rounded-lg shadow-sm group-hover:shadow-md transition-all duration-300 flex items-center justify-center p-4 border border-gray-200 group-hover:border-yellow-500/50">
         {imageLoading && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
@@ -183,122 +184,61 @@ const LiveProductCard = memo(({ product, className = "" }) => {
           )}
         </AnimatePresence>
         
-        {/* Gradient overlay on hover */}
-        <div className='absolute inset-0 bg-gradient-to-t from-gray-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl' />
-        
-        {/* Live Data badge */}
-        <div className='absolute top-4 left-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-semibold'>
-          Live Data
+        {/* Live Data badge - Subtle like Tommy CK */}
+        <div className='absolute top-3 left-3 bg-green-500 text-white px-2.5 py-1 rounded-full text-xs font-semibold shadow-sm'>
+          • Live Stock
         </div>
         
-        {/* Stock badge */}
-        <div className='absolute top-4 right-4 bg-coral-red text-white px-3 py-1 rounded-full text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-          Stock: {product.stock_quantity || 0}
-        </div>
-
-        {/* Favorite Button - positioned in top-right corner */}
-        <div className="absolute top-16 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+        {/* Favorite Button - Always visible like Tommy CK */}
+        <div className="absolute top-3 right-3 z-10">
           <FavoriteButton 
             product={product} 
-            size="md" 
-            className="transform hover:scale-110"
+            size="sm" 
+            className="bg-white/90 backdrop-blur-sm shadow-sm"
           />
         </div>
 
-        {/* Live indicator */}
-        <div className="absolute bottom-4 right-4">
-          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-        </div>
-
-        {/* Cart Button - Always visible on mobile, hover on desktop */}
-        <div className="absolute bottom-4 left-4 right-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300">
-          <motion.button
-            className={`w-full md:w-auto bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black px-4 py-3 md:px-3 md:py-3 rounded-full transition-all duration-300 flex items-center justify-center gap-2 shadow-lg font-semibold text-sm md:text-base min-h-[44px] ${
-              (product.stock_quantity || 0) === 0 ? 'opacity-50 cursor-not-allowed bg-gray-400' : 'hover:shadow-yellow-500/50'
-            }`}
-            whileHover={{ 
-              scale: (product.stock_quantity || 0) === 0 ? 1 : 1.05,
-              boxShadow: (product.stock_quantity || 0) === 0 ? 'none' : "0 8px 20px rgba(251, 191, 36, 0.5)"
-            }}
-            whileTap={{ scale: (product.stock_quantity || 0) === 0 ? 1 : 0.95 }}
-            onClick={handleAddToCart}
-            disabled={isAddingToCart || (product.stock_quantity || 0) === 0}
-            title={(product.stock_quantity || 0) === 0 ? 'Out of Stock' : 'Add to Cart'}
-          >
-            {isAddingToCart ? (
-              <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <>
-                <ShoppingCart size={18} className="text-black" />
-                <span className="md:hidden">Add to Cart</span>
-              </>
-            )}
-          </motion.button>
-        </div>
       </div>
 
-      {/* Content section - with black text for white theme */}
-      <div className='mt-6 space-y-3'>
-        {/* Product name */}
-        <motion.h3 
-          className='text-xl sm:text-2xl leading-normal font-semibold font-palanquin text-black'
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
+      {/* Content section - Clean layout like Tommy CK */}
+      <div className='flex-1 flex flex-col space-y-2'>
+        {/* Product name - Consistent height */}
+        <h3 className='text-base sm:text-lg font-semibold font-palanquin text-black line-clamp-2 min-h-[2.5rem]'>
           {baseName}
-        </motion.h3>
+        </h3>
         
-        {/* Variant / colorway (optional) */}
+        {/* Variant / colorway - Subtle */}
         {variantLabel && variantLabel.toLowerCase() !== baseName.toLowerCase() && (
-          <p className="text-sm text-black/50 font-montserrat">
+          <p className="text-xs sm:text-sm text-gray-500 font-montserrat line-clamp-1">
             {variantLabel}
           </p>
         )}
 
-        {/* Category */}
-        <motion.p 
-          className="text-sm text-black/60 font-montserrat"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-        >
-          {product.item_group || 'Product'}
-        </motion.p>
-
-        {/* Price and Stock on same line */}
-        <motion.div 
-          className='flex justify-between items-center'
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <p className='font-montserrat font-bold text-2xl leading-normal text-yellow-500'>
+        {/* Price - Prominent */}
+        <div className='mt-auto pt-2'>
+          <p className='font-montserrat font-bold text-lg sm:text-xl leading-normal text-yellow-500'>
             {formatPrice(product.price)}
           </p>
-          <p className='text-slate-600 text-sm font-montserrat font-medium'>
-            Stock: {product.stock_quantity || 0}
-          </p>
-        </motion.div>
+        </div>
 
-        {/* Modern Gradient Button */}
+        {/* Add to Cart Button - Always visible like Tommy CK */}
         <motion.button
-          className="w-full mt-4 relative overflow-hidden group"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          className="w-full mt-3 bg-white border border-gray-300 text-gray-700 py-2.5 sm:py-3 rounded font-semibold text-sm sm:text-base transition-all duration-200 hover:border-yellow-500 hover:text-yellow-500 min-h-[44px] flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+          whileHover={!isAddingToCart && (product.stock_quantity || 0) > 0 ? { scale: 1.01 } : {}}
+          whileTap={!isAddingToCart && (product.stock_quantity || 0) > 0 ? { scale: 0.99 } : {}}
           onClick={(e) => {
             e.stopPropagation();
-            handleCardClick();
+            handleAddToCart(e);
           }}
+          disabled={isAddingToCart || (product.stock_quantity || 0) === 0}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-xl"></div>
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-300"></div>
-          <span className="relative block py-3 px-6 text-white font-semibold tracking-wide">
-            View Details
-          </span>
+          {isAddingToCart ? (
+            <div className="w-5 h-5 border-2 border-gray-700 border-t-transparent rounded-full animate-spin" />
+          ) : (product.stock_quantity || 0) === 0 ? (
+            'Out of Stock'
+          ) : (
+            'ADD TO CART'
+          )}
         </motion.button>
       </div>
     </motion.div>
