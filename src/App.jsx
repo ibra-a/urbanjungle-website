@@ -26,7 +26,8 @@ const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/TermsAndConditions'));
 const Favorites = lazy(() => import('./pages/Favorites'));
 const Cart = lazy(() => import('./pages/Cart'));
-const TestPage = lazy(() => import('./pages/TestPage'));
+// TestPage removed for production security
+// const TestPage = lazy(() => import('./pages/TestPage'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 
 // Admin Pages - Lazy loaded (admin routes are less frequently accessed)
