@@ -12,7 +12,8 @@ import {
   ChevronDown,
   ShoppingBag,
   LogOut,
-  UserCircle
+  UserCircle,
+  XCircle
 } from "lucide-react";
 import { useApp } from "../context/AppContext";
 import { headerLogo } from "../assets/images";
@@ -29,6 +30,10 @@ const EcommerceNav = () => {
   const [scrolled, setScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedMobileMenu, setExpandedMobileMenu] = useState(null);
+  const [isBannerDismissed, setIsBannerDismissed] = useState(() => {
+    // Check localStorage on mount
+    return localStorage.getItem('urbanJungleBannerDismissed') === 'true';
+  });
   const { state, actions } = useApp();
   const navigate = useNavigate();
 
@@ -171,6 +176,11 @@ const EcommerceNav = () => {
     }
   };
 
+  const handleDismissBanner = () => {
+    setIsBannerDismissed(true);
+    localStorage.setItem('urbanJungleBannerDismissed', 'true');
+  };
+
   const mobileMenuVariants = {
     closed: {
       opacity: 0,
@@ -202,9 +212,20 @@ const EcommerceNav = () => {
       transition={{ duration: 0.5 }}
     >
       {/* Promotional Banner - Djibouti Local */}
-      <div className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black text-center py-2 text-xs sm:text-sm font-semibold">
-        🚚 Free shipping on orders over 25,000 DJF | Shop now and save
-      </div>
+      {!isBannerDismissed && (
+        <div className="bg-gradient-to-r from-yellow-500 via-yellow-400 to-yellow-500 text-black text-center py-2 text-xs sm:text-sm font-semibold relative">
+          <div className="flex items-center justify-center gap-2 px-8">
+            <span>🚚 Free shipping on orders over 25,000 DJF | Shop now and save</span>
+          </div>
+          <button
+            onClick={handleDismissBanner}
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-black/10 rounded-full transition-colors"
+            aria-label="Dismiss banner"
+          >
+            <XCircle className="w-4 h-4 text-black" />
+          </button>
+        </div>
+      )}
 
       {/* Main Navigation - Reduced height */}
       <nav className="bg-black border-b border-white/10">
