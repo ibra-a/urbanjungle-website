@@ -279,6 +279,23 @@ export const AppProvider = ({ children }) => {
         if (event === 'SIGNED_IN' && session?.user) {
           dispatch({ type: actionTypes.SET_USER, payload: session.user });
           await syncFavorites(session.user.id);
+          
+          // Handle social login profile creation with registration_source
+          if (session.user.id) {
+            const userMetadata = session.user.user_metadata || {};
+            await backend.supabase
+              .from('profiles')
+              .upsert({
+                id: session.user.id,
+                first_name: userMetadata.first_name || userMetadata.full_name?.split(' ')[0] || null,
+                last_name: userMetadata.last_name || userMetadata.full_name?.split(' ').slice(1).join(' ') || null,
+                phone: userMetadata.phone || null,
+                nationality: userMetadata.nationality || null,
+                registration_source: 'Urban Jungle' // Track registration source for social logins
+              }, {
+                onConflict: 'id'
+              });
+          }
         } else if (event === 'SIGNED_OUT') {
           dispatch({ type: actionTypes.LOGOUT });
         }
@@ -364,7 +381,8 @@ export const AppProvider = ({ children }) => {
                 first_name: userData.first_name,
                 last_name: userData.last_name,
                 phone: userData.phone || null,
-                nationality: userData.nationality || null
+                nationality: userData.nationality || null,
+                registration_source: 'Urban Jungle' // Track registration source
               }, {
                 onConflict: 'id'
               });
