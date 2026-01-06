@@ -139,15 +139,15 @@ const LiveProductCard = memo(({ product, className = "" }) => {
 
   return (
     <motion.div 
-      className={`group cursor-pointer flex flex-col h-full ${className}`}
+      className={`group cursor-pointer flex flex-col h-full bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 p-3 sm:p-4 ${className}`}
       onClick={handleCardClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      whileHover={{ scale: 1.02 }}
+      whileHover={{ scale: 1.01 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Image Container - White background like Tommy CK */}
-      <div className="relative aspect-[3/4] bg-white mb-4 overflow-hidden rounded-lg shadow-sm group-hover:shadow-md transition-all duration-300 flex items-center justify-center p-4 border border-gray-200 group-hover:border-yellow-500/50">
+      {/* Image Container - Light gray background like Tommy CK */}
+      <div className="relative aspect-[3/4] bg-gray-50 mb-3 overflow-hidden rounded-lg flex items-center justify-center p-4 border border-gray-100 group-hover:border-yellow-500/30 transition-colors">
         {imageLoading && !imageError && (
           <div className="absolute inset-0 flex items-center justify-center z-10">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-400"></div>
