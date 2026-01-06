@@ -251,7 +251,12 @@ const Orders = () => {
                       </span>
                     </td>
                     <td className="p-4">
-                      <div className="font-medium text-sm text-white">#{order.id.slice(0, 8)}</div>
+                      <Link
+                        to={`/admin/orders/${order.id}`}
+                        className="font-medium text-sm text-white hover:text-yellow-400 transition-colors underline"
+                      >
+                        #{order.id.slice(0, 8)}
+                      </Link>
                     </td>
                     <td className="p-4">
                       <div>

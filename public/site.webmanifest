@@ -1,0 +1,30 @@
+{
+  "name": "Urban Jungle - Premium Footwear & Fashion",
+  "short_name": "Urban Jungle",
+  "description": "Shop the latest Nike, Jordan, Converse, Crocs, Vans, and Puma collections in Djibouti",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#FCD34D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["shopping", "fashion", "footwear"],
+  "lang": "en",
+  "dir": "ltr",
+  "scope": "/",
+  "prefer_related_applications": false
+}
+

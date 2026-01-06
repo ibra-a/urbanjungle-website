@@ -6,6 +6,7 @@ import { EcommerceNav } from "./components";
 import UJLoadingScreen from './components/NikeLoadingScreen';
 import FavoriteNotification from './components/FavoriteNotification';
 import ScrollToTop from './components/ScrollToTop';
+import ErrorBoundary from './components/ErrorBoundary';
 import Footer from './sections/Footer';
 
 // OPTIMIZATION: Lazy load pages for code splitting (like Tommy CK)
@@ -30,11 +31,18 @@ const Cart = lazy(() => import('./pages/Cart'));
 // const TestPage = lazy(() => import('./pages/TestPage'));
 const AuthCallback = lazy(() => import('./pages/AuthCallback'));
 
+// Account Pages - Lazy loaded
+const Account = lazy(() => import('./pages/Account'));
+const AccountOrders = lazy(() => import('./pages/account/Orders'));
+const AccountSettings = lazy(() => import('./pages/account/Settings'));
+const AccountAddresses = lazy(() => import('./pages/account/Addresses'));
+
 // Admin Pages - Lazy loaded (admin routes are less frequently accessed)
 const AdminRoute = lazy(() => import('./components/AdminRoute'));
 const AdminLayout = lazy(() => import('./pages/admin/Layout'));
 const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'));
 const AdminOrders = lazy(() => import('./pages/admin/Orders'));
+const AdminOrderDetail = lazy(() => import('./pages/admin/OrderDetail'));
 const AdminProducts = lazy(() => import('./pages/admin/Products'));
 
 const AppContent = () => {
@@ -59,6 +67,7 @@ const AppContent = () => {
           <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
             <Route index element={<AdminDashboard />} />
             <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/:orderId" element={<AdminOrderDetail />} />
             <Route path="products" element={<AdminProducts />} />
           </Route>
           
@@ -91,6 +100,11 @@ const AppContent = () => {
                 <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                {/* Account Routes */}
+                <Route path="/account" element={<Account />} />
+                <Route path="/account/orders" element={<AccountOrders />} />
+                <Route path="/account/settings" element={<AccountSettings />} />
+                <Route path="/account/addresses" element={<AccountAddresses />} />
                 {/* Test route removed for production security */}
                 {/* <Route path="/test" element={<TestPage />} /> */}
               </Routes>
@@ -137,11 +151,13 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <AppProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </AppProvider>
+    <ErrorBoundary>
+      <AppProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AppProvider>
+    </ErrorBoundary>
   );
 };
 
