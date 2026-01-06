@@ -240,9 +240,16 @@ const Shop = () => {
   ];
 
 
+  // Scroll to top when search query changes
+  useEffect(() => {
+    if (searchQuery) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [searchQuery]);
+
   return (
     <div className="min-h-screen bg-white">
-      <main className="container mx-auto px-4 pt-8 pb-8">
+      <main className="container mx-auto px-4 pt-24 sm:pt-28 pb-8">
         {/* Search Results Banner */}
         {searchQuery && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
