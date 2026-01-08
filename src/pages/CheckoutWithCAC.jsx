@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Lock, CreditCard, Phone, User, Mail, MapPin, Loader2, Check, X } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import * as cacBankService from '../services/cacBankService';
+import { supabase } from '../services/supabase';
 import toast from 'react-hot-toast';
 import PaymentProcessing from '../components/PaymentProcessing';
 import cacLogoVertical from '../assets/logos/For-White-BG-Vertical.png';
@@ -103,6 +104,34 @@ const CheckoutWithCAC = () => {
     setIsProcessing(true);
 
     try {
+      // ✅ Step 1: Verify stock availability (real-time from ERPNext) BEFORE payment
+      const stockCheckResponse = await supabase.functions.invoke('verify-stock-uj', {
+        body: {
+          items: cart.items.map(item => ({
+            id: item.id,
+            item_code: item.itemCode || item.id,
+            quantity: item.quantity
+          }))
+        }
+      });
+
+      if (stockCheckResponse.error) {
+        throw new Error(stockCheckResponse.error.message || 'Stock verification failed');
+      }
+
+      const stockCheck = stockCheckResponse.data;
+      
+      if (!stockCheck.all_available) {
+        const unavailableItems = stockCheck.items
+          .filter(item => !item.is_available)
+          .map(item => `${item.item_code}: ${item.requested} requested but only ${item.available} available`);
+        
+        toast.error(`Some items are out of stock:\n${unavailableItems.join('\n')}`);
+        setIsProcessing(false);
+        return;
+      }
+
+      // ✅ Step 2: Stock verified - proceed with payment initiation
       // ✅ NEW FLOW: Don't create order yet - only initiate payment
       // Order will be created AFTER OTP confirmation (when payment is guaranteed)
       

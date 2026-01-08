@@ -55,6 +55,34 @@ const CheckoutCOD = () => {
     setIsProcessing(true);
 
     try {
+      // ✅ Step 1: Verify stock availability (real-time from ERPNext)
+      const stockCheckResponse = await supabase.functions.invoke('verify-stock-uj', {
+        body: {
+          items: cart.items.map(item => ({
+            id: item.id,
+            item_code: item.itemCode || item.id,
+            quantity: item.quantity
+          }))
+        }
+      });
+
+      if (stockCheckResponse.error) {
+        throw new Error(stockCheckResponse.error.message || 'Stock verification failed');
+      }
+
+      const stockCheck = stockCheckResponse.data;
+      
+      if (!stockCheck.all_available) {
+        const unavailableItems = stockCheck.items
+          .filter(item => !item.is_available)
+          .map(item => `${item.item_code}: ${item.requested} requested but only ${item.available} available`);
+        
+        toast.error(`Some items are out of stock:\n${unavailableItems.join('\n')}`);
+        setIsProcessing(false);
+        return;
+      }
+
+      // ✅ Step 2: Stock verified - proceed with order creation
       // ✅ COD ORDERS: NO stock reservation (tentative order, customer can cancel)
       // Stock will be reserved when driver takes collection photo
       

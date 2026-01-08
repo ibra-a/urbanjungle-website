@@ -63,6 +63,37 @@ const PaymentForm = ({ shippingData, total, cartItems }) => {
     setIsProcessing(true);
 
     try {
+      // ✅ Step 1: Verify stock availability (real-time from ERPNext) BEFORE payment
+      // Note: This is a demo component, but stock validation should still work
+      const { supabase } = await import('../services/supabase');
+      
+      const stockCheckResponse = await supabase.functions.invoke('verify-stock-uj', {
+        body: {
+          items: cartItems.map(item => ({
+            id: item.id,
+            item_code: item.item_code || item.itemCode || item.id,
+            quantity: item.quantity || 1
+          }))
+        }
+      });
+
+      if (stockCheckResponse.error) {
+        throw new Error(stockCheckResponse.error.message || 'Stock verification failed');
+      }
+
+      const stockCheck = stockCheckResponse.data;
+      
+      if (!stockCheck.all_available) {
+        const unavailableItems = stockCheck.items
+          .filter(item => !item.is_available)
+          .map(item => `${item.item_code}: ${item.requested} requested but only ${item.available} available`);
+        
+        toast.error(`Some items are out of stock:\n${unavailableItems.join('\n')}`);
+        setIsProcessing(false);
+        return;
+      }
+
+      // ✅ Step 2: Stock verified - proceed with payment
       if (paymentMethod === 'card') {
         await handleCardPayment();
       } else if (paymentMethod === 'apple') {
@@ -70,7 +101,7 @@ const PaymentForm = ({ shippingData, total, cartItems }) => {
       }
     } catch (error) {
       console.error('Payment error:', error);
-      toast.error('Payment failed. Please try again.');
+      toast.error(error.message || 'Payment failed. Please try again.');
     } finally {
       setIsProcessing(false);
     }
